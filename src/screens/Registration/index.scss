@@ -1,0 +1,111 @@
+.MainRegPage {
+  background-color: #e2e2e2;
+  min-height: 100vh;
+  font-family: "Lexend Deca", sans-serif;
+
+  input {
+    border: 1px solid #bfbfbf;
+    border-radius: 2px;
+  }
+  input:focus {
+    border-color: black;
+  }
+  .RegistrationDiv {
+    background: #f4f4f4;
+    z-index: 1;
+    box-shadow: 6px -1px 25px 8px rgba(0, 0, 0, 0.2);
+    margin: 0 0 10% 0;
+    .RegistrationInputBox {
+      background: #ffffff;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+      .previousEducation {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 28px;
+
+        color: #7c7c7c;
+      }
+      .RegistrationInputFields {
+        label {
+          font-style: normal;
+          font-weight: 700;
+          font-size: 1rem;
+          line-height: 1rem;
+          margin: 10px 0;
+          color: #404040;
+        }
+        .subLabel {
+          font-size: 0.95rem;
+          color: #626262;
+        }
+        .previousEducationHeading {
+          font-size: 1.3rem;
+          line-height: 1.4rem;
+        }
+      }
+      .greenButton {
+        background: #4dc175;
+        border: 1px solid #4dc175;
+        border-radius: 2px;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 0.9rem;
+        line-height: 0.95rem;
+        text-transform: capitalize;
+        text-align: center;
+        color: #ffffff;
+      }
+      .greyButton {
+        border: 1px solid #5a5a5a;
+        border-radius: 2px;
+        text-transform: capitalize;
+        text-align: center;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 0.9rem;
+        line-height: 0.95rem;
+        text-align: center;
+        color: #3c3c3c;
+      }
+      .SavedButton {
+        background-color: rgba(0, 174, 87, 0.6);
+        border: 1px solid #4dc175;
+        color: white;
+      }
+    }
+  }
+  .footerWave {
+    position: fixed;
+    bottom: 0%;
+    width: 100vw;
+  }
+}
+
+.css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root {
+  color: rgba(0, 174, 87, 0.6) !important;
+}
+.css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
+  color: #00ae57 !important;
+}
+.css-ascpo7-MuiStepLabel-root {
+  flex-direction: column !important;
+  margin: 0.8rem !important;
+}
+.css-qivjh0-MuiStepLabel-label {
+  font-size: 1rem !important;
+  //   line-height: 1.8 !important;
+  margin: 0.6rem !important;
+}
+.css-z7uhs0-MuiStepConnector-line {
+  border-color: #00ae57 !important;
+  border-top-width: 2px !important;
+}
+.css-qivjh0-MuiStepLabel-label.Mui-active {
+  color: rgba(0, 0, 0, 0.9) !important;
+  font-weight: 600 !important;
+}
+.css-mjpk2e-MuiButtonBase-root-MuiStepButton-root {
+  //   padding-left: 0 !important;
+  padding-right: 0 !important;
+}
