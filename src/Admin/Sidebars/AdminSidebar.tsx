@@ -6,6 +6,7 @@ import GradingIcon from "@mui/icons-material/Grading";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 import ImportantDevicesOutlinedIcon from "@mui/icons-material/ImportantDevicesOutlined";
+import Deparment from "../Department/Deparment";
 import "./index.scss";
 
 interface props {
@@ -17,8 +18,9 @@ export const AdminSidebar = ({ option, setOption }: props) => {
   const [selected, setSeleted] = useState<number>(0);
 
   return (
-    <div className="d-flex SubSidebar">
-      <div className="">
+    <div className="d-flex ">
+      <div className="d-flex w-100">
+        <div className="SubSidebar">
         <div className="topLogo d-flex justify-content-end closeDiv">
           <button className="closeButton" onClick={() => setOption("None")}>
             <CloseOutlinedIcon fontSize="small" />
@@ -116,6 +118,12 @@ export const AdminSidebar = ({ option, setOption }: props) => {
               </div>
             </div>
           </div>
+        </div>
+        </div>
+        <div  className="w-100 mg-0 pd-0">
+          {
+            selected === 1 && <Deparment/>
+          }
         </div>
       </div>
     </div>
