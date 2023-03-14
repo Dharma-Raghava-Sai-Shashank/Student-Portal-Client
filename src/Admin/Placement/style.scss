@@ -1,0 +1,280 @@
+.newjobInput {
+  background-color: rgba(240, 240, 240, 0.701) !important;
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 17px;
+  border: 2px rgba(0, 0, 0, 0.9) !important;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+.newjobLabel {
+  font-weight: 400;
+  font-size: 18px;
+  padding: 2px 0;
+  color: #000000;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.dropdownBody {
+  ul,
+  li {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+  }
+  .button-select {
+    background-color: rgba(240, 240, 240, 0.696) !important;
+    font-weight: 500;
+  }
+  button {
+    font-size: 16px;
+    line-height: 1;
+    // letter-spacing: -0.02em;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:focus,
+  button:active {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .title {
+    // width: 200px;
+    margin-bottom: 16px;
+  }
+
+  .title img {
+    width: 100%;
+    height: auto;
+  }
+
+  form {
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 6px;
+  }
+
+  form h1 {
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #3f4150;
+  }
+
+  .dropdown {
+    position: relative;
+    z-index: 1;
+    // width: 300px;
+    margin-bottom: 8px;
+  }
+
+  .dropdown-toggle {
+    width: 100%;
+    height: 50px;
+    padding: 0 16px;
+    line-height: 50px;
+    text-align: left;
+    border: 1px solid rgba(224, 226, 231, 0.75);
+    border-radius: 6px;
+    letter-spacing: 2px;
+    transition: border-color 100ms ease-in;
+  }
+
+  .dropdown-toggle.selected {
+    color: #3f4150;
+    border-color: rgba(224, 226, 231, 1);
+  }
+
+  .dropdown-toggle:active {
+    border-color: rgba(224, 226, 231, 1);
+  }
+  .dropdown-toggle::after {
+    display: none !important;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    padding-left: 10px;
+    z-index: 2;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: border-color 200ms ease-in, padding 200ms ease-in,
+      max-height 200ms ease-in, box-shadow 200ms ease-in;
+  }
+
+  .dropdown-menu.show {
+    padding: 8px 0;
+    height: auto;
+    max-height: 350px;
+    overflow-y: scroll;
+    border-color: rgba(224, 226, 231, 0.5);
+    box-shadow: 0 4px 9px 0 rgba(63, 65, 80, 0.1);
+  }
+
+  .dropdown-option {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    line-height: 44px;
+    text-align: left;
+  }
+
+  .dropdown-option:hover {
+    background-color: #f8f9fa;
+  }
+  .dropdown-option:active {
+    background-color: #f8f9fa;
+    border: none;
+  }
+}
+.newJobFlowchart {
+  .page {
+    position: absolute;
+    background-color: black;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .container {
+    margin: 2rem auto;
+    width: 60%;
+    height: 90%;
+    border-radius: 5px;
+    overflow: auto;
+    padding: 15px;
+  }
+
+  .dnd-list {
+    display: flex;
+    flex-direction: row;
+    height: 35px;
+    margin-bottom: 10px;
+  }
+
+  .input-item {
+    position: relative;
+    height: 100%;
+    flex-basis: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-bottom: 10px;
+    font-size: calc(10px + 2vmin);
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: move;
+    padding-left: 10px;
+  }
+
+  .over {
+    transform: scale(1.01);
+    border: 1px dashed #eee;
+  }
+
+  .addButton {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    line-height: 26px;
+    border: none;
+    color: black;
+    border-radius: 50%;
+    font-size: 24px;
+  }
+
+  .delButton {
+    display: flex;
+    align-items: center;
+    color: darkgrey;
+    margin-left: 10px;
+    height: 37px;
+    width: 30px;
+    font-size: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+  }
+}
+// .newJobCourses {
+.coursesModalBody {
+  .coursesNameBox {
+    max-height: 60vh;
+    overflow-y: scroll;
+    .courseButtonDiv {
+      border: 1px black;
+      .courseButton {
+        outline: none;
+        text-decoration: none;
+        background-color: inherit;
+        border: 1px black;
+        padding: 30px 10px;
+        width: 100%;
+        .courseName {
+          font-size: 19px;
+          font-weight: 500;
+        }
+      }
+      :hover {
+        background-color: #f8f9fa;
+      }
+      :focus {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+}
+.branchNameBox {
+  max-height: 60vh;
+  overflow-y: scroll;
+  .css-w5np7v-MuiTypography-root {
+    font-weight: 600 !important;
+  }
+}
+.showSelectectedCourse {
+  .showSelectectedCourseDegree {
+    .degreeDiv {
+      display: flex;
+      justify-content: center;
+      .DegreeName {
+        font-size: 19px;
+        font-weight: 500;
+      }
+    }
+  }
+  .showSelectectedCourseBranch {
+    .showSelectectedCourseHeading {
+      font-weight: 600;
+      font-size: 17px;
+    }
+  }
+}
+.newJobFlowchart {
+  .scrollSchedule {
+    padding: 10px;
+    margin: 10px;
+    width: 500px;
+    border-radius: 10px;
+    box-shadow: 2px 5px rgba(63, 65, 80, 0.04);
+    background-color: rgba(0, 174, 87, 0.13);
+  }
+}

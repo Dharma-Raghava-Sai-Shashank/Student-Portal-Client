@@ -65,3 +65,9 @@
 .fs-20 {
   font-size: 20px;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
+.capitalize {
+  text-transform: capitalize !important;
+}
