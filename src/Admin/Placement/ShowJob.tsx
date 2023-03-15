@@ -17,6 +17,32 @@ interface props {
   id: string;
   setSession: React.Dispatch<React.SetStateAction<string>>;
 }
+const Schedule = [
+  {
+    id: "892b",
+    StageName: "Resume SL",
+    StageMode: "Virtual",
+    StageDate: "22/04/2022",
+  },
+  {
+    id: "882b",
+    StageName: "Reasoning",
+    StageMode: "Virtual",
+    StageDate: "22/04/2022",
+  },
+  {
+    id: "881b",
+    StageName: "Interview 1",
+    StageMode: "On Campus",
+    StageDate: "22/04/2022",
+  },
+  {
+    id: "812b",
+    StageName: "Group Discussion",
+    StageMode: "Virtual",
+    StageDate: "22/04/2022",
+  },
+];
 export const ShowJob = ({
   option,
   setOption,
@@ -26,14 +52,9 @@ export const ShowJob = ({
 }: props) => {
   const generateDetails = (detailType: string, detail: string) => {
     return (
-      <div className="row mt-3 border-bottom">
-        <div className="col-3">
-          <Typography
-            className=""
-            variant="subtitle2"
-            sx={{ color: "gray" }}
-            gutterBottom
-          >
+      <div className="row mt-3 border-bottom mx-2">
+        <div className="col-3 ">
+          <Typography variant="subtitle2" sx={{ color: "gray" }} gutterBottom>
             {detailType}
           </Typography>
         </div>
@@ -48,12 +69,7 @@ export const ShowJob = ({
   const generateHeading = (heading: string) => {
     return (
       <div>
-        <Typography
-          className=""
-          variant="subtitle2"
-          sx={{ fontSize: "1rem" }}
-          gutterBottom
-        >
+        <Typography variant="subtitle2" sx={{ fontSize: "1rem" }} gutterBottom>
           {heading}
         </Typography>
         <hr style={{ height: "1.3px", margin: 0 }} />
@@ -144,7 +160,7 @@ export const ShowJob = ({
             </div>
           </div>
 
-          <div className="col-9 border p-4">
+          <div className="col-9 border p-3">
             <div>
               <div className="mb-5">
                 {generateHeading("Company Details")}
@@ -184,7 +200,7 @@ export const ShowJob = ({
               </div>
               <div className="mb-5">
                 <div>{generateHeading("Eligible Courses and Disciplines")}</div>
-                <div className="mt-2 mb-3">
+                <div className="mt-2 mb-3 ms-2">
                   <div className="showSelectectedCourse ">
                     <div className="row showSelectectedCourseDegree">
                       <div className="col-1 degreeDiv pt-5">
@@ -251,6 +267,44 @@ export const ShowJob = ({
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div>
+                {generateHeading("Schedule")}
+                <div className="my-3">
+                  {Schedule.map((item, stage) => (
+                    <div className="d-flex justify-content-center">
+                      <div key={item.id} className="scrollSchedule">
+                        <div>
+                          <div>
+                            <Typography
+                              variant="overline"
+                              display="block"
+                              // lineHeight="10px"
+                              align="center"
+                              style={{
+                                fontWeight: "600",
+                                fontSize: "0.9rem",
+                              }}
+                            >
+                              Stage {stage + 1}: {item.StageName}
+                            </Typography>
+
+                            <div className="d-flex justify-content-center">
+                              <div>
+                                <Typography variant="caption" display="block">
+                                  Mode: {item.StageMode}
+                                </Typography>
+                                <Typography variant="caption" display="block">
+                                  Tentative Date: {item.StageDate}
+                                </Typography>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

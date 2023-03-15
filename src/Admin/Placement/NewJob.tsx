@@ -16,6 +16,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import Switch from "@mui/material/Switch";
@@ -28,6 +29,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import "./style.scss";
 
 interface Schedule {
@@ -84,6 +87,19 @@ const names = [
   "Kelly Snyder",
 ];
 
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+  ],
+};
+
 export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const [openCategoryOption, setOpenCategoryOption] = useState<string>("");
@@ -103,8 +119,16 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [stageName, setStageName] = useState("");
   const [stageMode, setStageMode] = useState("");
   const [stageDate, setStagedate] = useState("");
+  const [stageNameError, setStageNameError] = useState(false);
 
   const [personName, setPersonName] = React.useState<string[]>([]);
+
+  const [secondaryHR, setSecondaryHR] = useState(false);
+
+  const [primaryspoc, setPrimaryspoc] = React.useState("");
+  const [secondaryspoc, setsecondaryspoc] = React.useState("");
+
+  const [value, setValue] = useState("");
 
   const handleChangeSkill = (event: SelectChangeEvent<typeof personName>) => {
     const {
@@ -135,6 +159,10 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   };
 
   const handleAddStage = () => {
+    if (stageName === "") {
+      setStageNameError(true);
+      return;
+    } else setStageNameError(false);
     setScheduleList((prevData) => [
       ...prevData,
       {
@@ -687,6 +715,14 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                 setStageName(() => e.target.value)
                               }
                             />
+                            {stageNameError && stageName === "" && (
+                              <div
+                                id="emailHelp"
+                                className="ms-2 form-text text-danger"
+                              >
+                                Enter valid stage Name
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -870,6 +906,169 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         ))}
                       </Select>
                     </FormControl>
+                  </div>
+                </div>
+              </div>
+              {/* HR Details */}
+              <div className="my-5">
+                <Divider>
+                  <Chip label="HR Details" />
+                </Divider>
+                <div>
+                  <div className="mb-3">
+                    <label htmlFor="Company Name" className="newjobLabel">
+                      Name
+                    </label>
+                    <input type="text" className="newjobInput" id="HRName" />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="Company Name" className="newjobLabel">
+                      Phone Number
+                    </label>
+                    <input type="text" className="newjobInput" id="HRPhone" />
+                    <div id="emailHelp" className="form-text">
+                      We'll never share your phone number with anyone else.
+                    </div>
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="Company Name" className="newjobLabel">
+                      Email ID
+                    </label>
+                    <input type="email" className="newjobInput" id="HREmail" />
+                    <div id="emailHelp" className="form-text">
+                      We'll never share your email with anyone else.
+                    </div>
+                  </div>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={secondaryHR}
+                        onChange={() => setSecondaryHR((prev) => !prev)}
+                      />
+                    }
+                    label="Add Secondary HR Details"
+                  />
+                </div>
+                {secondaryHR && (
+                  <div>
+                    <div className="mb-3">
+                      <label htmlFor="Company Name" className="newjobLabel">
+                        Name
+                      </label>
+                      <input type="text" className="newjobInput" id="HRName" />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="Company Name" className="newjobLabel">
+                        Phone Number
+                      </label>
+                      <input type="text" className="newjobInput" id="HRPhone" />
+                      <div id="emailHelp" className="form-text">
+                        We'll never share your phone number with anyone else.
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="Company Name" className="newjobLabel">
+                        Email ID
+                      </label>
+                      <input
+                        type="email"
+                        className="newjobInput"
+                        id="HREmail"
+                      />
+                      <div id="emailHelp" className="form-text">
+                        We'll never share your email with anyone else.
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* Assign spocs */}
+              <div className="my-5">
+                <Divider>
+                  <Chip label="ASSIGN SPOCs" />
+                </Divider>
+                <div className="my-3">
+                  <label htmlFor="Company Name" className="newjobLabel ms-2">
+                    Primary SPOC
+                  </label>
+                  <div>
+                    <FormControl sx={{ width: "100%" }}>
+                      <FormControl sx={{ m: 1, minWidth: 120 }}>
+                        <Select
+                          labelId="demo-simple-select-helper-label"
+                          id="demo-simple-select-helper"
+                          value={primaryspoc}
+                          onChange={(e) => {
+                            setPrimaryspoc(() => e.target.value);
+                          }}
+                          label="Select Primary SPOC"
+                        >
+                          <MenuItem value="None">
+                            <em>None</em>
+                          </MenuItem>
+                          {names.map((name) => (
+                            <MenuItem value={name}>{name}</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </FormControl>
+                  </div>
+                </div>
+                <div className="my-3">
+                  <label htmlFor="Company Name" className="newjobLabel ms-2">
+                    Secondary SPOC
+                  </label>
+                  <div>
+                    <FormControl sx={{ width: "100%" }}>
+                      <FormControl sx={{ m: 1, minWidth: 120 }}>
+                        <Select
+                          labelId="demo-simple-select-helper-label"
+                          id="demo-simple-select-helper"
+                          value={secondaryspoc}
+                          onChange={(e) => {
+                            setsecondaryspoc(() => e.target.value);
+                          }}
+                          label="Select Primary SPOC"
+                        >
+                          <MenuItem value="None">
+                            <em>None</em>
+                          </MenuItem>
+                          {names.map((name) => (
+                            <MenuItem value={name}>{name}</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </FormControl>
+                    {primaryspoc === secondaryspoc && primaryspoc !== "" && (
+                      <div
+                        id="emailHelp"
+                        className="ms-2 form-text text-danger"
+                      >
+                        Primary and Secondary SPOCs are the same.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {/* Additional Info */}
+              <div className="my-5">
+                <Divider>
+                  <Chip label="Add Additional Info" />
+                </Divider>
+
+                <div className="my-3">
+                  <label htmlFor="Company Name" className="newjobLabel ms-2">
+                    Add Additional Details
+                  </label>
+
+                  <div>
+                    <ReactQuill
+                      theme="snow"
+                      value={value}
+                      onChange={setValue}
+                      modules={modules}
+                      style={{ height: "300px", marginBottom: "150px" }}
+                    />
                   </div>
                 </div>
               </div>
