@@ -87,11 +87,11 @@ export const CSVUploader: React.FC = () => {
     },
   ];
 
-  const handleUpload = (e: any) => {
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     var files = e.target.files,
-      f = files[0];
+      f = files?.[0];
     var reader = new FileReader();
     reader.onload = function (e: any) {
       var data = e?.target?.result;
@@ -115,7 +115,7 @@ export const CSVUploader: React.FC = () => {
       }
       setRows(Sdata);
     };
-    reader.readAsBinaryString(f);
+    reader.readAsBinaryString(f as Blob);
     handleOpen();
   };
 
