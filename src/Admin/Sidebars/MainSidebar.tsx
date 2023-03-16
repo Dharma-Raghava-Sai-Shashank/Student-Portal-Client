@@ -8,32 +8,28 @@ import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 import ImportantDevicesOutlinedIcon from "@mui/icons-material/ImportantDevicesOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Link } from "react-router-dom";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Header1 } from "../Headers/Header1";
 import { Placement } from "../Placement/Placement";
 import { NewJob } from "../Placement/NewJob";
-import Department from "../Department/Deparment";
+import { Department } from "../Department/Department";
 import "./index.scss";
 
-interface props {
-  option: string;
-  setOption: React.Dispatch<React.SetStateAction<string>>;
-  session: string;
-  setSession: React.Dispatch<React.SetStateAction<string>>;
-}
+// interface props {
+//   option: string;
+//   setOption: React.Dispatch<React.SetStateAction<string>>;
+//   session: string;
+//   setSession: React.Dispatch<React.SetStateAction<string>>;
+// }
 
-export const MainSidebar = ({
-  option,
-  setOption,
-  session,
-  setSession,
-}: props) => {
+export const MainSidebar = () => {
   const [collapse, setCollapse] = useState(false);
   const [collapseadmin, setCollapseAdmin] = useState(false);
 
   return (
     <div>
-      <div className="d-flex">
+      <div className="d-flex h-100">
         {collapse === false ? (
           <div className="d-flex">
             <div className="MainSidebar">
@@ -48,7 +44,7 @@ export const MainSidebar = ({
                   className="closeButton"
                   onClick={() => {
                     setCollapse(true);
-                    setOption("None");
+                    // setOption("None");
                   }}
                 >
                   <CloseOutlinedIcon fontSize="small" />
@@ -86,25 +82,29 @@ export const MainSidebar = ({
               <hr />
               <div className="MainSidebarOptions">
                 <div className="MainSidebarOption">
+                  <Link to="/admin/profile">
+                    <button
+                      className="MainSidebarOptionButton"
+                      // onClick={() => setOption(() => "Profile")}
+                    >
+                      <div className="MainSidebarOptionButtonDiv">
+                        <DescriptionOutlinedIcon className="mx-3" /> Profile
+                      </div>
+                    </button>
+                  </Link>
+                  <Link to="/admin/placement">
+                    <button
+                      className="MainSidebarOptionButton"
+                      // onClick={() => setOption(() => "Placement")}
+                    >
+                      <div className="MainSidebarOptionButtonDiv">
+                        <GradingIcon className="mx-3" /> Placement
+                      </div>
+                    </button>
+                  </Link>
                   <button
                     className="MainSidebarOptionButton"
-                    onClick={() => setOption(() => "Profile")}
-                  >
-                    <div className="MainSidebarOptionButtonDiv">
-                      <DescriptionOutlinedIcon className="mx-3" /> Profile
-                    </div>
-                  </button>
-                  <button
-                    className="MainSidebarOptionButton"
-                    onClick={() => setOption(() => "Placement")}
-                  >
-                    <div className="MainSidebarOptionButtonDiv">
-                      <GradingIcon className="mx-3" /> Placement
-                    </div>
-                  </button>
-                  <button
-                    className="MainSidebarOptionButton"
-                    onClick={() => setOption(() => "Notices")}
+                    // onClick={() => setOption(() => "Notices")}
                   >
                     <div className="MainSidebarOptionButtonDiv">
                       <DescriptionOutlinedIcon className="mx-3" /> Notices
@@ -112,7 +112,7 @@ export const MainSidebar = ({
                   </button>
                   <button
                     className="MainSidebarOptionButton"
-                    onClick={() => setOption(() => "Companies")}
+                    // onClick={() => setOption(() => "Companies")}
                   >
                     <div className="MainSidebarOptionButtonDiv">
                       <ApartmentOutlinedIcon className="mx-3" /> Companies
@@ -120,7 +120,7 @@ export const MainSidebar = ({
                   </button>
                   <button
                     className="MainSidebarOptionButton"
-                    onClick={() => setOption(() => "Student")}
+                    // onClick={() => setOption(() => "Student")}
                   >
                     <div className="MainSidebarOptionButtonDiv">
                       <AccountBoxIcon className="mx-3" /> Student
@@ -128,7 +128,7 @@ export const MainSidebar = ({
                   </button>
                   <button
                     className="MainSidebarOptionButton"
-                    onClick={() => setOption(() => "Profile")}
+                    // onClick={() => setOption(() => "Profile")}
                   >
                     <div className="MainSidebarOptionButtonDiv">
                       <DescriptionOutlinedIcon className="mx-3" /> Profile
@@ -156,20 +156,22 @@ export const MainSidebar = ({
                   </button>
                   {collapseadmin === true && (
                     <div>
+                      <Link to="/admin/department">
+                        <button
+                          className="MainSidebarOptionButton ps-4"
+                          onClick={() => {
+                            // setOption(() => "Department");
+                          }}
+                        >
+                          <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
+                            <div className="fs-14 mx-3">Department</div>
+                          </div>
+                        </button>
+                      </Link>
                       <button
                         className="MainSidebarOptionButton ps-4"
                         onClick={() => {
-                          setOption(() => "Department");
-                        }}
-                      >
-                        <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
-                          <div className="fs-14 mx-3">Department</div>
-                        </div>
-                      </button>
-                      <button
-                        className="MainSidebarOptionButton ps-4"
-                        onClick={() => {
-                          setOption(() => "Users");
+                          // setOption(() => "Users");
                         }}
                       >
                         <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
@@ -194,11 +196,9 @@ export const MainSidebar = ({
             </button>
           </div>
         )}
-        <div className="w-100">
+        {/* <div className="w-100">
           <Header1 />
-          {/* {collapse === false && option === "Admin" && (
-            <AdminSidebar option={option} setOption={setOption} />
-          )} */}
+          
           {option === "Placement" && (
             <Placement
               option={option}
@@ -215,8 +215,15 @@ export const MainSidebar = ({
               setSession={setSession}
             />
           )}
-          {option === "Department" && <Department />}
-        </div>
+          {option === "Department" && (
+            <Department
+              option={option}
+              setOption={setOption}
+              session={session}
+              setSession={setSession}
+            />
+          )}
+        </div> */}
       </div>
     </div>
   );

@@ -24,13 +24,13 @@ import Popover from "@mui/material/Popover";
 import AddIcon from "@mui/icons-material/Add";
 import { ReactSortable } from "react-sortablejs";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { skills } from "../constants/skills";
 import "./style.scss";
 
 interface Schedule {
@@ -214,7 +214,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
           <span className="fs-14">Placement </span>
           <span
             className=" fs-14 cursor-pointer"
-            onClick={() => setOption("Placement")}
+            onClick={() => setOption("Show all NF")}
           >
             | {session} |{" "}
           </span>
@@ -720,7 +720,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                 id="emailHelp"
                                 className="ms-2 form-text text-danger"
                               >
-                                Enter valid stage Name
+                                Enter valid stage name
                               </div>
                             )}
                           </div>
@@ -886,8 +886,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     Skills
                   </label>
                   <div>
-                    <FormControl sx={{ my: 3, width: "100%" }}>
-                      <InputLabel>Select Skill</InputLabel>
+                    <FormControl sx={{ mt: 1, mb: 3, width: "100%" }}>
+                      {/* <InputLabel>Select Skill</InputLabel> */}
                       <Select
                         labelId="demo-multiple-checkbox-label"
                         id="demo-multiple-checkbox"
@@ -898,10 +898,12 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         renderValue={(selected) => selected.join(", ")}
                         MenuProps={MenuProps}
                       >
-                        {names.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            <Checkbox checked={personName.indexOf(name) > -1} />
-                            <ListItemText primary={name} />
+                        {skills.map((skill) => (
+                          <MenuItem key={skill} value={skill}>
+                            <Checkbox
+                              checked={personName.indexOf(skill) > -1}
+                            />
+                            <ListItemText primary={skill} />
                           </MenuItem>
                         ))}
                       </Select>

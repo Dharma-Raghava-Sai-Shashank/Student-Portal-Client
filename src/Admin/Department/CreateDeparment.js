@@ -30,7 +30,7 @@ const style = {
   p: 4,
 };
 
-function Department() {
+function CreateDepartment() {
   const [togglec, settogglec] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState("");
@@ -1266,4 +1266,4 @@ function Department() {
   );
 }
 
-export default Department;
+export default CreateDepartment;
