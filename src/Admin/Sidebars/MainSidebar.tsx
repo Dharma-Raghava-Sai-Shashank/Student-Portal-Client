@@ -7,18 +7,29 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 import ImportantDevicesOutlinedIcon from "@mui/icons-material/ImportantDevicesOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
-import { AdminSidebar } from "./AdminSidebar";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Header1 } from "../Headers/Header1";
 import { Placement } from "../Placement/Placement";
+import { NewJob } from "../Placement/NewJob";
+import Department from "../Department/Deparment";
 import "./index.scss";
 
 interface props {
   option: string;
   setOption: React.Dispatch<React.SetStateAction<string>>;
+  session: string;
+  setSession: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const MainSidebar = ({ option, setOption }: props) => {
+export const MainSidebar = ({
+  option,
+  setOption,
+  session,
+  setSession,
+}: props) => {
   const [collapse, setCollapse] = useState(false);
+  const [collapseadmin, setCollapseAdmin] = useState(false);
 
   return (
     <div>
@@ -126,14 +137,47 @@ export const MainSidebar = ({ option, setOption }: props) => {
                   <button
                     className="MainSidebarOptionButton"
                     onClick={() => {
-                      // setShowSubSidebar("admin");
-                      setOption(() => "Admin");
+                      // setOption(() => "Admin");
+                      setCollapseAdmin((prev) => !prev);
                     }}
                   >
-                    <div className="MainSidebarOptionButtonDiv">
-                      <ImportantDevicesOutlinedIcon className="mx-3" /> Admin
+                    <div className="MainSidebarOptionButtonDiv d-flex justify-content-between">
+                      <div>
+                        <ImportantDevicesOutlinedIcon className="mx-3" /> Admin
+                      </div>
+                      <div>
+                        {!collapseadmin ? (
+                          <KeyboardArrowDownIcon />
+                        ) : (
+                          <KeyboardArrowUpIcon />
+                        )}
+                      </div>
                     </div>
                   </button>
+                  {collapseadmin === true && (
+                    <div>
+                      <button
+                        className="MainSidebarOptionButton ps-4"
+                        onClick={() => {
+                          setOption(() => "Department");
+                        }}
+                      >
+                        <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
+                          <div className="fs-14 mx-3">Department</div>
+                        </div>
+                      </button>
+                      <button
+                        className="MainSidebarOptionButton ps-4"
+                        onClick={() => {
+                          setOption(() => "Users");
+                        }}
+                      >
+                        <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
+                          <div className="fs-14 mx-3">Users</div>
+                        </div>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -152,10 +196,26 @@ export const MainSidebar = ({ option, setOption }: props) => {
         )}
         <div className="w-100">
           <Header1 />
-          {collapse === false && option === "Admin" && (
+          {/* {collapse === false && option === "Admin" && (
             <AdminSidebar option={option} setOption={setOption} />
+          )} */}
+          {option === "Placement" && (
+            <Placement
+              option={option}
+              setOption={setOption}
+              session={session}
+              setSession={setSession}
+            />
           )}
-          {option === "Placement" && <Placement />}
+          {option === "Add New Job" && (
+            <NewJob
+              option={option}
+              setOption={setOption}
+              session={session}
+              setSession={setSession}
+            />
+          )}
+          {option === "Department" && <Department />}
         </div>
       </div>
     </div>
