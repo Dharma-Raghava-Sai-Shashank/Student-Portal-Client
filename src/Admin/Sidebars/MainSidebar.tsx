@@ -185,45 +185,22 @@ export const MainSidebar = () => {
             </div>
           </div>
         ) : (
-          <div className="topLogoHamburger d-flex justify-content-between">
-            <div className="d-flex ">
+          <div className="topLogoHamburger">
+            <div className="d-flex justify-content-center">
               <div className="logo">
                 <MotionPhotosAutoIcon fontSize="large" />
               </div>
             </div>
-            <button className="closeButton" onClick={() => setCollapse(false)}>
-              <MenuIcon fontSize="medium" />
-            </button>
+            <div className="d-flex justify-content-center">
+              <button
+                className="closeButton"
+                onClick={() => setCollapse(false)}
+              >
+                <MenuIcon fontSize="medium" />
+              </button>
+            </div>
           </div>
         )}
-        {/* <div className="w-100">
-          <Header1 />
-          
-          {option === "Placement" && (
-            <Placement
-              option={option}
-              setOption={setOption}
-              session={session}
-              setSession={setSession}
-            />
-          )}
-          {option === "Add New Job" && (
-            <NewJob
-              option={option}
-              setOption={setOption}
-              session={session}
-              setSession={setSession}
-            />
-          )}
-          {option === "Department" && (
-            <Department
-              option={option}
-              setOption={setOption}
-              session={session}
-              setSession={setSession}
-            />
-          )}
-        </div> */}
       </div>
     </div>
   );

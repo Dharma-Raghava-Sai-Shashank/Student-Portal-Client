@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import Typography from "@mui/material/Typography";
@@ -7,7 +7,15 @@ import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import Modal from "react-bootstrap/Modal";
+import dayjs, { Dayjs } from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { branches } from "../constants/branches";
+import { skills } from "../constants/skills";
 import "./style.scss";
 
 interface props {
@@ -43,6 +51,28 @@ const Schedule = [
     StageDate: "22/04/2022",
   },
 ];
+const html = (
+  <div>
+    <h1>This is a webpage.</h1>
+    <h2>Why do I have to check this??</h2>
+    <p>
+      <br />
+    </p>
+    <p>Because whatever.</p>
+    <p>
+      <strong>Pros:</strong>
+    </p>
+    <ol>
+      <li>
+        <strong>checking</strong>
+      </li>
+      <li>
+        <strong>seeing if it works</strong>
+      </li>
+    </ol>
+  </div>
+);
+
 export const ShowJob = ({
   option,
   setOption,
@@ -50,6 +80,15 @@ export const ShowJob = ({
   setSession,
   id,
 }: props) => {
+  const [inputdeadlineTime, setInputDeadlineTime] =
+    React.useState<Dayjs | null>();
+  const [deadlineTime, setDeadlineTime] = React.useState<Dayjs | null>();
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleSetDeadline = () => setDeadlineTime(() => inputdeadlineTime);
+
   const generateDetails = (detailType: string, detail: string) => {
     return (
       <div className="row mt-3 border-bottom mx-2">
@@ -110,52 +149,98 @@ export const ShowJob = ({
         </div>
         <Divider />
         <div className="row">
-          <div className="col-3 border-right d-flex justify-content-center py-5">
+          <div className="col-3 border-right d-flex justify-content-center py-3">
             <div>
-              <div>
-                <Button
-                  variant="text"
-                  color="success"
-                  sx={{ p: 0, textTransform: "capitalize" }}
-                >
-                  View application
-                </Button>
-              </div>
-              <div>
-                <Button
-                  variant="text"
-                  color="success"
-                  sx={{ p: 0, textTransform: "capitalize" }}
-                >
-                  View application
-                </Button>
-              </div>
-              <div>
-                <Button
-                  variant="text"
-                  color="success"
-                  sx={{ p: 0, textTransform: "capitalize" }}
-                >
-                  View application
-                </Button>
-              </div>
-              <div>
-                <Button
-                  variant="text"
-                  color="success"
-                  sx={{ p: 0, textTransform: "capitalize" }}
-                >
-                  View application
-                </Button>
-              </div>
-              <div>
-                <Button
-                  variant="text"
-                  color="success"
-                  sx={{ p: 0, textTransform: "capitalize" }}
-                >
-                  View application
-                </Button>
+              <div className="mb-3 ">
+                <div className="d-flex justify-content-center">
+                  <Button
+                    variant="text"
+                    color="success"
+                    endIcon={<EditOutlinedIcon />}
+                    onClick={handleShow}
+                  >
+                    {deadlineTime
+                      ? "Edit Application Deadine"
+                      : "Add Application Deadine"}
+                  </Button>
+                </div>
+                {deadlineTime && (
+                  <div className="ms-3 mt-2 mb-5">
+                    <div>
+                      <div>
+                        <strong className="text-danger">Deadline:</strong>
+                      </div>
+                      <div>
+                        <strong className="">
+                          {deadlineTime.format("DD/MM/YYYY hh:mm A")}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <Modal show={show} onHide={handleClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Add Application Deadine</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="my-4 d-flex justify-content-center">
+                      <div className="w-75">
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer
+                            components={["DateTimePicker", "DateTimePicker"]}
+                          >
+                            <DateTimePicker
+                              label="MM/DD/YYYY hh:mm am/pm"
+                              value={inputdeadlineTime}
+                              onChange={(newValue) =>
+                                setInputDeadlineTime(newValue)
+                              }
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </div>
+                    </div>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        handleClose();
+                        handleSetDeadline();
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+                <div className="my-5">
+                  <Button
+                    variant="text"
+                    color="success"
+                    fullWidth
+                    sx={{ p: 0, textTransform: "capitalize" }}
+                  >
+                    View all students
+                  </Button>
+                  {Schedule.map((item) => (
+                    <Button
+                      variant="text"
+                      color="success"
+                      fullWidth
+                      sx={{ p: 0, textTransform: "capitalize" }}
+                    >
+                      View {item.StageName} Stage
+                    </Button>
+                  ))}
+                  <Button
+                    variant="text"
+                    fullWidth
+                    color="success"
+                    sx={{ p: 0, textTransform: "capitalize" }}
+                  >
+                    Final Selected Students
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -305,6 +390,58 @@ export const ShowJob = ({
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+              <div>
+                <div className="mb-5">
+                  {generateHeading("Skill Based Hiring")}
+
+                  <div className="my-3 mb-3 ms-3">
+                    <ul>
+                      {skills.map((skill) => (
+                        <li>{skill}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="mb-5">
+                  {generateHeading("HR Details")}
+
+                  <div className="mt-2 mb-5">
+                    {generateDetails("Primary HR Name", "Krittika Barnwal")}
+                    {generateDetails("Phone Number", "8278928092")}
+                    {generateDetails("Email ID", "abss.fkkejfci@jd.com")}
+                  </div>
+                  <div className="mt-2 mb-5">
+                    {generateDetails("Secondary HR Name", "Harry Potter")}
+                    {generateDetails("Phone Number", "8278928092")}
+                    {generateDetails("Email ID", "abss.fkkejfci@jd.com")}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="mb-5">
+                  {generateHeading("Assigned SPOC")}
+
+                  <div className="mt-2 mb-5">
+                    {generateDetails("Primary SPOC Name", "Krittika Barnwal")}
+                    {generateDetails("Phone Number", "8278928092")}
+                    {generateDetails("Email ID", "abss.fkkejfci@jd.com")}
+                  </div>
+                  <div className="mt-2 mb-5">
+                    {generateDetails("Secondary SPOC Name", "Harry Potter")}
+                    {generateDetails("Phone Number", "8278928092")}
+                    {generateDetails("Email ID", "abss.fkkejfci@jd.com")}
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-5">
+                    {generateHeading("Additional Infomation")}
+
+                    <div className="mt-2 mb-5">{html}</div>
+                  </div>
                 </div>
               </div>
             </div>

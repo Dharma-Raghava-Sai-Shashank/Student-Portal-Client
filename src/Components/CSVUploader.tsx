@@ -40,24 +40,24 @@ export const CSVUploader: React.FC = () => {
 
   const renderField = (value: string) => {
     return (
-<>
-          {isEditable ? (
-            <TextField
-              hiddenLabel
-              id="filled-hidden-label-small"
-              variant="filled"
-              size="small"
-              value={value}
-              fullWidth
-            />
-          ) : (
-            <span style={{ overflow: "hidden", textOverflow: "clip" }}>
-              {value}
-            </span>
-          )}
-        </>
-    )
-  }
+      <>
+        {isEditable ? (
+          <TextField
+            hiddenLabel
+            id="filled-hidden-label-small"
+            variant="filled"
+            size="small"
+            value={value}
+            fullWidth
+          />
+        ) : (
+          <span style={{ overflow: "hidden", textOverflow: "clip" }}>
+            {value}
+          </span>
+        )}
+      </>
+    );
+  };
 
   const columns: GridColDef[] = [
     {
@@ -182,7 +182,12 @@ export const CSVUploader: React.FC = () => {
               justifyContent: "flex-end",
             }}
           >
-            <Button style={btnStyle} variant="outlined" endIcon={<Edit />} onClick={() => setIsEditable(!isEditable)}>
+            <Button
+              style={btnStyle}
+              variant="outlined"
+              endIcon={<Edit />}
+              onClick={() => setIsEditable(!isEditable)}
+            >
               Edit
             </Button>
             <Button style={btnStyle} variant="contained" endIcon={<Send />}>

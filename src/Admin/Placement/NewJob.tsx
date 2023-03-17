@@ -89,7 +89,7 @@ const names = [
 
 const modules = {
   toolbar: [
-    [{ header: [1, 2, 3, false] }],
+    [{ header: [2, 3, 4, false] }],
     ["bold", "italic", "underline"],
     [
       { list: "ordered" },
@@ -1071,6 +1071,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       modules={modules}
                       style={{ height: "300px", marginBottom: "150px" }}
                     />
+                    {/* <>{console.log(value)}</> */}
                   </div>
                 </div>
               </div>
