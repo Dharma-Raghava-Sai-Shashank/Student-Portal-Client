@@ -29,6 +29,7 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ReactQuill from "react-quill";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import "react-quill/dist/quill.snow.css";
 import { skills } from "../constants/skills";
 import "./style.scss";
@@ -1049,6 +1050,34 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         Primary and Secondary SPOCs are the same.
                       </div>
                     )}
+                  </div>
+                </div>
+              </div>
+              <div className="my-5">
+                <Divider>
+                  <Chip label="Add Additional Files" />
+                </Divider>
+                <div className="my-3">
+                  <label htmlFor="Company Name" className="newjobLabel ms-2">
+                    Choose additional files (if any)
+                  </label>
+                  <div className="m-3">
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      startIcon={<FileUploadIcon />}
+                      // onClick={()=>handleUploadClick}
+                    >
+                      Upload Files
+                      <input
+                        hidden
+                        accept="pdf"
+                        multiple
+                        type="file"
+                        // ref={hiddenFileInput}
+                        // onChange={() => handleUploadChange}
+                      />
+                    </Button>
                   </div>
                 </div>
               </div>

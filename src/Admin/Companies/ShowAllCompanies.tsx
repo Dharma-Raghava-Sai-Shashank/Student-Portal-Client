@@ -18,7 +18,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -30,22 +30,24 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { ShowJob } from "../Placement/ShowJob";
+import { CompanyDetails } from "./CompanyDetails";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 
 interface Column {
-  id: "name" | "designation" | "status";
+  id: "name" | "category/sector" | "registration";
   label: string;
   minWidth?: number;
   align?: "left" | "right" | "center" | "inherit" | "justify" | undefined;
 }
 
 const columns: Column[] = [
-  { id: "name", label: "Company Name", minWidth: 180 },
-  { id: "designation", label: "Designation", minWidth: 220 },
+  { id: "name", label: "Company Name", minWidth: 220 },
+  { id: "category/sector", label: "Category/Sector", minWidth: 250 },
   {
-    id: "status",
-    label: "Status",
+    id: "registration",
+    label: "Registered On",
     minWidth: 180,
     align: "center",
   },
@@ -54,59 +56,27 @@ const columns: Column[] = [
 interface Data {
   name: string;
   designation: string;
-  status: string;
+  registeredOn: string;
 }
 
-function createData(name: string, designation: string, status: string): Data {
-  return { name, designation, status };
+function createData(
+  name: string,
+  designation: string,
+  registeredOn: string
+): Data {
+  return { name, designation, registeredOn };
 }
 
 const rows = [
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "New"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "New"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "Closed"),
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "Closed"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "Draft"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "New"),
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "Closed"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "Draft"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "Closed"),
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "Closed"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "Draft"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "Closed"),
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "Closed"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "Draft"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "Closed"),
+  createData("Google", "SDE", "22/03/2023"),
+  createData("Microsoft", "SWE", "05/03/2023"),
+  createData("Trilogy", "SDE", "12/01/2023"),
+  createData("Samsung", "Reseacher", "22/03/2023"),
+  createData("Nvidea", "Engineer", "29/01/2023"),
+  createData("Sprinklr", "Implementation Consulatant", "18/03/2023"),
+  createData("Standard Chartered", "Data Analyst", "01/03/2023"),
+  createData("Goldman Sacs", "Business Analyst", "22/07/2023"),
+  createData("Walmart", "SDE", "22/03/2023"),
 ];
 
 interface props {
@@ -114,13 +84,17 @@ interface props {
   setOption: React.Dispatch<React.SetStateAction<string>>;
   session: string;
   setSession: React.Dispatch<React.SetStateAction<string>>;
+  applicationId: string;
+  setapplicationId: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const NFTableShow = ({
+export const ShowAllCompanies = ({
   option,
   setOption,
   session,
   setSession,
+  applicationId,
+  setapplicationId,
 }: props) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
@@ -146,7 +120,7 @@ export const NFTableShow = ({
   ];
 
   const [currentstatus, setCurrentStatus] = useState("All");
-  const [showJobId, setShowJobId] = useState("");
+  const [companyId, setcompanyId] = useState("");
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -228,44 +202,27 @@ export const NFTableShow = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const statushandlecolor = (status: string) => {
-    if (status === "Closed") return "text-muted fs-12";
-    else if (status === "New") return "text-danger fw-600 fs-14";
-    else if (status === "In Progress") return "text-primary";
-    else if (status === "Accepting application") return "green1c";
-    else return "text-info";
-  };
+
   return (
     <div className="d-flex justify-content-center">
       <div className=" w-100 px-5 py-5 grey2b">
         <div>
-          <span className="fs-14">Placement </span>
+          <span className="fs-14">Companies </span>
           <span
             className={`fs-14 cursor-pointer ${
-              showJobId !== "" ? "" : " green1c fw-500"
+              companyId !== "" ? "" : " green1c fw-500"
             }`}
-            onClick={() => {
-              setOption(() => "Placement");
-              setShowJobId(() => "");
-            }}
           >
             | {session} |
           </span>
-          {showJobId !== "" && (
-            <span className={`fs-14  green1c fw-500`}> {showJobId} </span>
-          )}
         </div>
         <div className="bg-white my-2 shadow-lg ">
           <div>
             <div className="d-flex justify-content-between border-bottom">
-              <div className="fs-18 px-3 py-2 fw-500 my-2">{session}</div>
+              <div className="fs-18 px-3 py-2 fw-500 my-2">
+                List of Companies: {session}
+              </div>
               <div className=" px-3 py-2 d-flex">
-                <div className="my-1">
-                  <Button sx={{ color: "#00ae57", fontSize: "12px" }}>
-                    <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} />
-                    Edit Placement
-                  </Button>
-                </div>
                 <React.Fragment>
                   <Button onClick={toggleDrawer("right", true)}>
                     <MenuIcon className="grey1c" />
@@ -317,34 +274,10 @@ export const NFTableShow = ({
               </div>
               <div className="d-flex">
                 <div>
-                  <Button
-                    sx={{ color: "#00ae57" }}
-                    onClick={() => {
-                      setOption(() => "Add New Job");
-                    }}
-                    className="fw-600 capitalize"
-                  >
-                    <AddCircleOutlineOutlinedIcon
-                      fontSize="small"
-                      sx={{ mx: 1 }}
-                    />
-                    Add New Job
-                  </Button>
-                </div>
-                <div className="mx-2">
-                  <Button
-                    sx={{ color: "#00ae57" }}
-                    className="fw-600 capitalize"
-                  >
-                    <FilterAltOutlinedIcon fontSize="small" sx={{ mx: 1 }} />{" "}
-                    Check Eligibilty
-                  </Button>
-                </div>
-                <div>
                   <InputBase sx={{ ml: 1 }} placeholder="Search Company" />
                   <IconButton
                     type="button"
-                    sx={{ p: "4px" }}
+                    sx={{ p: "4px", mx: 2 }}
                     aria-label="search"
                   >
                     <SearchIcon />
@@ -387,85 +320,49 @@ export const NFTableShow = ({
                               key={item}
                               className="cursor-pointer"
                             >
-                              <TableCell sx={{ p: 1 }}>
-                                <Link
-                                  to={`/admin/placement${row.name + item}`}
-                                  style={{
-                                    textDecoration: "none",
-                                    color: "inherit",
+                              <TableCell sx={{ py: 1, mx: 3 }}>
+                                <Avatar
+                                  className={"doctorcolor"}
+                                  aria-label="recipe"
+                                  sx={{ width: 37, height: 37 }}
+                                  onClick={() => {
+                                    setcompanyId(() => row.name + item);
                                   }}
                                 >
-                                  <Avatar
-                                    className={"doctorcolor"}
-                                    aria-label="recipe"
-                                    sx={{ width: 32, height: 32 }}
-                                  >
-                                    {row.name[0]}
-                                  </Avatar>
-                                </Link>
+                                  {row.name[0]}
+                                </Avatar>
                               </TableCell>
                               <TableCell key="id" sx={{ p: 0 }}>
-                                <Link
-                                  to={`/admin/placement/${row.name + item}`}
-                                  style={{
-                                    textDecoration: "none",
-                                    color: "inherit",
-                                  }}
-                                >
-                                  {row["name"]}
-                                </Link>
+                                {row["name"]}
                               </TableCell>
-                              <TableCell key="designation" sx={{ p: 0 }}>
-                                <Link
-                                  to={`/admin/placement/${row.name + item}`}
-                                  style={{
-                                    textDecoration: "none",
-                                    color: "inherit",
-                                  }}
-                                >
-                                  {row["designation"]}
-                                </Link>
+                              <TableCell key="category/sector" sx={{ p: 0 }}>
+                                {row["designation"]}
                               </TableCell>
                               <TableCell
-                                key="status"
+                                key="registeredOn"
                                 sx={{ p: 0 }}
                                 align="center"
-                                onClick={() => {
-                                  setShowJobId(() => row.name + item);
-                                }}
                               >
-                                <Link
-                                  to={`/admin/placement/${row.name + item}`}
-                                  style={{
-                                    textDecoration: "none",
-                                    color: "inherit",
-                                  }}
-                                >
-                                  <Typography
-                                    variant="subtitle2"
-                                    className={`${statushandlecolor(
-                                      row["status"]
-                                    )}`}
-                                  >
-                                    {row["status"]}
-                                  </Typography>
-                                </Link>
+                                <Typography variant="subtitle2">
+                                  {row["registeredOn"]}
+                                </Typography>
                               </TableCell>
                               <TableCell
                                 key="action"
                                 align="left"
                                 sx={{ p: 0 }}
                               >
-                                <IconButton
-                                  aria-label="edit"
-                                  color="success"
-                                  sx={{ mx: 1 }}
+                                <Link
+                                  to={`/admin/companies/${row.name + item}`}
                                 >
-                                  <EditOutlinedIcon fontSize="small" />
-                                </IconButton>
-                                <IconButton aria-label="delete" sx={{ mx: 1 }}>
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
+                                  <IconButton
+                                    aria-label="edit"
+                                    color="success"
+                                    sx={{ mx: 1 }}
+                                  >
+                                    <InfoOutlinedIcon fontSize="small" />
+                                  </IconButton>
+                                </Link>
                               </TableCell>
                             </TableRow>
                           );

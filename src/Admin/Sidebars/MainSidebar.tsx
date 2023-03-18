@@ -110,14 +110,16 @@ export const MainSidebar = () => {
                       <DescriptionOutlinedIcon className="mx-3" /> Notices
                     </div>
                   </button>
-                  <button
-                    className="MainSidebarOptionButton"
-                    // onClick={() => setOption(() => "Companies")}
-                  >
-                    <div className="MainSidebarOptionButtonDiv">
-                      <ApartmentOutlinedIcon className="mx-3" /> Companies
-                    </div>
-                  </button>
+                  <Link to="/admin/companies">
+                    <button
+                      className="MainSidebarOptionButton"
+                      // onClick={() => setOption(() => "Companies")}
+                    >
+                      <div className="MainSidebarOptionButtonDiv">
+                        <ApartmentOutlinedIcon className="mx-3" /> Companies
+                      </div>
+                    </button>
+                  </Link>
                   <button
                     className="MainSidebarOptionButton"
                     // onClick={() => setOption(() => "Student")}

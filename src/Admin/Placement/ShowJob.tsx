@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router";
 import Avatar from "@mui/material/Avatar";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import Typography from "@mui/material/Typography";
@@ -9,22 +10,17 @@ import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import Modal from "react-bootstrap/Modal";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { branches } from "../constants/branches";
 import { skills } from "../constants/skills";
+import { MainSidebar } from "../Sidebars/MainSidebar";
+import { Header1 } from "../Headers/Header1";
 import "./style.scss";
 
-interface props {
-  option: string;
-  setOption: React.Dispatch<React.SetStateAction<string>>;
-  session: string;
-  id: string;
-  setSession: React.Dispatch<React.SetStateAction<string>>;
-}
 const Schedule = [
   {
     id: "892b",
@@ -73,13 +69,7 @@ const html = (
   </div>
 );
 
-export const ShowJob = ({
-  option,
-  setOption,
-  session,
-  setSession,
-  id,
-}: props) => {
+export const ShowJob = () => {
   const [inputdeadlineTime, setInputDeadlineTime] =
     React.useState<Dayjs | null>();
   const [deadlineTime, setDeadlineTime] = React.useState<Dayjs | null>();
@@ -115,332 +105,412 @@ export const ShowJob = ({
       </div>
     );
   };
+  const params = useParams();
+  const applicationId = params.applicationId as string;
   return (
     <div>
-      <div>
-        <div className="row pt-2">
-          <div className="col-3  my-5">
-            <div className="d-flex justify-content-center">
-              <Avatar
-                className={"doctorcolor"}
-                aria-label="recipe"
-                sx={{ width: 120, height: 120 }}
-              >
-                <ApartmentIcon sx={{ fontSize: "80px" }} />
-              </Avatar>
-            </div>
-          </div>
-          <div className="col-9 my-5">
-            <Box sx={{ width: "100%", maxWidth: 500 }}>
-              <div className="ms-1">
-                <Typography variant="h4" gutterBottom>
-                  Google
-                </Typography>
-                <Typography variant="button" className="me-3" display="block">
-                  Software Developer
-                </Typography>
-                <div className="mb-2">
-                  <Typography variant="button">Bangalore, Noida</Typography>
-                </div>
-              </div>
-              <Chip label={session} variant="outlined" />
-            </Box>
-          </div>
-        </div>
-        <Divider />
-        <div className="row">
-          <div className="col-3 border-right d-flex justify-content-center py-3">
-            <div>
-              <div className="mb-3 ">
-                <div className="d-flex justify-content-center">
-                  <Button
-                    variant="text"
-                    color="success"
-                    endIcon={<EditOutlinedIcon />}
-                    onClick={handleShow}
-                  >
-                    {deadlineTime
-                      ? "Edit Application Deadine"
-                      : "Add Application Deadine"}
-                  </Button>
-                </div>
-                {deadlineTime && (
-                  <div className="ms-3 mt-2 mb-5">
-                    <div>
-                      <div>
-                        <strong className="text-danger">Deadline:</strong>
-                      </div>
-                      <div>
-                        <strong className="">
-                          {deadlineTime.format("DD/MM/YYYY hh:mm A")}
-                        </strong>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <Modal show={show} onHide={handleClose}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Add Application Deadine</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <div className="my-4 d-flex justify-content-center">
-                      <div className="w-75">
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DemoContainer
-                            components={["DateTimePicker", "DateTimePicker"]}
-                          >
-                            <DateTimePicker
-                              label="MM/DD/YYYY hh:mm am/pm"
-                              value={inputdeadlineTime}
-                              onChange={(newValue) =>
-                                setInputDeadlineTime(newValue)
-                              }
-                            />
-                          </DemoContainer>
-                        </LocalizationProvider>
-                      </div>
-                    </div>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        handleClose();
-                        handleSetDeadline();
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
-                <div className="my-5">
-                  <Button
-                    variant="text"
-                    color="success"
-                    fullWidth
-                    sx={{ p: 0, textTransform: "capitalize" }}
-                  >
-                    View all students
-                  </Button>
-                  {Schedule.map((item) => (
-                    <Button
-                      variant="text"
-                      color="success"
-                      fullWidth
-                      sx={{ p: 0, textTransform: "capitalize" }}
-                    >
-                      View {item.StageName} Stage
-                    </Button>
-                  ))}
-                  <Button
-                    variant="text"
-                    fullWidth
-                    color="success"
-                    sx={{ p: 0, textTransform: "capitalize" }}
-                  >
-                    Final Selected Students
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="d-flex">
+        <MainSidebar />
+        <div className="w-100">
+          <Header1 />
 
-          <div className="col-9 border p-3">
-            <div>
-              <div className="mb-5">
-                {generateHeading("Company Details")}
-                <div className="mt-2 mb-3">
-                  {generateDetails("Company Name", "Google")}
-                  {generateDetails("Placement Cycle", session)}
-                  {generateDetails("Website", "careers.google.com")}
-                  {generateDetails("Category", "E-Commerece")}
-                </div>
-              </div>
-              <div className="mb-5">
-                {generateHeading("Job Details")}
-                <div className="mt-2 mb-3">
-                  {generateDetails("Designation", "Software Developer")}
-                  {generateDetails("Place of Posting", "Bangalore")}
-                  {generateDetails(
-                    "Job Description",
-                    "consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam."
-                  )}
-                  {generateDetails("Category", "E-Commerece")}
-                </div>
-              </div>
-              <div className="mb-5">
-                {generateHeading("Salary Details")}
-                <div className="mt-2 mb-3">
-                  {generateDetails("CTC (in lpa)", "Rs 35,00,000")}
-                  {generateDetails(
-                    "CTC breakup",
-                    "Base Salary: Rs 22,00,000 Stock: Rs 13,00,000"
-                  )}
-                  {generateDetails(
-                    "Bond Details",
-                    "consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam."
-                  )}
-                  {generateDetails("Category", "E-Commerece")}
-                </div>
-              </div>
-              <div className="mb-5">
-                <div>{generateHeading("Eligible Courses and Disciplines")}</div>
-                <div className="mt-2 mb-3 ms-2">
-                  <div className="showSelectectedCourse ">
-                    <div className="row showSelectectedCourseDegree">
-                      <div className="col-1 degreeDiv pt-5">
-                        <div className="">
-                          <div className="">
-                            <div className="DegreeName"> M.Tech</div>
-                            <div className="DegreeYear"> 2-years</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-11 showSelectectedCourseBranch mt-3">
-                        <Box sx={{ width: "100%" }}>
-                          <Paper sx={{ width: "100%", mb: 2, p: 3 }}>
-                            <div className="row  showSelectectedCourseHeading">
-                              <div className="col-5">Department</div>
-                              <div className="col-5">Branch</div>
-                              <div className="col-2">CGPA Cutoff</div>
-                            </div>
-                            <div>
-                              {branches.map((row, index) => (
-                                <div>
-                                  <div className="row">
-                                    <div className="col-5">&bull; {row}</div>
-                                    <div className="col-5">{row}</div>
-                                    <div className="col-2">8.5</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </Paper>
-                        </Box>
-                      </div>
-                    </div>
-                    <div className="row showSelectectedCourseDegree">
-                      <div className="col-1 degreeDiv pt-5">
-                        <div className="">
-                          <div className="">
-                            <div className="DegreeName"> B.Tech</div>
-                            <div className="DegreeYear"> 4-years</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-11 showSelectectedCourseBranch mt-3">
-                        <Box sx={{ width: "100%" }}>
-                          <Paper sx={{ width: "100%", mb: 2, p: 3 }}>
-                            <div className="row  showSelectectedCourseHeading">
-                              <div className="col-5">Department</div>
-                              <div className="col-5">Branch</div>
-                              <div className="col-2">CGPA Cutoff</div>
-                            </div>
-                            <div>
-                              {branches.map((row, index) => (
-                                <div>
-                                  <div className="row">
-                                    <div className="col-5">&bull; {row}</div>
-                                    <div className="col-5">{row}</div>
-                                    <div className="col-2">8.5</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </Paper>
-                        </Box>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div className="d-flex justify-content-center">
+            <div className=" w-100 px-5 py-5 grey2b">
               <div>
-                {generateHeading("Schedule")}
-                <div className="my-3">
-                  {Schedule.map((item, stage) => (
-                    <div className="d-flex justify-content-center">
-                      <div key={item.id} className="scrollSchedule">
-                        <div>
-                          <div>
-                            <Typography
-                              variant="overline"
-                              display="block"
-                              // lineHeight="10px"
-                              align="center"
-                              style={{
-                                fontWeight: "600",
-                                fontSize: "0.9rem",
-                              }}
-                            >
-                              Stage {stage + 1}: {item.StageName}
-                            </Typography>
+                <span className="fs-14">Placement | </span>
 
-                            <div className="d-flex justify-content-center">
+                <span className={`fs-14  green1c fw-500`}>
+                  {" "}
+                  {applicationId}{" "}
+                </span>
+              </div>
+              <div className="bg-white my-2 shadow-lg ">
+                <div>
+                  <div className="row pt-2">
+                    <div className="col-3  my-5">
+                      <div className="d-flex justify-content-center">
+                        <Avatar
+                          className={"doctorcolor"}
+                          aria-label="recipe"
+                          sx={{ width: 120, height: 120 }}
+                        >
+                          <ApartmentIcon sx={{ fontSize: "80px" }} />
+                        </Avatar>
+                      </div>
+                    </div>
+                    <div className="col-9 my-5">
+                      <Box sx={{ width: "100%", maxWidth: 500 }}>
+                        <div className="ms-1">
+                          <Typography variant="h4" gutterBottom>
+                            Google
+                          </Typography>
+                          <Typography
+                            variant="button"
+                            className="me-3"
+                            display="block"
+                          >
+                            Software Developer
+                          </Typography>
+                          <div className="mb-2">
+                            <Typography variant="button">
+                              Bangalore, Noida
+                            </Typography>
+                          </div>
+                        </div>
+                        <Chip label={"Full time 2022-23"} variant="outlined" />
+                      </Box>
+                    </div>
+                  </div>
+                  <Divider />
+                  <div className="row">
+                    <div className="col-3 border-right d-flex justify-content-center py-3">
+                      <div>
+                        <div className="mb-3 ">
+                          <div className="d-flex justify-content-center">
+                            <Button
+                              variant="text"
+                              color="success"
+                              endIcon={<EditOutlinedIcon />}
+                              onClick={handleShow}
+                            >
+                              {deadlineTime
+                                ? "Edit Application Deadine"
+                                : "Add Application Deadine"}
+                            </Button>
+                          </div>
+                          {deadlineTime && (
+                            <div className="ms-3 mt-2 mb-5">
                               <div>
-                                <Typography variant="caption" display="block">
-                                  Mode: {item.StageMode}
-                                </Typography>
-                                <Typography variant="caption" display="block">
-                                  Tentative Date: {item.StageDate}
-                                </Typography>
+                                <div>
+                                  <strong className="text-danger">
+                                    Deadline:
+                                  </strong>
+                                </div>
+                                <div>
+                                  <strong className="">
+                                    {deadlineTime.format("DD/MM/YYYY hh:mm A")}
+                                  </strong>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          <Modal show={show} onHide={handleClose}>
+                            <Modal.Header closeButton>
+                              <Modal.Title>Add Application Deadine</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                              <div className="my-4 d-flex justify-content-center">
+                                <div className="w-75">
+                                  <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                  >
+                                    <DemoContainer
+                                      components={[
+                                        "DateTimePicker",
+                                        "DateTimePicker",
+                                      ]}
+                                    >
+                                      <DateTimePicker
+                                        label="MM/DD/YYYY hh:mm am/pm"
+                                        value={inputdeadlineTime}
+                                        onChange={(newValue) =>
+                                          setInputDeadlineTime(newValue)
+                                        }
+                                      />
+                                    </DemoContainer>
+                                  </LocalizationProvider>
+                                </div>
+                              </div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                              <Button
+                                variant="contained"
+                                onClick={() => {
+                                  handleClose();
+                                  handleSetDeadline();
+                                }}
+                              >
+                                Save
+                              </Button>
+                            </Modal.Footer>
+                          </Modal>
+                          <div className="my-5">
+                            <Button
+                              variant="text"
+                              color="success"
+                              fullWidth
+                              sx={{ p: 0, textTransform: "capitalize" }}
+                            >
+                              View all students
+                            </Button>
+                            {Schedule.map((item) => (
+                              <Button
+                                variant="text"
+                                color="success"
+                                fullWidth
+                                sx={{ p: 0, textTransform: "capitalize" }}
+                              >
+                                View {item.StageName} Stage
+                              </Button>
+                            ))}
+                            <Button
+                              variant="text"
+                              fullWidth
+                              color="success"
+                              sx={{ p: 0, textTransform: "capitalize" }}
+                            >
+                              Final Selected Students
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-9 border p-3">
+                      <div>
+                        <div className="mb-5">
+                          {generateHeading("Company Details")}
+                          <div className="mt-2 mb-3">
+                            {generateDetails("Company Name", "Google")}
+                            {generateDetails(
+                              "Placement Cycle",
+                              "Full time 2022-23"
+                            )}
+                            {generateDetails("Website", "careers.google.com")}
+                            {generateDetails("Category", "E-Commerece")}
+                          </div>
+                        </div>
+                        <div className="mb-5">
+                          {generateHeading("Job Details")}
+                          <div className="mt-2 mb-3">
+                            {generateDetails(
+                              "Designation",
+                              "Software Developer"
+                            )}
+                            {generateDetails("Place of Posting", "Bangalore")}
+                            {generateDetails(
+                              "Job Description",
+                              "consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam."
+                            )}
+                            {generateDetails("Category", "E-Commerece")}
+                          </div>
+                        </div>
+                        <div className="mb-5">
+                          {generateHeading("Salary Details")}
+                          <div className="mt-2 mb-3">
+                            {generateDetails("CTC (in lpa)", "Rs 35,00,000")}
+                            {generateDetails(
+                              "CTC breakup",
+                              "Base Salary: Rs 22,00,000 Stock: Rs 13,00,000"
+                            )}
+                            {generateDetails(
+                              "Bond Details",
+                              "consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam."
+                            )}
+                            {generateDetails("Category", "E-Commerece")}
+                          </div>
+                        </div>
+                        <div className="mb-5">
+                          <div>
+                            {generateHeading(
+                              "Eligible Courses and Disciplines"
+                            )}
+                          </div>
+                          <div className="mt-2 mb-3 ms-2">
+                            <div className="showSelectectedCourse ">
+                              <div className="row showSelectectedCourseDegree">
+                                <div className="col-1 degreeDiv pt-5">
+                                  <div className="">
+                                    <div className="">
+                                      <div className="DegreeName"> M.Tech</div>
+                                      <div className="DegreeYear"> 2-years</div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-11 showSelectectedCourseBranch mt-3">
+                                  <Box sx={{ width: "100%" }}>
+                                    <Paper sx={{ width: "100%", mb: 2, p: 3 }}>
+                                      <div className="row  showSelectectedCourseHeading">
+                                        <div className="col-5">Department</div>
+                                        <div className="col-5">Branch</div>
+                                        <div className="col-2">CGPA Cutoff</div>
+                                      </div>
+                                      <div>
+                                        {branches.map((row, index) => (
+                                          <div>
+                                            <div className="row">
+                                              <div className="col-5">
+                                                &bull; {row}
+                                              </div>
+                                              <div className="col-5">{row}</div>
+                                              <div className="col-2">8.5</div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </Paper>
+                                  </Box>
+                                </div>
+                              </div>
+                              <div className="row showSelectectedCourseDegree">
+                                <div className="col-1 degreeDiv pt-5">
+                                  <div className="">
+                                    <div className="">
+                                      <div className="DegreeName"> B.Tech</div>
+                                      <div className="DegreeYear"> 4-years</div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-11 showSelectectedCourseBranch mt-3">
+                                  <Box sx={{ width: "100%" }}>
+                                    <Paper sx={{ width: "100%", mb: 2, p: 3 }}>
+                                      <div className="row  showSelectectedCourseHeading">
+                                        <div className="col-5">Department</div>
+                                        <div className="col-5">Branch</div>
+                                        <div className="col-2">CGPA Cutoff</div>
+                                      </div>
+                                      <div>
+                                        {branches.map((row, index) => (
+                                          <div>
+                                            <div className="row">
+                                              <div className="col-5">
+                                                &bull; {row}
+                                              </div>
+                                              <div className="col-5">{row}</div>
+                                              <div className="col-2">8.5</div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </Paper>
+                                  </Box>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                        <div>
+                          {generateHeading("Schedule")}
+                          <div className="my-3">
+                            {Schedule.map((item, stage) => (
+                              <div className="d-flex justify-content-center">
+                                <div key={item.id} className="scrollSchedule">
+                                  <div>
+                                    <div>
+                                      <Typography
+                                        variant="overline"
+                                        display="block"
+                                        // lineHeight="10px"
+                                        align="center"
+                                        style={{
+                                          fontWeight: "600",
+                                          fontSize: "0.9rem",
+                                        }}
+                                      >
+                                        Stage {stage + 1}: {item.StageName}
+                                      </Typography>
+
+                                      <div className="d-flex justify-content-center">
+                                        <div>
+                                          <Typography
+                                            variant="caption"
+                                            display="block"
+                                          >
+                                            Mode: {item.StageMode}
+                                          </Typography>
+                                          <Typography
+                                            variant="caption"
+                                            display="block"
+                                          >
+                                            Tentative Date: {item.StageDate}
+                                          </Typography>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="mb-5">
+                            {generateHeading("Skill Based Hiring")}
+
+                            <div className="my-3 mb-3 ms-3">
+                              <ul>
+                                {skills.map((skill) => (
+                                  <li>{skill}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="mb-5">
+                            {generateHeading("HR Details")}
+
+                            <div className="mt-2 mb-5">
+                              {generateDetails(
+                                "Primary HR Name",
+                                "Krittika Barnwal"
+                              )}
+                              {generateDetails("Phone Number", "8278928092")}
+                              {generateDetails(
+                                "Email ID",
+                                "abss.fkkejfci@jd.com"
+                              )}
+                            </div>
+                            <div className="mt-2 mb-5">
+                              {generateDetails(
+                                "Secondary HR Name",
+                                "Harry Potter"
+                              )}
+                              {generateDetails("Phone Number", "8278928092")}
+                              {generateDetails(
+                                "Email ID",
+                                "abss.fkkejfci@jd.com"
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="mb-5">
+                            {generateHeading("Assigned SPOC")}
+
+                            <div className="mt-2 mb-5">
+                              {generateDetails(
+                                "Primary SPOC Name",
+                                "Krittika Barnwal"
+                              )}
+                              {generateDetails("Phone Number", "8278928092")}
+                              {generateDetails(
+                                "Email ID",
+                                "abss.fkkejfci@jd.com"
+                              )}
+                            </div>
+                            <div className="mt-2 mb-5">
+                              {generateDetails(
+                                "Secondary SPOC Name",
+                                "Harry Potter"
+                              )}
+                              {generateDetails("Phone Number", "8278928092")}
+                              {generateDetails(
+                                "Email ID",
+                                "abss.fkkejfci@jd.com"
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="mb-5">
+                              {generateHeading("Additional Infomation")}
+
+                              <div className="mt-2 mb-5">{html}</div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="mb-5">
-                  {generateHeading("Skill Based Hiring")}
-
-                  <div className="my-3 mb-3 ms-3">
-                    <ul>
-                      {skills.map((skill) => (
-                        <li>{skill}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="mb-5">
-                  {generateHeading("HR Details")}
-
-                  <div className="mt-2 mb-5">
-                    {generateDetails("Primary HR Name", "Krittika Barnwal")}
-                    {generateDetails("Phone Number", "8278928092")}
-                    {generateDetails("Email ID", "abss.fkkejfci@jd.com")}
-                  </div>
-                  <div className="mt-2 mb-5">
-                    {generateDetails("Secondary HR Name", "Harry Potter")}
-                    {generateDetails("Phone Number", "8278928092")}
-                    {generateDetails("Email ID", "abss.fkkejfci@jd.com")}
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="mb-5">
-                  {generateHeading("Assigned SPOC")}
-
-                  <div className="mt-2 mb-5">
-                    {generateDetails("Primary SPOC Name", "Krittika Barnwal")}
-                    {generateDetails("Phone Number", "8278928092")}
-                    {generateDetails("Email ID", "abss.fkkejfci@jd.com")}
-                  </div>
-                  <div className="mt-2 mb-5">
-                    {generateDetails("Secondary SPOC Name", "Harry Potter")}
-                    {generateDetails("Phone Number", "8278928092")}
-                    {generateDetails("Email ID", "abss.fkkejfci@jd.com")}
-                  </div>
-                </div>
-                <div>
-                  <div className="mb-5">
-                    {generateHeading("Additional Infomation")}
-
-                    <div className="mt-2 mb-5">{html}</div>
                   </div>
                 </div>
               </div>

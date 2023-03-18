@@ -14,7 +14,7 @@ export const Header1 = () => {
       </div>
       <div>
         <div className="d-flex mt-2">
-          <div className="">
+          {/* <div className="">
             <IconButton type="button" sx={{ p: "4px" }} aria-label="search">
               <SearchIcon />
             </IconButton>
@@ -23,7 +23,7 @@ export const Header1 = () => {
               placeholder="Search Student"
               inputProps={{ "aria-label": "search student" }}
             />
-          </div>
+          </div> */}
           <div className="verticalLine"></div>
           <NotificationsNoneOutlinedIcon sx={{ color: "red" }} />
           <div className="verticalLine"></div>
