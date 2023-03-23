@@ -19,6 +19,7 @@ import { branches } from "../constants/branches";
 import { skills } from "../constants/skills";
 import { MainSidebar } from "../Sidebars/MainSidebar";
 import { Header1 } from "../Headers/Header1";
+import { AddstudentsModal } from "./AddStudentModal";
 import "./style.scss";
 
 const Schedule = [
@@ -74,11 +75,11 @@ export const ShowJob = () => {
     React.useState<Dayjs | null>();
   const [deadlineTime, setDeadlineTime] = React.useState<Dayjs | null>();
   const [show, setShow] = useState(false);
-
+  const [stageName, setStageName] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleSetDeadline = () => setDeadlineTime(() => inputdeadlineTime);
-
+  const [showCheckbox, setShowCheckbox] = useState(true);
   const generateDetails = (detailType: string, detail: string) => {
     return (
       <div className="row mt-3 border-bottom mx-2">
@@ -105,6 +106,7 @@ export const ShowJob = () => {
       </div>
     );
   };
+  const [showStudentModal, setshowStudentModal] = useState(false);
   const params = useParams();
   const applicationId = params.applicationId as string;
   return (
@@ -240,6 +242,11 @@ export const ShowJob = () => {
                               color="success"
                               fullWidth
                               sx={{ p: 0, textTransform: "capitalize" }}
+                              onClick={() => {
+                                setshowStudentModal(true);
+                                setShowCheckbox(() => false);
+                                setStageName(() => "All Applications");
+                              }}
                             >
                               View all students
                             </Button>
@@ -249,6 +256,11 @@ export const ShowJob = () => {
                                 color="success"
                                 fullWidth
                                 sx={{ p: 0, textTransform: "capitalize" }}
+                                onClick={() => {
+                                  setshowStudentModal(true);
+                                  setShowCheckbox(() => true);
+                                  setStageName(() => item.StageName);
+                                }}
                               >
                                 View {item.StageName} Stage
                               </Button>
@@ -258,9 +270,20 @@ export const ShowJob = () => {
                               fullWidth
                               color="success"
                               sx={{ p: 0, textTransform: "capitalize" }}
+                              onClick={() => {
+                                setshowStudentModal(true);
+                                setShowCheckbox(() => true);
+                                setStageName(() => "Final Shortlist");
+                              }}
                             >
                               Final Selected Students
                             </Button>
+                            <AddstudentsModal
+                              open={showStudentModal}
+                              setOpen={setshowStudentModal}
+                              showCheckbox={showCheckbox}
+                              stageName={stageName}
+                            />
                           </div>
                         </div>
                       </div>
