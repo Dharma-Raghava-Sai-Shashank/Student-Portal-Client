@@ -1,9 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import FooterWave from "../../Images/FooterWave.svg";
 import "./Auth.scss";
+import { signin } from "../../api";
+import { useNavigate } from "react-router-dom";
 
 function Auth() {
+  const Navigate = useNavigate();
+
   const [ForgotPassword, setForgotPassword] = useState(false);
+
+  const [authData, setAuthData] = React.useState<User.AuthData>({ username: '', password: '' });
+
+  const handleAuthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAuthData((prevData: User.AuthData) => ({ ...prevData, [e.target.name]: e.target.value}));
+  };
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const { studentData } = await signin(authData);
+
+    console.log({ studentData });
+    Navigate('/reg');
+  }
   return (
     <div className="MainPage">
       <div className="d-flex align-items-center justify-content-center AuthSignIn">
@@ -47,13 +66,16 @@ function Auth() {
             <div className="SignInSubText mt-3 mb-5">
               Sign in and apply for interns and jobs!
             </div>
-            <form>
+            <form onSubmit={handleLogin}>
               <div className="d-flex justify-content-center">
                 <div className="">
                   <input
-                    type="email"
+                    type="text"
                     className="InputSignIn p-3"
-                    placeholder="Enter email"
+                    placeholder="Enter username"
+                    name="username"
+                    value={authData.username}
+                    onChange={handleAuthChange}
                   />
                 </div>
               </div>
@@ -63,6 +85,9 @@ function Auth() {
                     type="password"
                     className="InputSignIn p-3"
                     placeholder="Password"
+                    name="password"
+                    value={authData.password}
+                    onChange={handleAuthChange}
                   />
                 </div>
               </div>
@@ -97,7 +122,7 @@ function Auth() {
 
       <div className="footerWave">
         <div>
-          <img src={FooterWave} width="100%"></img>
+          <img src={FooterWave} width="100%" alt=""></img>
         </div>
       </div>
     </div>

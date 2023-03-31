@@ -192,6 +192,12 @@ const initialStageData = {
   stageMode: ''
 }
 
+interface StageData {
+  stage: number,
+  stageType: string,
+  stageMode: string
+}
+
 export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const [openCategoryOption, setOpenCategoryOption] = useState<number>(0);
@@ -201,7 +207,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = React.useState<any>([]);
   const [ScheduleList, setScheduleList] = useState<Schedule[]>([]);
-  const [stageData, setStageData] = useState<any>(initialStageData);
+  const [stageData, setStageData] = useState<StageData>(initialStageData);
   const [uploadedDocs, setUploadedDocs] = useState<any>([]);
   const [secondaryHR, setSecondaryHR] = useState(false);
   const [primaryspoc, setPrimaryspoc] = React.useState("");
@@ -1007,7 +1013,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                             className="dropdown-option"
                                             onClick={() => {
                                               setOpenSchedule("None");
-                                              setStageData(() => setStageData({ ...stageData, [item.name]: data.value }))
+                                              setStageData({ ...stageData, [item.name]: data.value })
                                             }}
                                           >
                                             {data.name}
