@@ -69,7 +69,32 @@ const html = (
     </ol>
   </div>
 );
-
+export const generateDetails = (detailType: string, detail: string) => {
+  return (
+    <div className="row mt-3 border-bottom mx-2">
+      <div className="col-3 ">
+        <Typography variant="subtitle2" sx={{ color: "gray" }} gutterBottom>
+          {detailType}
+        </Typography>
+      </div>
+      <div className="col-9">
+        <Typography variant="body2" sx={{ fontSize: "0.93rem" }} gutterBottom>
+          {detail}
+        </Typography>
+      </div>
+    </div>
+  );
+};
+export const generateHeading = (heading: string) => {
+  return (
+    <div>
+      <Typography variant="subtitle2" sx={{ fontSize: "1rem" }} gutterBottom>
+        {heading}
+      </Typography>
+      <hr style={{ height: "1.3px", margin: 0 }} />
+    </div>
+  );
+};
 export const ShowJob = () => {
   const [inputdeadlineTime, setInputDeadlineTime] =
     React.useState<Dayjs | null>();
@@ -80,32 +105,7 @@ export const ShowJob = () => {
   const handleShow = () => setShow(true);
   const handleSetDeadline = () => setDeadlineTime(() => inputdeadlineTime);
   const [showCheckbox, setShowCheckbox] = useState(true);
-  const generateDetails = (detailType: string, detail: string) => {
-    return (
-      <div className="row mt-3 border-bottom mx-2">
-        <div className="col-3 ">
-          <Typography variant="subtitle2" sx={{ color: "gray" }} gutterBottom>
-            {detailType}
-          </Typography>
-        </div>
-        <div className="col-9">
-          <Typography variant="body2" sx={{ fontSize: "0.93rem" }} gutterBottom>
-            {detail}
-          </Typography>
-        </div>
-      </div>
-    );
-  };
-  const generateHeading = (heading: string) => {
-    return (
-      <div>
-        <Typography variant="subtitle2" sx={{ fontSize: "1rem" }} gutterBottom>
-          {heading}
-        </Typography>
-        <hr style={{ height: "1.3px", margin: 0 }} />
-      </div>
-    );
-  };
+
   const [showStudentModal, setshowStudentModal] = useState(false);
   const params = useParams();
   const applicationId = params.applicationId as string;

@@ -1,20 +1,23 @@
 import React, { useState } from "react";
+import { useParams } from "react-router";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
-import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
-import RadioButtonCheckedOutlinedIcon from "@mui/icons-material/RadioButtonCheckedOutlined";
 import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 import Select from "react-select";
+import { Header1 } from "../Headers/Header1";
+import { MainSidebar } from "../Sidebars/MainSidebar";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { generateDetails } from "../Placement/ShowJob";
+import { NewCycleModal } from "./NewCycleModal";
+// import Modal from "react-bootstrap/Modal";
 
 import "./index.scss";
 
@@ -29,8 +32,15 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+const cycle = {
+  id: 1,
+  name: "Full Time Placement (2023 batch)",
+  startDate: "15 June 2022",
+  endDate: "30 March 2023",
+  type: "Placement",
+};
 
-function CreateDepartment() {
+function CycleDepartment() {
   const [togglec, settogglec] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState("");
@@ -51,6 +61,10 @@ function CreateDepartment() {
   const [store, setstore] = useState([]);
   const [storefcourse, setstorefcourse] = useState([]);
   const [selectedvalue, setselectedvalue] = useState([]);
+
+  const params = useParams();
+  const cycleId = params.cycleId;
+
   const handleCourseStorage = () => {
     let temp = [...storage];
     let temp2 = [];
@@ -561,704 +575,767 @@ function CreateDepartment() {
     setStorage(temp);
     handleCourseStorage();
   };
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [opentype, setOpentype] = useState(false);
+  const [opentypeOption, setOpentypeOption] = useState("");
+
   return (
-    <div className="d-flex justify-content-center w-100">
-      <div className="w-100 px-5 py-5 grey2b">
-        <div>
-          <span className="green1c fw-500 fs-14">Admin </span>
-          <span className="fs-14">| Department </span>
-        </div>
-        <div className="bg-white my-2 shadow-lg position-relative">
-          <div>
-            <div className="fs-10 py-3 d-flex justify-content-center ">
-              Configure the academic organization of Indian Institute of
-              Technology Indian School of Mines here
+    <div className="d-flex">
+      <MainSidebar />
+      <div className="w-100">
+        <Header1 />
+        <>{console.log(cycleId)}</>
+        <div className="d-flex justify-content-center w-100">
+          <div className="w-100 px-5 py-5 grey2b">
+            <div>
+              <span className=" fs-14">Admin </span>
+              <span className=" fs-14">| Placement Cycle </span>
+              <span className="green1c fw-500 fs-14">| Cycle-Name </span>
             </div>
-
-            <hr className="py-0 my-0 mx-4" />
-            <div className="d-flex justify-content-end">
-              <div className="d-flex fs-12" style={{ width: "200px" }}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={!togglec}
-                      onChange={() => settogglec((prev) => !prev)}
-                    />
-                  }
-                  label={togglec ? "Course Mode" : "Department Mode"}
-                />
-              </div>
-            </div>
-
-            <div className="pb-4">
-              <div className="d-flex justify-content-between mx-2">
-                <div className="d-flex justify-content-between">
-                  <div className="fs-18 px-3 fw-500 ">All Courses</div>
+            <div className="bg-white my-2 shadow-lg position-relative">
+              <div>
+                <div className="fs-10 py-3 d-flex justify-content-center ">
+                  Configure the academic organization of Indian Institute of
+                  Technology Indian School of Mines here
                 </div>
-                <div>
-                  <Button onClick={handleOpen1} sx={{ color: "#00ae57" }}>
-                    <AddCircleOutlineOutlinedIcon
-                      fontSize="small"
-                      sx={{ mx: 1 }}
-                    />
-                    <Typography variant="overline" display="block">
-                      Add New Degree
-                    </Typography>
-                  </Button>
-                  <Modal
-                    open={open1}
-                    onClose={handleClose1}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      <div>
-                        <div className="my-4 w-100">
-                          <Typography variant="body1">Degree Name</Typography>
-                          <input
-                            value={Degree}
-                            onChange={(e) => {
-                              setDegree(e.target.value);
-                            }}
-                            className="form-control shadow-none mb-2 border rounded-0"
-                            type="text"
-                          />
-                        </div>
-                        <div className="my-4 w-100">
-                          <Typography variant="body1">Degree Period</Typography>
-                          <input
-                            value={DegreePeroid}
-                            onChange={(e) => {
-                              setDegreePeriod(e.target.value);
-                            }}
-                            className="form-control shadow-none mb-2 border rounded-0"
-                            type="number"
-                          />
-                        </div>
-                      </div>
-                      <div className="d-flex justify-content-center">
-                        <Button
-                          variant="contained"
-                          color="success"
-                          fullWidth
-                          onClick={AddDegree}
-                        >
-                          Add
-                        </Button>
-                      </div>
 
-                      {error !== "" && (
-                        <div
-                          style={{ color: "red", fontSize: 14 }}
-                          className="d-flex justify-content-center"
-                        >
-                          {error}
-                        </div>
-                      )}
-                    </Box>
-                  </Modal>
+                <hr className="py-0 my-0 mx-4" />
+                <div className="d-flex justify-content-end">
+                  <div className="d-flex fs-12" style={{ width: "200px" }}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={!togglec}
+                          onChange={() => settogglec((prev) => !prev)}
+                        />
+                      }
+                      label={togglec ? "Course Mode" : "Department Mode"}
+                    />
+                  </div>
                 </div>
-              </div>
-              <hr className="mx-3 my-0 p-0" />
-            </div>
-            {storage.length !== 0 &&
-              storage.map((degreeobj) => (
-                <div className="deg">
-                  <div className="d-flex justify-content-between px-2">
-                    <div className="d-flex align-items-center">
-                      <KeyboardArrowDownOutlinedIcon
-                        fontSize="small"
-                        sx={{ mx: 1, color: "#7c7c7c" }}
-                      />
+                <div className="mx-5 mt-2 mb-5 ">
+                  <div className="d-flex ">
+                    <div className="mt-1">
                       <Typography
-                        variant="button"
-                        className="fw-600"
+                        variant="subtitle2"
                         sx={{ fontSize: "1rem" }}
+                        gutterBottom
                       >
-                        {degreeobj.degreeName +
-                          " (" +
-                          degreeobj.degreePeriod +
-                          " years) "}
+                        Cycle Details
                       </Typography>
-
-                      <CreateOutlinedIcon
-                        className="symbol"
-                        fontSize="small"
-                        sx={{ color: "#00ae57", mx: 1 }}
+                    </div>
+                    <div className="ms-5">
+                      <Button
+                        sx={{ color: "#00ae57", fontSize: "12px" }}
+                        startIcon={
+                          <EditOutlinedIcon sx={{ fontSize: "8px" }} />
+                        }
+                        onClick={handleShow}
+                      >
+                        Edit
+                      </Button>
+                      <NewCycleModal
+                        heading="Edit Placement Cycle"
+                        show={show}
+                        setShow={setShow}
                       />
                     </div>
-                    {togglec ? (
-                      <div>
-                        <Button
-                          onClick={() => {
-                            setOpen4(
-                              degreeobj.degreeName + degreeobj.degreePeriod
-                            );
-                          }}
-                          sx={{ color: "#00ae57", mt: 3 }}
-                        >
-                          <AddCircleOutlineOutlinedIcon
-                            fontSize="small"
-                            sx={{ mx: 1 }}
-                          />{" "}
-                          Add New Course
-                        </Button>
-                        <Modal
-                          open={
-                            open4 ===
-                            degreeobj.degreeName + degreeobj.degreePeriod
-                              ? true
-                              : false
-                          }
-                          onClose={handleClose4}
-                          aria-labelledby="modal-modal-title"
-                          aria-describedby="modal-modal-description"
-                        >
-                          <Box sx={style}>
-                            <div className="d-flex justify-content-center">
-                              <div className="RegistrationInputFields col-11 col-md-9 px-3 my-4 pt-2 pb-4">
-                                <label>Course Name</label>
-                                <input
-                                  value={Course}
-                                  onChange={(e) => {
-                                    setCourse(e.target.value);
-                                  }}
-                                  className="form-control shadow-none mb-2 border rounded-0"
-                                  type="text"
-                                />
-                                <label>Course Code</label>
-                                <input
-                                  value={CourseCode}
-                                  onChange={(e) => {
-                                    setCourseCode(e.target.value);
-                                  }}
-                                  className="form-control shadow-none mb-2 border rounded-0"
-                                  type="text"
-                                />
-                                <label>Departments for this course</label>
-                                <Select
-                                  isMulti
-                                  name="colors"
-                                  options={store}
-                                  className="basic-multi-select"
-                                  classNamePrefix="select"
-                                  onChange={(e) => {
-                                    setselectedvalue(e);
-                                  }}
-                                />
-                                <label>New Department Name</label>
-                                <input
-                                  value={Department}
-                                  onChange={(e) => {
-                                    setDepartment(e.target.value);
-                                  }}
-                                  className="form-control shadow-none mb-2 border rounded-0"
-                                  type="text"
-                                />
-                              </div>
-                            </div>
-                            <div>
-                              <Button
-                                className="greyButton AddButton px-4 py-2 m-3"
-                                onClick={() => {
-                                  AddCourse2(degreeobj);
-                                }}
-                              >
-                                Add
-                              </Button>
-                            </div>
-                            {error4 !== "" && (
-                              <div
-                                style={{ color: "red", fontSize: 14 }}
-                                className="d-flex justify-content-center"
-                              >
-                                {error4}
-                              </div>
-                            )}
-                          </Box>
-                        </Modal>
-                      </div>
-                    ) : (
-                      <div>
-                        <Button
-                          onClick={() => {
-                            setOpen2(
-                              degreeobj.degreeName + degreeobj.degreePeriod
-                            );
-                          }}
-                          sx={{ color: "#00ae57", p: 0 }}
-                        >
-                          <AddCircleOutlineOutlinedIcon
-                            fontSize="small"
-                            sx={{ mx: 1 }}
-                          />
-                          <Typography variant="overline" display="block">
-                            Add New Department
-                          </Typography>
-                        </Button>
-                        <Modal
-                          open={
-                            open2 ===
-                            degreeobj.degreeName + degreeobj.degreePeriod
-                              ? true
-                              : false
-                          }
-                          onClose={handleClose2}
-                          aria-labelledby="modal-modal-title"
-                          aria-describedby="modal-modal-description"
-                        >
-                          <Box sx={style}>
-                            <div className="d-flex justify-content-center">
-                              <div className="my-4 w-100">
-                                <Typography variant="body1">
-                                  Department Name
-                                </Typography>
-                                <input
-                                  value={Department}
-                                  onChange={(e) => {
-                                    setDepartment(e.target.value);
-                                  }}
-                                  className="form-control shadow-none mb-2 border rounded-0 my-2"
-                                  type="text"
-                                />
-                              </div>
-                            </div>
-                            <div className="d-flex justify-content-center">
-                              <Button
-                                variant="contained"
-                                color="success"
-                                fullWidth
-                                onClick={() => {
-                                  AddDepartment(degreeobj);
-                                }}
-                              >
-                                Add
-                              </Button>
-                            </div>
-                            {error2 !== "" && (
-                              <div
-                                style={{ color: "red", fontSize: 14 }}
-                                className="d-flex justify-content-center"
-                              >
-                                {error2}
-                              </div>
-                            )}
-                          </Box>
-                        </Modal>
-                      </div>
-                    )}
+                    <hr style={{ height: "1.3px", margin: 0 }} />
                   </div>
-                  {togglec ? (
-                    <div>
-                      {storefcourse
-                        .filter(
-                          (e) =>
-                            e.degreeName === degreeobj.degreeName &&
-                            e.degreePeriod === degreeobj.degreePeriod
-                        )
-                        .map((degree) => (
-                          <div className="departments mx-5">
-                            {degree.courses.length !== 0 &&
-                              degree.courses.map((courseobj) => (
-                                <div>
-                                  <div>
-                                    <div className="department">
-                                      <div className="d-flex ">
-                                        <KeyboardArrowDownOutlinedIcon
-                                          fontSize="24"
-                                          sx={{
-                                            mx: 1,
-                                            color: "#7c7c7c",
-                                            alignSelf: "center",
-                                          }}
-                                        />
-                                        <label
-                                          className="d-block "
-                                          sx={{
-                                            color: "black",
-                                            fontWeight: "bold",
-                                          }}
-                                        >
-                                          {courseobj.courseName}(
-                                          {courseobj.courseCode})
-                                        </label>
-                                        <CreateOutlinedIcon
-                                          className="symbol"
-                                          fontSize="24"
-                                          sx={{
-                                            color: "#00ae57",
-                                            mx: 0.5,
-                                            alignSelf: "center",
-                                          }}
-                                        />
-                                        <AddBoxOutlinedIcon
-                                          className="symbol"
-                                          onClick={() => {
-                                            handleOpen5(courseobj);
-                                          }}
-                                          fontSize="24"
-                                          sx={{
-                                            color: "#00ae57",
-                                            mx: 0.5,
-                                            alignSelf: "center",
-                                          }}
-                                        />
-                                        <Modal
-                                          open={
-                                            open5 ===
-                                            courseobj.courseName +
-                                              courseobj.courseCode
-                                              ? true
-                                              : false
-                                          }
-                                          onClose={handleClose5}
-                                          aria-labelledby="modal-modal-title"
-                                          aria-describedby="modal-modal-description"
-                                        >
-                                          <Box sx={style}>
-                                            <div className="d-flex justify-content-center">
-                                              <div className="RegistrationInputFields col-11 col-md-9 px-3 my-4 pt-2 pb-4">
-                                                <label>
-                                                  New Department Name
-                                                </label>
-                                                <input
-                                                  value={Department}
-                                                  onChange={(e) => {
-                                                    setDepartment(
-                                                      e.target.value
-                                                    );
-                                                  }}
-                                                  className="form-control shadow-none mb-2 border rounded-0"
-                                                  type="text"
-                                                />
+                  <div>
+                    <div className="mt-2 mb-3">
+                      {generateDetails("Cycle Name", cycle.name)}
+                      {generateDetails("Type", cycle.type)}
+                      {generateDetails("Start Date", cycle.startDate)}
+                      {generateDetails("End Date", cycle.endDate)}
+                    </div>
+                  </div>
+                </div>
 
-                                                <label>
-                                                  Other departments for this
-                                                  course (if any)
-                                                </label>
-                                                <Select
-                                                  isMulti
-                                                  name="colors"
-                                                  options={store}
-                                                  className="basic-multi-select"
-                                                  classNamePrefix="select"
-                                                  onChange={(e) => {
-                                                    setselectedvalue(e);
-                                                  }}
-                                                />
-                                              </div>
+                <div className="pb-4">
+                  <div className="d-flex justify-content-between mx-2">
+                    <div className="d-flex justify-content-between">
+                      <div className="fs-18 px-3 fw-500 ">All Courses</div>
+                    </div>
+                    <div>
+                      <Button onClick={handleOpen1} sx={{ color: "#00ae57" }}>
+                        <AddCircleOutlineOutlinedIcon
+                          fontSize="small"
+                          sx={{ mx: 1 }}
+                        />
+                        <Typography variant="overline" display="block">
+                          Add New Degree
+                        </Typography>
+                      </Button>
+                      <Modal
+                        open={open1}
+                        onClose={handleClose1}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                      >
+                        <Box sx={style}>
+                          <div>
+                            <div className="my-4 w-100">
+                              <Typography variant="body1">
+                                Degree Name
+                              </Typography>
+                              <input
+                                value={Degree}
+                                onChange={(e) => {
+                                  setDegree(e.target.value);
+                                }}
+                                className="form-control shadow-none mb-2 border rounded-0"
+                                type="text"
+                              />
+                            </div>
+                            <div className="my-4 w-100">
+                              <Typography variant="body1">
+                                Degree Period
+                              </Typography>
+                              <input
+                                value={DegreePeroid}
+                                onChange={(e) => {
+                                  setDegreePeriod(e.target.value);
+                                }}
+                                className="form-control shadow-none mb-2 border rounded-0"
+                                type="number"
+                              />
+                            </div>
+                          </div>
+                          <div className="d-flex justify-content-center">
+                            <Button
+                              variant="contained"
+                              color="success"
+                              fullWidth
+                              onClick={AddDegree}
+                            >
+                              Add
+                            </Button>
+                          </div>
+
+                          {error !== "" && (
+                            <div
+                              style={{ color: "red", fontSize: 14 }}
+                              className="d-flex justify-content-center"
+                            >
+                              {error}
+                            </div>
+                          )}
+                        </Box>
+                      </Modal>
+                    </div>
+                  </div>
+                  <hr className="mx-3 my-0 p-0" />
+                </div>
+                {storage.length !== 0 &&
+                  storage.map((degreeobj) => (
+                    <div className="deg">
+                      <div className="d-flex justify-content-between px-2">
+                        <div className="d-flex align-items-center">
+                          <KeyboardArrowDownOutlinedIcon
+                            fontSize="small"
+                            sx={{ mx: 1, color: "#7c7c7c" }}
+                          />
+                          <Typography
+                            variant="button"
+                            className="fw-600"
+                            sx={{ fontSize: "1rem" }}
+                          >
+                            {degreeobj.degreeName +
+                              " (" +
+                              degreeobj.degreePeriod +
+                              " years) "}
+                          </Typography>
+
+                          <CreateOutlinedIcon
+                            className="symbol"
+                            fontSize="small"
+                            sx={{ color: "#00ae57", mx: 1 }}
+                          />
+                        </div>
+                        {togglec ? (
+                          <div>
+                            <Button
+                              onClick={() => {
+                                setOpen4(
+                                  degreeobj.degreeName + degreeobj.degreePeriod
+                                );
+                              }}
+                              sx={{ color: "#00ae57", mt: 3 }}
+                            >
+                              <AddCircleOutlineOutlinedIcon
+                                fontSize="small"
+                                sx={{ mx: 1 }}
+                              />{" "}
+                              Add New Course
+                            </Button>
+                            <Modal
+                              open={
+                                open4 ===
+                                degreeobj.degreeName + degreeobj.degreePeriod
+                                  ? true
+                                  : false
+                              }
+                              onClose={handleClose4}
+                              aria-labelledby="modal-modal-title"
+                              aria-describedby="modal-modal-description"
+                            >
+                              <Box sx={style}>
+                                <div className="d-flex justify-content-center">
+                                  <div className="RegistrationInputFields col-11 col-md-9 px-3 my-4 pt-2 pb-4">
+                                    <label>Course Name</label>
+                                    <input
+                                      value={Course}
+                                      onChange={(e) => {
+                                        setCourse(e.target.value);
+                                      }}
+                                      className="form-control shadow-none mb-2 border rounded-0"
+                                      type="text"
+                                    />
+                                    <label>Course Code</label>
+                                    <input
+                                      value={CourseCode}
+                                      onChange={(e) => {
+                                        setCourseCode(e.target.value);
+                                      }}
+                                      className="form-control shadow-none mb-2 border rounded-0"
+                                      type="text"
+                                    />
+                                    <label>Departments for this course</label>
+                                    <Select
+                                      isMulti
+                                      name="colors"
+                                      options={store}
+                                      className="basic-multi-select"
+                                      classNamePrefix="select"
+                                      onChange={(e) => {
+                                        setselectedvalue(e);
+                                      }}
+                                    />
+                                    <label>New Department Name</label>
+                                    <input
+                                      value={Department}
+                                      onChange={(e) => {
+                                        setDepartment(e.target.value);
+                                      }}
+                                      className="form-control shadow-none mb-2 border rounded-0"
+                                      type="text"
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <Button
+                                    className="greyButton AddButton px-4 py-2 m-3"
+                                    onClick={() => {
+                                      AddCourse2(degreeobj);
+                                    }}
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
+                                {error4 !== "" && (
+                                  <div
+                                    style={{ color: "red", fontSize: 14 }}
+                                    className="d-flex justify-content-center"
+                                  >
+                                    {error4}
+                                  </div>
+                                )}
+                              </Box>
+                            </Modal>
+                          </div>
+                        ) : (
+                          <div>
+                            <Button
+                              onClick={() => {
+                                setOpen2(
+                                  degreeobj.degreeName + degreeobj.degreePeriod
+                                );
+                              }}
+                              sx={{ color: "#00ae57", p: 0 }}
+                            >
+                              <AddCircleOutlineOutlinedIcon
+                                fontSize="small"
+                                sx={{ mx: 1 }}
+                              />
+                              <Typography variant="overline" display="block">
+                                Add New Department
+                              </Typography>
+                            </Button>
+                            <Modal
+                              open={
+                                open2 ===
+                                degreeobj.degreeName + degreeobj.degreePeriod
+                                  ? true
+                                  : false
+                              }
+                              onClose={handleClose2}
+                              aria-labelledby="modal-modal-title"
+                              aria-describedby="modal-modal-description"
+                            >
+                              <Box sx={style}>
+                                <div className="d-flex justify-content-center">
+                                  <div className="my-4 w-100">
+                                    <Typography variant="body1">
+                                      Department Name
+                                    </Typography>
+                                    <input
+                                      value={Department}
+                                      onChange={(e) => {
+                                        setDepartment(e.target.value);
+                                      }}
+                                      className="form-control shadow-none mb-2 border rounded-0 my-2"
+                                      type="text"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                  <Button
+                                    variant="contained"
+                                    color="success"
+                                    fullWidth
+                                    onClick={() => {
+                                      AddDepartment(degreeobj);
+                                    }}
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
+                                {error2 !== "" && (
+                                  <div
+                                    style={{ color: "red", fontSize: 14 }}
+                                    className="d-flex justify-content-center"
+                                  >
+                                    {error2}
+                                  </div>
+                                )}
+                              </Box>
+                            </Modal>
+                          </div>
+                        )}
+                      </div>
+                      {togglec ? (
+                        <div>
+                          {storefcourse
+                            .filter(
+                              (e) =>
+                                e.degreeName === degreeobj.degreeName &&
+                                e.degreePeriod === degreeobj.degreePeriod
+                            )
+                            .map((degree) => (
+                              <div className="departments mx-5">
+                                {degree.courses.length !== 0 &&
+                                  degree.courses.map((courseobj) => (
+                                    <div>
+                                      <div>
+                                        <div className="department">
+                                          <div className="d-flex ">
+                                            <KeyboardArrowDownOutlinedIcon
+                                              fontSize="24"
+                                              sx={{
+                                                mx: 1,
+                                                color: "#7c7c7c",
+                                                alignSelf: "center",
+                                              }}
+                                            />
+                                            <label
+                                              className="d-block "
+                                              sx={{
+                                                color: "black",
+                                                fontWeight: "bold",
+                                              }}
+                                            >
+                                              {courseobj.courseName}(
+                                              {courseobj.courseCode})
+                                            </label>
+                                            <CreateOutlinedIcon
+                                              className="symbol"
+                                              fontSize="24"
+                                              sx={{
+                                                color: "#00ae57",
+                                                mx: 0.5,
+                                                alignSelf: "center",
+                                              }}
+                                            />
+                                            <AddBoxOutlinedIcon
+                                              className="symbol"
+                                              onClick={() => {
+                                                handleOpen5(courseobj);
+                                              }}
+                                              fontSize="24"
+                                              sx={{
+                                                color: "#00ae57",
+                                                mx: 0.5,
+                                                alignSelf: "center",
+                                              }}
+                                            />
+                                            <Modal
+                                              open={
+                                                open5 ===
+                                                courseobj.courseName +
+                                                  courseobj.courseCode
+                                                  ? true
+                                                  : false
+                                              }
+                                              onClose={handleClose5}
+                                              aria-labelledby="modal-modal-title"
+                                              aria-describedby="modal-modal-description"
+                                            >
+                                              <Box sx={style}>
+                                                <div className="d-flex justify-content-center">
+                                                  <div className="RegistrationInputFields col-11 col-md-9 px-3 my-4 pt-2 pb-4">
+                                                    <label>
+                                                      New Department Name
+                                                    </label>
+                                                    <input
+                                                      value={Department}
+                                                      onChange={(e) => {
+                                                        setDepartment(
+                                                          e.target.value
+                                                        );
+                                                      }}
+                                                      className="form-control shadow-none mb-2 border rounded-0"
+                                                      type="text"
+                                                    />
+
+                                                    <label>
+                                                      Other departments for this
+                                                      course (if any)
+                                                    </label>
+                                                    <Select
+                                                      isMulti
+                                                      name="colors"
+                                                      options={store}
+                                                      className="basic-multi-select"
+                                                      classNamePrefix="select"
+                                                      onChange={(e) => {
+                                                        setselectedvalue(e);
+                                                      }}
+                                                    />
+                                                  </div>
+                                                </div>
+                                                <div>
+                                                  <Button
+                                                    onClick={() => {
+                                                      AddDepartment2(
+                                                        degreeobj,
+                                                        courseobj
+                                                      );
+                                                    }}
+                                                    className="greyButton AddButton px-4 py-2 m-3"
+                                                  >
+                                                    Add
+                                                  </Button>
+                                                </div>
+                                                {error5 !== "" && (
+                                                  <div
+                                                    style={{
+                                                      color: "red",
+                                                      fontSize: 14,
+                                                    }}
+                                                    className="d-flex justify-content-center"
+                                                  >
+                                                    {error5}
+                                                  </div>
+                                                )}
+                                              </Box>
+                                            </Modal>
+                                            <DeleteOutlineOutlinedIcon
+                                              className="symbol"
+                                              onClick={() => {
+                                                handleDelclass(
+                                                  degreeobj,
+                                                  courseobj
+                                                );
+                                              }}
+                                              fontSize="24"
+                                              sx={{
+                                                color: "#00ae57",
+                                                mx: 0.5,
+                                                alignSelf: "center",
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div>
+                                        {courseobj.Departments.length !== 0 && (
+                                          <div className="branches mx-4">
+                                            {courseobj.Departments.map(
+                                              (department) => (
+                                                <div className="branch">
+                                                  <div className="d-flex ">
+                                                    <KeyboardArrowDownOutlinedIcon
+                                                      fontSize="10"
+                                                      sx={{
+                                                        mx: 1,
+                                                        color: "#7c7c7c",
+                                                        alignSelf: "center",
+                                                      }}
+                                                    />
+                                                    <label
+                                                      className="d-block "
+                                                      sz={{ color: "#7c7c7c" }}
+                                                    >
+                                                      {department}
+                                                    </label>
+                                                    <CreateOutlinedIcon
+                                                      className="symbol"
+                                                      fontSize="15"
+                                                      sx={{
+                                                        color: "#00ae57",
+                                                        mx: 0.5,
+                                                        alignSelf: "center",
+                                                      }}
+                                                    />
+                                                    <DeleteOutlineOutlinedIcon
+                                                      className="symbol"
+                                                      onClick={() => {
+                                                        handleDeldept2(
+                                                          degreeobj,
+                                                          department,
+                                                          courseobj
+                                                        );
+                                                      }}
+                                                      fontSize="10"
+                                                      sx={{
+                                                        color: "#00ae57",
+                                                        mx: 0.5,
+                                                        alignSelf: "center",
+                                                      }}
+                                                    />
+                                                  </div>
+                                                </div>
+                                              )
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                            ))}
+                        </div>
+                      ) : (
+                        <div>
+                          {degreeobj.departments.length !== 0 && (
+                            <div className="departments mx-4 px-2">
+                              {degreeobj.departments.map((departmentobj) => (
+                                <div>
+                                  <div className="department">
+                                    <div className="d-flex ">
+                                      <KeyboardArrowDownOutlinedIcon
+                                        fontSize="24"
+                                        sx={{
+                                          mx: 1,
+                                          color: "#7c7c7c",
+                                          alignSelf: "center",
+                                        }}
+                                      />
+                                      <Typography
+                                        variant="subtitle2"
+                                        sx={{ fontSize: "1rem" }}
+                                      >
+                                        {departmentobj.departmentName}
+                                      </Typography>
+
+                                      <CreateOutlinedIcon
+                                        fontSize="24"
+                                        className="symbol"
+                                        sx={{
+                                          color: "#00ae57",
+                                          mx: 0.5,
+                                          alignSelf: "center",
+                                        }}
+                                      />
+                                      <AddBoxOutlinedIcon
+                                        className="symbol"
+                                        onClick={() => {
+                                          handleOpen3(
+                                            departmentobj.departmentName,
+                                            degreeobj
+                                          );
+                                        }}
+                                        fontSize="24"
+                                        sx={{
+                                          color: "#00ae57",
+                                          mx: 0.5,
+                                          alignSelf: "center",
+                                        }}
+                                      />
+                                      <Modal
+                                        open={
+                                          open3 === departmentobj.departmentName
+                                            ? true
+                                            : false
+                                        }
+                                        onClose={handleClose3}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                      >
+                                        <Box sx={style}>
+                                          <div className="">
+                                            <div className="my-4 w-100">
+                                              <Typography variant="body1">
+                                                Course Name
+                                              </Typography>
+                                              <input
+                                                value={Course}
+                                                onChange={(e) => {
+                                                  setCourse(e.target.value);
+                                                }}
+                                                className="form-control shadow-none mb-2 border rounded-0"
+                                                type="text"
+                                              />
                                             </div>
-                                            <div>
-                                              <Button
+                                            <div className="my-4 w-100">
+                                              <Typography variant="body1">
+                                                Course Code
+                                              </Typography>
+                                              <input
+                                                value={CourseCode}
+                                                onChange={(e) => {
+                                                  setCourseCode(e.target.value);
+                                                }}
+                                                className="form-control shadow-none mb-2 border rounded-0"
+                                                type="text"
+                                              />
+                                            </div>
+                                            <div className="my-4 w-100">
+                                              <Typography variant="body1">
+                                                Other departments for this
+                                                course (if any)
+                                              </Typography>
+                                              <Select
+                                                isMulti
+                                                name="colors"
+                                                options={store}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                onChange={(e) => {
+                                                  setselectedvalue(e);
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="d-flex justify-content-center">
+                                            <Button
+                                              variant="contained"
+                                              color="success"
+                                              fullWidth
+                                              onClick={() => {
+                                                AddCourse(
+                                                  degreeobj.degreeName,
+                                                  departmentobj.departmentName
+                                                );
+                                              }}
+                                            >
+                                              Add
+                                            </Button>
+                                          </div>
+
+                                          {error3 !== "" && (
+                                            <div
+                                              style={{
+                                                color: "red",
+                                                fontSize: 14,
+                                              }}
+                                              className="d-flex justify-content-center"
+                                            >
+                                              {error3}
+                                            </div>
+                                          )}
+                                        </Box>
+                                      </Modal>
+                                      <DeleteOutlineOutlinedIcon
+                                        className="symbol"
+                                        onClick={() => {
+                                          handleDeldept(
+                                            degreeobj,
+                                            departmentobj.departmentName
+                                          );
+                                        }}
+                                        fontSize="24"
+                                        sx={{
+                                          color: "#00ae57",
+                                          mx: 0.5,
+                                          alignSelf: "center",
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                  {departmentobj.courses.length !== 0 && (
+                                    <div className="branches mx-4">
+                                      {departmentobj.courses.map(
+                                        (courseobj) => (
+                                          <div className="branch">
+                                            <div className="d-flex ">
+                                              <KeyboardArrowDownOutlinedIcon
+                                                fontSize="10"
+                                                sx={{
+                                                  mx: 1,
+                                                  color: "#7c7c7c",
+                                                  alignSelf: "center",
+                                                }}
+                                              />
+                                              <Typography
+                                                variant="caption"
+                                                sx={{ fontSize: "0.925rem" }}
+                                              >
+                                                {courseobj.courseName +
+                                                  " (" +
+                                                  courseobj.courseCode +
+                                                  ")"}
+                                              </Typography>
+
+                                              <label
+                                                className="d-block "
+                                                sz={{ color: "#7c7c7c" }}
+                                              ></label>
+                                              <CreateOutlinedIcon
+                                                className="symbol"
+                                                fontSize="15"
+                                                sx={{
+                                                  color: "#00ae57",
+                                                  mx: 0.5,
+                                                  alignSelf: "center",
+                                                }}
+                                              />
+                                              <DeleteOutlineOutlinedIcon
+                                                className="symbol"
                                                 onClick={() => {
-                                                  AddDepartment2(
+                                                  handleDelclass(
                                                     degreeobj,
                                                     courseobj
                                                   );
                                                 }}
-                                                className="greyButton AddButton px-4 py-2 m-3"
-                                              >
-                                                Add
-                                              </Button>
-                                            </div>
-                                            {error5 !== "" && (
-                                              <div
-                                                style={{
-                                                  color: "red",
-                                                  fontSize: 14,
+                                                fontSize="10"
+                                                sx={{
+                                                  color: "#00ae57",
+                                                  mx: 0.5,
+                                                  alignSelf: "center",
                                                 }}
-                                                className="d-flex justify-content-center"
-                                              >
-                                                {error5}
-                                              </div>
-                                            )}
-                                          </Box>
-                                        </Modal>
-                                        <DeleteOutlineOutlinedIcon
-                                          className="symbol"
-                                          onClick={() => {
-                                            handleDelclass(
-                                              degreeobj,
-                                              courseobj
-                                            );
-                                          }}
-                                          fontSize="24"
-                                          sx={{
-                                            color: "#00ae57",
-                                            mx: 0.5,
-                                            alignSelf: "center",
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div>
-                                    {courseobj.Departments.length !== 0 && (
-                                      <div className="branches mx-4">
-                                        {courseobj.Departments.map(
-                                          (department) => (
-                                            <div className="branch">
-                                              <div className="d-flex ">
-                                                <KeyboardArrowDownOutlinedIcon
-                                                  fontSize="10"
-                                                  sx={{
-                                                    mx: 1,
-                                                    color: "#7c7c7c",
-                                                    alignSelf: "center",
-                                                  }}
-                                                />
-                                                <label
-                                                  className="d-block "
-                                                  sz={{ color: "#7c7c7c" }}
-                                                >
-                                                  {department}
-                                                </label>
-                                                <CreateOutlinedIcon
-                                                  className="symbol"
-                                                  fontSize="15"
-                                                  sx={{
-                                                    color: "#00ae57",
-                                                    mx: 0.5,
-                                                    alignSelf: "center",
-                                                  }}
-                                                />
-                                                <DeleteOutlineOutlinedIcon
-                                                  className="symbol"
-                                                  onClick={() => {
-                                                    handleDeldept2(
-                                                      degreeobj,
-                                                      department,
-                                                      courseobj
-                                                    );
-                                                  }}
-                                                  fontSize="10"
-                                                  sx={{
-                                                    color: "#00ae57",
-                                                    mx: 0.5,
-                                                    alignSelf: "center",
-                                                  }}
-                                                />
-                                              </div>
+                                              />
                                             </div>
-                                          )
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  )}
                                 </div>
                               ))}
-                          </div>
-                        ))}
-                    </div>
-                  ) : (
-                    <div>
-                      {degreeobj.departments.length !== 0 && (
-                        <div className="departments mx-4 px-2">
-                          {degreeobj.departments.map((departmentobj) => (
-                            <div>
-                              <div className="department">
-                                <div className="d-flex ">
-                                  <KeyboardArrowDownOutlinedIcon
-                                    fontSize="24"
-                                    sx={{
-                                      mx: 1,
-                                      color: "#7c7c7c",
-                                      alignSelf: "center",
-                                    }}
-                                  />
-                                  <Typography
-                                    variant="subtitle2"
-                                    sx={{ fontSize: "1rem" }}
-                                  >
-                                    {departmentobj.departmentName}
-                                  </Typography>
-
-                                  <CreateOutlinedIcon
-                                    fontSize="24"
-                                    className="symbol"
-                                    sx={{
-                                      color: "#00ae57",
-                                      mx: 0.5,
-                                      alignSelf: "center",
-                                    }}
-                                  />
-                                  <AddBoxOutlinedIcon
-                                    className="symbol"
-                                    onClick={() => {
-                                      handleOpen3(
-                                        departmentobj.departmentName,
-                                        degreeobj
-                                      );
-                                    }}
-                                    fontSize="24"
-                                    sx={{
-                                      color: "#00ae57",
-                                      mx: 0.5,
-                                      alignSelf: "center",
-                                    }}
-                                  />
-                                  <Modal
-                                    open={
-                                      open3 === departmentobj.departmentName
-                                        ? true
-                                        : false
-                                    }
-                                    onClose={handleClose3}
-                                    aria-labelledby="modal-modal-title"
-                                    aria-describedby="modal-modal-description"
-                                  >
-                                    <Box sx={style}>
-                                      <div className="">
-                                        <div className="my-4 w-100">
-                                          <Typography variant="body1">
-                                            Course Name
-                                          </Typography>
-                                          <input
-                                            value={Course}
-                                            onChange={(e) => {
-                                              setCourse(e.target.value);
-                                            }}
-                                            className="form-control shadow-none mb-2 border rounded-0"
-                                            type="text"
-                                          />
-                                        </div>
-                                        <div className="my-4 w-100">
-                                          <Typography variant="body1">
-                                            Course Code
-                                          </Typography>
-                                          <input
-                                            value={CourseCode}
-                                            onChange={(e) => {
-                                              setCourseCode(e.target.value);
-                                            }}
-                                            className="form-control shadow-none mb-2 border rounded-0"
-                                            type="text"
-                                          />
-                                        </div>
-                                        <div className="my-4 w-100">
-                                          <Typography variant="body1">
-                                            Other departments for this course
-                                            (if any)
-                                          </Typography>
-                                          <Select
-                                            isMulti
-                                            name="colors"
-                                            options={store}
-                                            className="basic-multi-select"
-                                            classNamePrefix="select"
-                                            onChange={(e) => {
-                                              setselectedvalue(e);
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="d-flex justify-content-center">
-                                        <Button
-                                          variant="contained"
-                                          color="success"
-                                          fullWidth
-                                          onClick={() => {
-                                            AddCourse(
-                                              degreeobj.degreeName,
-                                              departmentobj.departmentName
-                                            );
-                                          }}
-                                        >
-                                          Add
-                                        </Button>
-                                      </div>
-
-                                      {error3 !== "" && (
-                                        <div
-                                          style={{ color: "red", fontSize: 14 }}
-                                          className="d-flex justify-content-center"
-                                        >
-                                          {error3}
-                                        </div>
-                                      )}
-                                    </Box>
-                                  </Modal>
-                                  <DeleteOutlineOutlinedIcon
-                                    className="symbol"
-                                    onClick={() => {
-                                      handleDeldept(
-                                        degreeobj,
-                                        departmentobj.departmentName
-                                      );
-                                    }}
-                                    fontSize="24"
-                                    sx={{
-                                      color: "#00ae57",
-                                      mx: 0.5,
-                                      alignSelf: "center",
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                              {departmentobj.courses.length !== 0 && (
-                                <div className="branches mx-4">
-                                  {departmentobj.courses.map((courseobj) => (
-                                    <div className="branch">
-                                      <div className="d-flex ">
-                                        <KeyboardArrowDownOutlinedIcon
-                                          fontSize="10"
-                                          sx={{
-                                            mx: 1,
-                                            color: "#7c7c7c",
-                                            alignSelf: "center",
-                                          }}
-                                        />
-                                        <Typography
-                                          variant="caption"
-                                          sx={{ fontSize: "0.925rem" }}
-                                        >
-                                          {courseobj.courseName +
-                                            " (" +
-                                            courseobj.courseCode +
-                                            ")"}
-                                        </Typography>
-
-                                        <label
-                                          className="d-block "
-                                          sz={{ color: "#7c7c7c" }}
-                                        ></label>
-                                        <CreateOutlinedIcon
-                                          className="symbol"
-                                          fontSize="15"
-                                          sx={{
-                                            color: "#00ae57",
-                                            mx: 0.5,
-                                            alignSelf: "center",
-                                          }}
-                                        />
-                                        <DeleteOutlineOutlinedIcon
-                                          className="symbol"
-                                          onClick={() => {
-                                            handleDelclass(
-                                              degreeobj,
-                                              courseobj
-                                            );
-                                          }}
-                                          fontSize="10"
-                                          sx={{
-                                            color: "#00ae57",
-                                            mx: 0.5,
-                                            alignSelf: "center",
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
                             </div>
-                          ))}
+                          )}
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
-              ))}
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1266,4 +1343,4 @@ function CreateDepartment() {
   );
 }
 
-export default CreateDepartment;
+export default CycleDepartment;
