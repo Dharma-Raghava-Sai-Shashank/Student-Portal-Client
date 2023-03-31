@@ -218,26 +218,6 @@ export const ShowAllCompanies = ({
           </>
         );
       })}
-      {/* <List>
-        {["Full Time Hiring 2022-23", "Intern Hiring 2022-23"].map(
-          (text, index) => (
-            <ListItem
-              key={text}
-              disablePadding
-              onClick={() => {
-                setSession(() => text);
-              }}
-            >
-              <ListItemButton>
-                <ListItemIcon>
-                  <CalendarMonthIcon />
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          )
-        )}
-      </List> */}
     </Box>
   );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

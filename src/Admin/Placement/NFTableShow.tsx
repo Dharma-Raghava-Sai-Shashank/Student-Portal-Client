@@ -30,6 +30,8 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { deleteJob, fetchAllPlacementCycles, fetchJobsForAdmin, searchCompany, searchJobsForAdmin } from "../../api";
+import moment from "moment";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 
@@ -52,62 +54,68 @@ const columns: Column[] = [
 ];
 
 interface Data {
+  id: number,
   name: string;
   designation: string;
   status: string;
 }
 
-function createData(name: string, designation: string, status: string): Data {
-  return { name, designation, status };
+function createData(job: any): Data {
+  return {
+    id: job.nfId,
+    name: job.companyName,
+    designation: job.profile,
+    status: (job.status === "Draft") ? "Draft" : (moment(Date.now()) < moment(job.deadline)) ? "Accepting Application" : "Applications Closed"
+  }
 }
 
-const rows = [
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "New"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "New"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "Closed"),
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "Closed"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "Draft"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "New"),
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "Closed"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "Draft"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "Closed"),
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "Closed"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "Draft"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "Closed"),
-  createData("Google", "SDE", "Accepting application"),
-  createData("Microsoft", "SWE", "In Progress"),
-  createData("Trilogy", "SDE", "Closed"),
-  createData("Samsung", "Reseacher", "Closed"),
-  createData("Nvidea", "Engineer", "In Progress"),
-  createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-  createData("Standard Chartered", "Data Analyst", "Draft"),
-  createData("Goldman Sacs", "Business Analyst", "Draft"),
-  createData("Walmart", "SDE", "Closed"),
-];
+// const jobs = [
+//   createData("Google", "SDE", "Accepting application"),
+//   createData("Microsoft", "SWE", "In Progress"),
+//   createData("Trilogy", "SDE", "New"),
+//   createData("Samsung", "Reseacher", "Closed"),
+//   createData("Nvidea", "Engineer", "In Progress"),
+//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
+//   createData("Standard Chartered", "Data Analyst", "New"),
+//   createData("Goldman Sacs", "Business Analyst", "Draft"),
+//   createData("Walmart", "SDE", "Closed"),
+//   createData("Google", "SDE", "Accepting application"),
+//   createData("Microsoft", "SWE", "In Progress"),
+//   createData("Trilogy", "SDE", "Closed"),
+//   createData("Samsung", "Reseacher", "Closed"),
+//   createData("Nvidea", "Engineer", "In Progress"),
+//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
+//   createData("Standard Chartered", "Data Analyst", "Draft"),
+//   createData("Goldman Sacs", "Business Analyst", "Draft"),
+//   createData("Walmart", "SDE", "New"),
+//   createData("Google", "SDE", "Accepting application"),
+//   createData("Microsoft", "SWE", "In Progress"),
+//   createData("Trilogy", "SDE", "Closed"),
+//   createData("Samsung", "Reseacher", "Closed"),
+//   createData("Nvidea", "Engineer", "In Progress"),
+//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
+//   createData("Standard Chartered", "Data Analyst", "Draft"),
+//   createData("Goldman Sacs", "Business Analyst", "Draft"),
+//   createData("Walmart", "SDE", "Closed"),
+//   createData("Google", "SDE", "Accepting application"),
+//   createData("Microsoft", "SWE", "In Progress"),
+//   createData("Trilogy", "SDE", "Closed"),
+//   createData("Samsung", "Reseacher", "Closed"),
+//   createData("Nvidea", "Engineer", "In Progress"),
+//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
+//   createData("Standard Chartered", "Data Analyst", "Draft"),
+//   createData("Goldman Sacs", "Business Analyst", "Draft"),
+//   createData("Walmart", "SDE", "Closed"),
+//   createData("Google", "SDE", "Accepting application"),
+//   createData("Microsoft", "SWE", "In Progress"),
+//   createData("Trilogy", "SDE", "Closed"),
+//   createData("Samsung", "Reseacher", "Closed"),
+//   createData("Nvidea", "Engineer", "In Progress"),
+//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
+//   createData("Standard Chartered", "Data Analyst", "Draft"),
+//   createData("Goldman Sacs", "Business Analyst", "Draft"),
+//   createData("Walmart", "SDE", "Closed"),
+// ];
 
 interface props {
   option: string;
@@ -124,6 +132,56 @@ export const NFTableShow = ({
 }: props) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [jobs, setJobs] = React.useState<Data[]>([]);
+  const [query, setQuery] = React.useState<string>("");
+  const [placementCycles, setPlacementCycles] = React.useState<
+    PlacementCycle.Response[]
+  >([]);
+  const [placementCycleId, setPlacementCycleId] = React.useState<number>(0);
+  const [acadYears, setAcadYears] = React.useState<string[]>([]);
+
+  const resetState = () => {
+    setRowsPerPage(25);
+    setQuery("");
+  };
+
+  const handlePlacementCycleSelection = (cycleId: number) => {
+    setPlacementCycleId(cycleId);
+    resetState();
+  };
+
+  React.useEffect(() => {
+    const initialFetch = async () => {
+      const { cycles } = await fetchAllPlacementCycles();
+
+      setPlacementCycles(cycles);
+      const years: string[] = [];
+      cycles?.map((cycle: PlacementCycle.Response) => {
+        if (!years.includes(cycle?.acadYear)) years.push(cycle.acadYear);
+        return cycle;
+      });
+      setAcadYears(years);
+      setPlacementCycleId(cycles?.[0]?.placementCycleId);
+    };
+    initialFetch();
+  }, []);
+
+  React.useEffect(() => {
+    const fetchJobs = async () => {
+      const { jobs } =
+        query && query !== ""
+          ? await searchJobsForAdmin(placementCycleId, query)
+          : await fetchJobsForAdmin(placementCycleId);
+      setJobs(jobs?.map((item: any) => createData(item)));
+    };
+    fetchJobs();
+  }, [query, placementCycleId]);
+
+  const handleDeleteJob = async (jobId: number) => {
+    const { success } = await deleteJob(jobId);
+    if(success)
+    setJobs(jobs.filter((job: Data) => job.id!==jobId));
+  }
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -139,11 +197,17 @@ export const NFTableShow = ({
   const status: string[] = [
     "All",
     "Draft",
-    "In Progress",
-    "Accepting application",
-    "Closed",
-    "New",
+    "Accepting Application",
+    "Applications Closed",
   ];
+  // const status: string[] = [
+  //   "All",
+  //   "Draft",
+  //   "In Progress",
+  //   "Accepting application",
+  //   "Closed",
+  //   "New",
+  // ];
 
   const [currentstatus, setCurrentStatus] = useState("All");
   const [showJobId, setShowJobId] = useState("");
@@ -174,50 +238,46 @@ export const NFTableShow = ({
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
-        {[
-          "Full Time Hiring 2023-24",
-          "Intern Hiring 2023-24",
-          "PSU Hiring 2023-24",
-        ].map((text, index) => (
-          <ListItem
-            key={text}
-            disablePadding
-            onClick={() => {
-              //   toggleDrawer(anchor, false);
-              setSession(() => text);
-            }}
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                <CalendarMonthIcon />
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["Full Time Hiring 2022-23", "Intern Hiring 2022-23"].map(
-          (text, index) => (
-            <ListItem
-              key={text}
-              disablePadding
-              onClick={() => {
-                setSession(() => text);
-              }}
-            >
-              <ListItemButton>
-                <ListItemIcon>
-                  <CalendarMonthIcon />
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          )
-        )}
-      </List>
+      {acadYears.map((year: string) => {
+        return (
+          <>
+            <List>
+              {placementCycles
+                .filter(
+                  (cycle: PlacementCycle.Response) => cycle.acadYear === year
+                )
+                .map((cycle: PlacementCycle.Response) => (
+                  <ListItem
+                    key={cycle.placementCycleId}
+                    disablePadding
+                    onClick={() => {
+                      //   toggleDrawer(anchor, false);
+                      setSession(() => cycle.placementCycleName);
+                    }}
+                    style={{
+                      backgroundColor: `${
+                        placementCycleId === cycle.placementCycleId
+                          ? "#e6e6ff"
+                          : "#fff"
+                      }`,
+                    }}
+                    onClickCapture={() =>
+                      handlePlacementCycleSelection(cycle.placementCycleId)
+                    }
+                  >
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <CalendarMonthIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={cycle.placementCycleName} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+            </List>
+            <Divider />
+          </>
+        );
+      })}
     </Box>
   );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -229,12 +289,17 @@ export const NFTableShow = ({
     setAnchorEl(null);
   };
   const statushandlecolor = (status: string) => {
-    if (status === "Closed") return "text-muted fs-12";
-    else if (status === "New") return "text-danger fw-600 fs-14";
-    else if (status === "In Progress") return "text-primary";
+    if (status === "Applications Closed") return "text-muted fs-12";
     else if (status === "Accepting application") return "green1c";
     else return "text-info";
   };
+  // const statushandlecolor = (status: string) => {
+  //   if (status === "Closed") return "text-muted fs-12";
+  //   else if (status === "New") return "text-danger fw-600 fs-14";
+  //   else if (status === "In Progress") return "text-primary";
+  //   else if (status === "Accepting application") return "green1c";
+  //   else return "text-info";
+  // };
   return (
     <div className="d-flex justify-content-center">
       <div className=" w-100 px-5 py-5 grey2b">
@@ -341,7 +406,12 @@ export const NFTableShow = ({
                   </Button>
                 </div>
                 <div>
-                  <InputBase sx={{ ml: 1 }} placeholder="Search Company" />
+                  <InputBase
+                    sx={{ ml: 1 }}
+                    placeholder="Search Company"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
                   <IconButton
                     type="button"
                     sx={{ p: "4px" }}
@@ -373,7 +443,7 @@ export const NFTableShow = ({
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows
+                      {jobs.filter((job: any) => currentstatus === "All" || job.status === currentstatus)
                         .slice(
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage
@@ -463,8 +533,8 @@ export const NFTableShow = ({
                                 >
                                   <EditOutlinedIcon fontSize="small" />
                                 </IconButton>
-                                <IconButton aria-label="delete" sx={{ mx: 1 }}>
-                                  <DeleteIcon fontSize="small" />
+                                <IconButton aria-label="delete" sx={{ mx: 1 }} onClick={() => handleDeleteJob(row.id)}>
+                                  <DeleteIcon fontSize="small"/>
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -476,7 +546,7 @@ export const NFTableShow = ({
                 <TablePagination
                   rowsPerPageOptions={[10, 25, 100]}
                   component="div"
-                  count={rows.length}
+                  count={jobs.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}

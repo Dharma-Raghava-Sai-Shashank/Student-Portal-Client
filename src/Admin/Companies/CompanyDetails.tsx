@@ -167,7 +167,6 @@ export const CompanyDetails = () => {
         <MainSidebar />
         <div className="w-100">
           <Header1 />
-          {/* <div>HI{console.log(params.companyId)}</div> */}
           <div className=" w-100 px-5 py-5 grey2b">
             <div>
               <span className="fs-14">Companies | </span>
@@ -195,7 +194,6 @@ export const CompanyDetails = () => {
                       <div className="ms-1">
                         <Typography variant="h4" gutterBottom>
                           {company?.companyName || ""}
-                          {/* <>{console.log(companyId.companyId)}</> */}
                         </Typography>
                         <Typography
                           variant="button"
