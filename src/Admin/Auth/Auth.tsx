@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FooterWave from "../../Images/FooterWave.svg";
 import "./Auth.scss";
-import { signin } from "../../api";
+import { adminSignin } from "../../api";
 import { useNavigate } from "react-router-dom";
 
 function Auth() {
@@ -9,7 +9,7 @@ function Auth() {
 
   const [ForgotPassword, setForgotPassword] = useState(false);
 
-  const [authData, setAuthData] = React.useState<User.AuthData>({ username: '', password: '' });
+  const [authData, setAuthData] = React.useState<User.AuthData>({ email: '', password: '' });
 
   const handleAuthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAuthData((prevData: User.AuthData) => ({ ...prevData, [e.target.name]: e.target.value}));
@@ -18,11 +18,11 @@ function Auth() {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { token } = await signin(authData);
+    const { token } = await adminSignin(authData);
 
     localStorage.setItem('token', token);
-    localStorage.setItem('userType', 'student');
-    Navigate('/reg');
+    localStorage.setItem('userType', 'admin');
+    Navigate('/admin');
   }
   return (
     <div className="MainPage">
@@ -71,11 +71,11 @@ function Auth() {
               <div className="d-flex justify-content-center">
                 <div className="">
                   <input
-                    type="text"
+                    type="email"
                     className="InputSignIn p-3"
-                    placeholder="Enter username"
-                    name="username"
-                    value={authData.username}
+                    placeholder="Enter email"
+                    name="email"
+                    value={authData.email}
                     onChange={handleAuthChange}
                   />
                 </div>

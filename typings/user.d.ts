@@ -13,7 +13,8 @@ declare enum Category{
 
 declare namespace User{
     interface AuthData {
-        username: string,
+        email?: string,
+        username?: string,
         password: string,
     }
 

@@ -26,6 +26,9 @@ const baseURL = `http://localhost:3001/api`;
 export const signin = async (data: User.AuthData) =>
   await APIRequest(baseURL + `/auth/signin`, "POST", data);
 
+export const adminSignin = async (data: User.AuthData) =>
+  await APIRequest(baseURL + `/auth/admin/signin`, "POST", data);
+
 // ----------------------------------- COMPANY REQUESTS ----------------------------------------
 
 export const fetchAllCompanies = async () =>
