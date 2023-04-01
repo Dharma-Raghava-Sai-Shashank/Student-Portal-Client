@@ -12,14 +12,11 @@ import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -30,8 +27,12 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { ShowJob } from "../Placement/ShowJob";
-import { CompanyDetails } from "./CompanyDetails";
+import {
+  fetchAllPlacementCycles,
+  fetchCompaniesForCycle,
+  searchCompany,
+} from "../../api";
+import moment from "moment";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 
@@ -54,30 +55,20 @@ const columns: Column[] = [
 ];
 
 interface Data {
+  id: number;
   name: string;
-  designation: string;
+  category: string;
   registeredOn: string;
 }
 
-function createData(
-  name: string,
-  designation: string,
-  registeredOn: string
-): Data {
-  return { name, designation, registeredOn };
+function createData(company: Company.Response): Data {
+  return {
+    id: company.companyId,
+    name: company.companyName,
+    category: company.categoryName,
+    registeredOn: moment(company.createdAt).format("DD-MM-YYYY"),
+  };
 }
-
-const rows = [
-  createData("Google", "SDE", "22/03/2023"),
-  createData("Microsoft", "SWE", "05/03/2023"),
-  createData("Trilogy", "SDE", "12/01/2023"),
-  createData("Samsung", "Reseacher", "22/03/2023"),
-  createData("Nvidea", "Engineer", "29/01/2023"),
-  createData("Sprinklr", "Implementation Consulatant", "18/03/2023"),
-  createData("Standard Chartered", "Data Analyst", "01/03/2023"),
-  createData("Goldman Sacs", "Business Analyst", "22/07/2023"),
-  createData("Walmart", "SDE", "22/03/2023"),
-];
 
 interface props {
   option: string;
@@ -98,6 +89,50 @@ export const ShowAllCompanies = ({
 }: props) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [companies, setCompanies] = React.useState<Data[]>([]);
+  const [query, setQuery] = React.useState<string>("");
+  const [placementCycles, setPlacementCycles] = React.useState<PlacementCycle.Response[]>([]);
+  const [placementCycleId, setPlacementCycleId] = React.useState<number>(0);
+  const [acadYears, setAcadYears] = React.useState<string[]>([]);
+
+  const resetState = () => {
+    setRowsPerPage(25);
+    setCompanies([]);
+    setQuery("");
+  };
+
+  const handlePlacementCycleSelection = (cycleId: number) => {
+    setPlacementCycleId(cycleId);
+    resetState();
+  };
+
+  React.useEffect(() => {
+    const initialFetch = async () => {
+      const { cycles } = await fetchAllPlacementCycles();
+
+      setPlacementCycles(cycles);
+      const years: string[] = []
+      cycles.map((cycle: PlacementCycle.Response) => {
+        if (!years.includes(cycle?.acadYear))
+          years.push(cycle.acadYear);
+        return cycle;
+      });
+      setAcadYears(years);
+      setPlacementCycleId(cycles?.[0]?.placementCycleId);
+    };
+    initialFetch();
+  }, []);
+
+  React.useEffect(() => {
+    const fetchCompanies = async () => {
+      const { companies } =
+        query && query !== ""
+          ? await searchCompany(placementCycleId, query)
+          : await fetchCompaniesForCycle(placementCycleId);
+      setCompanies(companies.map((item: Company.Response) => createData(item)));
+    };
+    fetchCompanies();
+  }, [query, placementCycleId]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -120,7 +155,7 @@ export const ShowAllCompanies = ({
   ];
 
   const [currentstatus, setCurrentStatus] = useState("All");
-  const [companyId, setcompanyId] = useState("");
+  const [companyId, setcompanyId] = useState<number>();
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -140,7 +175,6 @@ export const ShowAllCompanies = ({
       }
       setState({ ...state, [anchor]: open });
     };
-
   const list = (anchor: Anchor) => (
     <Box
       sx={{ width: 300 }}
@@ -148,50 +182,42 @@ export const ShowAllCompanies = ({
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
-        {[
-          "Full Time Hiring 2023-24",
-          "Intern Hiring 2023-24",
-          "PSU Hiring 2023-24",
-        ].map((text, index) => (
-          <ListItem
-            key={text}
-            disablePadding
-            onClick={() => {
-              //   toggleDrawer(anchor, false);
-              setSession(() => text);
-            }}
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                <CalendarMonthIcon />
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["Full Time Hiring 2022-23", "Intern Hiring 2022-23"].map(
-          (text, index) => (
-            <ListItem
-              key={text}
-              disablePadding
-              onClick={() => {
-                setSession(() => text);
-              }}
-            >
-              <ListItemButton>
-                <ListItemIcon>
-                  <CalendarMonthIcon />
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          )
-        )}
-      </List>
+      {acadYears.map((year: string) => {
+        return (
+          <>
+            <List>
+              {placementCycles.filter((cycle: PlacementCycle.Response) => cycle.acadYear === year).map((cycle: PlacementCycle.Response) => (
+                <ListItem
+                  key={cycle.placementCycleId}
+                  disablePadding
+                  onClick={() => {
+                    //   toggleDrawer(anchor, false);
+                    setSession(() => cycle.placementCycleName);
+                  }}
+                  style={{
+                    backgroundColor: `${
+                      placementCycleId === cycle.placementCycleId
+                        ? "#e6e6ff"
+                        : "#fff"
+                    }`,
+                  }}
+                  onClickCapture={() =>
+                    handlePlacementCycleSelection(cycle.placementCycleId)
+                  }
+                >
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <CalendarMonthIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={cycle.placementCycleName} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+            <Divider />
+          </>
+        );
+      })}
     </Box>
   );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -210,7 +236,7 @@ export const ShowAllCompanies = ({
           <span className="fs-14">Companies </span>
           <span
             className={`fs-14 cursor-pointer ${
-              companyId !== "" ? "" : " green1c fw-500"
+              companyId ? "" : " green1c fw-500"
             }`}
           >
             | {session} |
@@ -274,7 +300,12 @@ export const ShowAllCompanies = ({
               </div>
               <div className="d-flex">
                 <div>
-                  <InputBase sx={{ ml: 1 }} placeholder="Search Company" />
+                  <InputBase
+                    sx={{ ml: 1 }}
+                    placeholder="Search Company"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
                   <IconButton
                     type="button"
                     sx={{ p: "4px", mx: 2 }}
@@ -306,18 +337,18 @@ export const ShowAllCompanies = ({
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows
+                      {companies
                         .slice(
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage
                         )
-                        .map((row, item) => {
+                        .map((row: Data) => {
                           return (
                             <TableRow
                               hover
                               role="checkbox"
                               tabIndex={-1}
-                              key={item}
+                              key={row.id}
                               className="cursor-pointer"
                             >
                               <TableCell sx={{ py: 1, mx: 3 }}>
@@ -326,7 +357,7 @@ export const ShowAllCompanies = ({
                                   aria-label="recipe"
                                   sx={{ width: 37, height: 37 }}
                                   onClick={() => {
-                                    setcompanyId(() => row.name + item);
+                                    setcompanyId(() => row.id);
                                   }}
                                 >
                                   {row.name[0]}
@@ -336,7 +367,7 @@ export const ShowAllCompanies = ({
                                 {row["name"]}
                               </TableCell>
                               <TableCell key="category/sector" sx={{ p: 0 }}>
-                                {row["designation"]}
+                                {row["category"]}
                               </TableCell>
                               <TableCell
                                 key="registeredOn"
@@ -352,9 +383,7 @@ export const ShowAllCompanies = ({
                                 align="left"
                                 sx={{ p: 0 }}
                               >
-                                <Link
-                                  to={`/admin/companies/${row.name + item}`}
-                                >
+                                <Link to={`/admin/companies/${row.id}`}>
                                   <IconButton
                                     aria-label="edit"
                                     color="success"
@@ -373,7 +402,7 @@ export const ShowAllCompanies = ({
                 <TablePagination
                   rowsPerPageOptions={[10, 25, 100]}
                   component="div"
-                  count={rows.length}
+                  count={companies.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}
