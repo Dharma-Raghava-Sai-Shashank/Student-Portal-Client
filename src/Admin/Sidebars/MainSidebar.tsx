@@ -10,10 +10,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Link } from "react-router-dom";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { Header1 } from "../Headers/Header1";
-import { Placement } from "../Placement/Placement";
-import { NewJob } from "../Placement/NewJob";
-import { Department } from "../Department/Department";
 import "./index.scss";
 
 // interface props {
@@ -83,55 +79,37 @@ export const MainSidebar = () => {
               <div className="MainSidebarOptions">
                 <div className="MainSidebarOption">
                   <Link to="/admin/profile">
-                    <button
-                      className="MainSidebarOptionButton"
-                      // onClick={() => setOption(() => "Profile")}
-                    >
+                    <button className="MainSidebarOptionButton">
                       <div className="MainSidebarOptionButtonDiv">
                         <DescriptionOutlinedIcon className="mx-3" /> Profile
                       </div>
                     </button>
                   </Link>
                   <Link to="/admin/placement">
-                    <button
-                      className="MainSidebarOptionButton"
-                      // onClick={() => setOption(() => "Placement")}
-                    >
+                    <button className="MainSidebarOptionButton">
                       <div className="MainSidebarOptionButtonDiv">
                         <GradingIcon className="mx-3" /> Placement
                       </div>
                     </button>
                   </Link>
-                  <button
-                    className="MainSidebarOptionButton"
-                    // onClick={() => setOption(() => "Notices")}
-                  >
+                  <button className="MainSidebarOptionButton">
                     <div className="MainSidebarOptionButtonDiv">
                       <DescriptionOutlinedIcon className="mx-3" /> Notices
                     </div>
                   </button>
                   <Link to="/admin/companies">
-                    <button
-                      className="MainSidebarOptionButton"
-                      // onClick={() => setOption(() => "Companies")}
-                    >
+                    <button className="MainSidebarOptionButton">
                       <div className="MainSidebarOptionButtonDiv">
                         <ApartmentOutlinedIcon className="mx-3" /> Companies
                       </div>
                     </button>
                   </Link>
-                  <button
-                    className="MainSidebarOptionButton"
-                    // onClick={() => setOption(() => "Student")}
-                  >
+                  <button className="MainSidebarOptionButton">
                     <div className="MainSidebarOptionButtonDiv">
                       <AccountBoxIcon className="mx-3" /> Student
                     </div>
                   </button>
-                  <button
-                    className="MainSidebarOptionButton"
-                    // onClick={() => setOption(() => "Profile")}
-                  >
+                  <button className="MainSidebarOptionButton">
                     <div className="MainSidebarOptionButtonDiv">
                       <DescriptionOutlinedIcon className="mx-3" /> Profile
                     </div>
@@ -139,7 +117,6 @@ export const MainSidebar = () => {
                   <button
                     className="MainSidebarOptionButton"
                     onClick={() => {
-                      // setOption(() => "Admin");
                       setCollapseAdmin((prev) => !prev);
                     }}
                   >
@@ -158,23 +135,19 @@ export const MainSidebar = () => {
                   </button>
                   {collapseadmin === true && (
                     <div>
-                      <Link to="/admin/department">
+                      <Link to="/admin/placementcycle">
                         <button
                           className="MainSidebarOptionButton ps-4"
-                          onClick={() => {
-                            // setOption(() => "Department");
-                          }}
+                          onClick={() => {}}
                         >
                           <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
-                            <div className="fs-14 mx-3">Department</div>
+                            <div className="fs-14 mx-3">Placement Cycle</div>
                           </div>
                         </button>
                       </Link>
                       <button
                         className="MainSidebarOptionButton ps-4"
-                        onClick={() => {
-                          // setOption(() => "Users");
-                        }}
+                        onClick={() => {}}
                       >
                         <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
                           <div className="fs-14 mx-3">Users</div>
