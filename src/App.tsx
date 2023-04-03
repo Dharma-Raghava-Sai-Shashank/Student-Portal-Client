@@ -10,10 +10,12 @@ import { ShowJob } from "./Admin/Placement/ShowJob";
 import AdminAuth from './Admin/Auth/Auth'
 import CycleDepartment from "./Admin/Department/CreateDeparment";
 import "bootstrap/dist/css/bootstrap.css";
+import {useSelector,useDispatch} from "react-redux"
 
 import "./App.css";
 
 function App() {
+  const dispatch = useDispatch();
   return (
     <BrowserRouter>
       <Routes>
