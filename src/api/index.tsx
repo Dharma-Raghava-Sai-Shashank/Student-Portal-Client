@@ -1,4 +1,4 @@
-const APIRequest = async (url: string, method: string, data?: Object | FormData) => {
+export const APIRequest = async (url: string, method: string, data?: Object | FormData) => {
   const response = await fetch(url, {
     method, // *GET, POST, PUT, DELETE, etc.
     mode: "cors", // no-cors, *cors, same-origin
@@ -14,12 +14,12 @@ const APIRequest = async (url: string, method: string, data?: Object | FormData)
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   })
     .then((response: any) => response.json())
-    .catch((error) => error.message);
+    .catch((error) => ({ success: false, message: error.message}));
 
   return response;
 };
 
-const baseURL = `http://localhost:3001/api`;
+export const baseURL = `http://localhost:3001/api`;
 
 // ----------------------------------- AUTH REQUESTS -------------------------------------------
 

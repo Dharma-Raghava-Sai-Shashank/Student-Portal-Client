@@ -18,10 +18,8 @@ function Auth() {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { token } = await adminSignin(authData);
+    await adminSignin(authData);
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('userType', 'admin');
     Navigate('/admin');
   }
   return (
