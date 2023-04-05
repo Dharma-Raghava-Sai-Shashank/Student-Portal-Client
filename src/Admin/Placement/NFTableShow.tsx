@@ -30,8 +30,9 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { deleteJob, fetchAllPlacementCycles, fetchJobsForAdmin, searchCompany, searchJobsForAdmin } from "../../api";
 import moment from "moment";
+import { fetchAllPlacementCycles } from "../../api/placementCycle.service";
+import { deleteJob, fetchJobsForAdmin, searchJobsForAdmin } from "../../api/job.service";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 

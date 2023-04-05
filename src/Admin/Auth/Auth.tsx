@@ -1,27 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FooterWave from "../../Images/FooterWave.svg";
 import "./Auth.scss";
-import { adminSignin } from "../../api";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { login } from "../../Slices/auth";
+import { clearMessage } from "../../Slices/message";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 function Auth() {
-  const Navigate = useNavigate();
+  let navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
+  const { isLoggedIn, role } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
 
   const [ForgotPassword, setForgotPassword] = useState(false);
 
-  const [authData, setAuthData] = React.useState<User.AuthData>({ email: '', password: '' });
+  const [authData, setAuthData] = React.useState<User.AuthData>({ username: '', password: '' });
 
   const handleAuthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAuthData((prevData: User.AuthData) => ({ ...prevData, [e.target.name]: e.target.value}));
   };
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { username, password } = authData;
+    setLoading(true);
 
-    await adminSignin(authData);
+    dispatch(login({ username, password, type: 'admin' }))
+      .unwrap()
+      .then(() => {
+        setLoading(false);
+        // navigate("/admin");
+        // window.location.reload();
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
 
-    Navigate('/admin');
+  if (isLoggedIn && role==='admin') {
+    return <Navigate to="/admin" />;
   }
+
   return (
     <div className="MainPage">
       <div className="d-flex align-items-center justify-content-center AuthSignIn">
@@ -69,11 +95,11 @@ function Auth() {
               <div className="d-flex justify-content-center">
                 <div className="">
                   <input
-                    type="email"
+                    type="text"
                     className="InputSignIn p-3"
-                    placeholder="Enter email"
-                    name="email"
-                    value={authData.email}
+                    placeholder="Enter username"
+                    name="username"
+                    value={authData.username}
                     onChange={handleAuthChange}
                   />
                 </div>
@@ -110,7 +136,7 @@ function Auth() {
                 </div>
               </div>
               <div className="d-flex justify-content-center my-3">
-                <button type="submit" className="LoginButton">
+                <button type="submit" className="LoginButton" disabled={loading}>
                   Login
                 </button>
               </div>

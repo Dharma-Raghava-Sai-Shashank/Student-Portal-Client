@@ -7,22 +7,24 @@ export const signin = async (data: User.AuthData) => {
     const response = await APIRequest(authBaseURL + `/signin`, "POST", data);
 
     if(!response.success)
-    return response?.message;
+    return { ...response, role: 'student'};
 
     localStorage.setItem('token', response?.token);
     localStorage.setItem('role', 'student');
-    return response?.studentData
+    return { ...response, role: 'student' }
 }
 
 export const adminSignin = async (data: User.AuthData) => {
     const response = await APIRequest(adminAuthURL + `/signin`, "POST", data);
 
+    console.log({ response });
+
     if(!response.success)
-    return response?.message;
+    return { ...response, role: 'admin'};
 
     localStorage.setItem('token', response?.token);
     localStorage.setItem('role', 'admin');
-    return response?.user
+    return { ...response, role: 'admin' }
 }
 
 export const logout = () => {

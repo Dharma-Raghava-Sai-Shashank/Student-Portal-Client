@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FooterWave from "../../Images/FooterWave.svg";
 import "./Auth.scss";
-import { signin } from "../../api";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { login } from "../../Slices/auth";
+import { clearMessage } from "../../Slices/message";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 function Auth() {
-  const Navigate = useNavigate();
+  let navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
+  const { isLoggedIn, role } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
 
   const [ForgotPassword, setForgotPassword] = useState(false);
 
@@ -15,15 +27,27 @@ function Auth() {
     setAuthData((prevData: User.AuthData) => ({ ...prevData, [e.target.name]: e.target.value}));
   };
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { username, password } = authData;
+    setLoading(true);
 
-    const { token } = await signin(authData);
+    dispatch(login({ username, password, type: 'student' }))
+      .unwrap()
+      .then(() => {
+        setLoading(false);
+        navigate("/reg");
+        window.location.reload();
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('userType', 'student');
-    Navigate('/reg');
+  if (isLoggedIn && role==='student') {
+    return <Navigate to="/reg" />;
   }
+
   return (
     <div className="MainPage">
       <div className="d-flex align-items-center justify-content-center AuthSignIn">
@@ -112,7 +136,7 @@ function Auth() {
                 </div>
               </div>
               <div className="d-flex justify-content-center my-3">
-                <button type="submit" className="LoginButton">
+                <button type="submit" className="LoginButton" disabled={loading}>
                   Login
                 </button>
               </div>

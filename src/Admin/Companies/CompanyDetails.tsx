@@ -9,11 +9,7 @@ import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import { Header1 } from "../Headers/Header1";
 import { MainSidebar } from "../Sidebars/MainSidebar";
-// import { ShowJob } from "../Placement/ShowJob";
-// import { Dayjs } from "dayjs";
-import { fetchCompanyById, fetchCompanyHRs, fetchCompanyNFs } from "../../api";
-
-// import "./style.scss";
+import { fetchCompanyById, fetchCompanyHRs, fetchCompanyNFs } from "../../api/company.service";
 
 interface allNFInCycle {
   applicationid: number;
@@ -21,58 +17,6 @@ interface allNFInCycle {
   placementCycleId: number;
   placementCycleName: string;
 }
-// const Schedule = [
-//   {
-//     id: "892b",
-//     StageName: "Resume SL",
-//     StageMode: "Virtual",
-//     StageDate: "22/04/2022",
-//   },
-//   {
-//     id: "882b",
-//     StageName: "Reasoning",
-//     StageMode: "Virtual",
-//     StageDate: "22/04/2022",
-//   },
-//   {
-//     id: "881b",
-//     StageName: "Interview 1",
-//     StageMode: "On Campus",
-//     StageDate: "22/04/2022",
-//   },
-//   {
-//     id: "812b",
-//     StageName: "Group Discussion",
-//     StageMode: "Virtual",
-//     StageDate: "22/04/2022",
-//   },
-// ];
-// const html = (
-//   <div>
-//     <h1>This is a webpage.</h1>
-//     <h2>Why do I have to check this??</h2>
-//     <p>
-//       <br />
-//     </p>
-//     <p>Because whatever.</p>
-//     <p>
-//       <strong>Pros:</strong>
-//     </p>
-//     <ol>
-//       <li>
-//         <strong>checking</strong>
-//       </li>
-//       <li>
-//         <strong>seeing if it works</strong>
-//       </li>
-//     </ol>
-//   </div>
-// );
-// const NFIncycle: allNFInCycle[] = [
-//   { applicationid: "329jkawqsdh", designation: "Software Developer" },
-//   { applicationid: "329jkdnbcjsh", designation: "System Engineer" },
-//   { applicationid: "329jkasasxdh", designation: "Machine Learning" },
-// ];
 
 export const CompanyDetails = () => {
   const params = useParams();

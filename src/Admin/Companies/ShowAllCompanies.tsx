@@ -27,12 +27,9 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import {
-  fetchAllPlacementCycles,
-  fetchCompaniesForCycle,
-  searchCompany,
-} from "../../api";
 import moment from "moment";
+import { fetchAllPlacementCycles } from "../../api/placementCycle.service";
+import { fetchCompaniesForCycle, searchCompany } from "../../api/company.service";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 
