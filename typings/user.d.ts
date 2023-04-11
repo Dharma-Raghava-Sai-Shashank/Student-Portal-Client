@@ -16,6 +16,7 @@ declare namespace User{
         email?: string,
         username?: string,
         password: string,
+        type?: string
     }
 
     interface Student{

@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { uid } from "uid/single";
-import { Category } from "../constants/category";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -23,26 +22,20 @@ import Switch from "@mui/material/Switch";
 import Popover from "@mui/material/Popover";
 import AddIcon from "@mui/icons-material/Add";
 import { ReactSortable } from "react-sortablejs";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import ListItemText from "@mui/material/ListItemText";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import ReactQuill from "react-quill";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
 import "react-quill/dist/quill.snow.css";
-import { skills } from "../constants/skills";
 import "./style.scss";
-import {
-  createHR,
-  createJob,
-  fetchAllCategories,
-  fetchAllCourses,
-  fetchAllScpts,
-  fetchAllStages,
-  fetchSpecializationForCourses,
-  uploadFile,
-} from "../../api";
+import { fetchAllCategories } from "../../api/companycategory.service";
+import { fetchAllCourses } from "../../api/course.service";
+import { fetchAllScpts } from "../../api/scpt.service";
+import { fetchAllStages } from "../../api/selectionStage.service";
+import { fetchSpecializationForCourses } from "../../api/specialization.service";
+import { uploadFile } from "../../api/document.service";
+import { createHR } from "../../api/hr.service";
+import { createJob } from "../../api/job.service";
 
 interface Schedule {
   id: string;
