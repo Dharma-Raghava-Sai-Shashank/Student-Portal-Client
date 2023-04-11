@@ -8,6 +8,7 @@ import { Companies } from "./Admin/Companies/Companies";
 import { CompanyDetails } from "./Admin/Companies/CompanyDetails";
 import { ShowJob } from "./Admin/Placement/ShowJob";
 import AdminAuth from "./Admin/Auth/Auth";
+import { CycleDetails } from "./Admin/Department/CycleDetails";
 import CycleDepartment from "./Admin/Department/CreateDeparment";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -70,7 +71,7 @@ function App() {
         <Route path="/admin/placementcycle" element={<PlacementCycle />} />
         <Route
           path="/admin/placementcycle/:cycleId"
-          element={<CycleDepartment />}
+          element={<CycleDetails />}
         />
         <Route path="/admin/companies" element={<Companies />} />
         <Route
