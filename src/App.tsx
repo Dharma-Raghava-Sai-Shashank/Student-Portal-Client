@@ -19,6 +19,23 @@ import AuthVerify from "./common/AuthVerify";
 import { useCallback, useEffect } from "react";
 import { logout } from "./Slices/auth";
 import EventBus from "./common/EventBus";
+import AdminRoute from "./common/AdminRoute";
+import StudentRoute from './common/StudentRoute';
+
+const ProtectRoute: any = (Component: React.FC<{}>) => {
+  return (
+    <AdminRoute>
+      <Component />
+    </AdminRoute>
+  );
+};
+const ProtectStudentRoute: any = (Component: React.FC<{}>) => {
+  return (
+    <StudentRoute>
+      <Component />
+    </StudentRoute>
+  );
+};
 
 function App() {
   const { open, message, type } = useAppSelector((state) => state.message);
@@ -62,20 +79,20 @@ function App() {
       </Snackbar>
       <Routes>
         <Route path="/" element={<Auth />} />
-        <Route path="/reg" element={<Registration />} />
-        <Route path="/admin" element={<Admin />} />
         <Route path="/admin/auth" element={<AdminAuth />} />
-        <Route path="/admin/placement" element={<Placement />} />
-        <Route path="/admin/placement/:applicationId" element={<ShowJob />} />
-        <Route path="/admin/placementcycle" element={<PlacementCycle />} />
+        <Route path="/reg" element={ProtectStudentRoute(Registration)} />
+        <Route path="/admin" element={ProtectRoute(Admin)} />
+        <Route path="/admin/placement" element={ProtectRoute(Placement)} />
+        <Route path="/admin/placement/:applicationId" element={ProtectRoute(ShowJob)} />
+        <Route path="/admin/placementcycle" element={ProtectRoute(PlacementCycle)} />
         <Route
           path="/admin/placementcycle/:cycleId"
-          element={<CycleDepartment />}
+          element={ProtectRoute(CycleDepartment)}
         />
-        <Route path="/admin/companies" element={<Companies />} />
+        <Route path="/admin/companies" element={ProtectRoute(Companies)} />
         <Route
           path="/admin/companies/:companyId"
-          element={<CompanyDetails />}
+          element={ProtectRoute(CompanyDetails)}
         />
       </Routes>
       <AuthVerify logOut={logOut} />

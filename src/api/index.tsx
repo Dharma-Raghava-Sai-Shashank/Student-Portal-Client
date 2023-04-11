@@ -1,4 +1,7 @@
+
 export const APIRequest = async (url: string, method: string, data?: Object | FormData) => {
+  const token = localStorage.getItem('token');
+
   return fetch(url, {
     method, // *GET, POST, PUT, DELETE, etc.
     mode: "cors", // no-cors, *cors, same-origin
@@ -8,6 +11,7 @@ export const APIRequest = async (url: string, method: string, data?: Object | Fo
       // "Content-Type": `multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW`
       // 'Content-Type': 'application/x-www-form-urlencoded',
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
     },
     redirect: "follow", // manual, *follow, error
     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url

@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from '../Slices/auth';
 import messageReducer from '../Slices/message';
+import placementReducer from '../Slices/placementcycle';
 
 export const store = configureStore({
     reducer:{
         auth: authReducer,
-        message: messageReducer
+        message: messageReducer,
+        placementcycle: placementReducer
     },
     devTools: true
 })

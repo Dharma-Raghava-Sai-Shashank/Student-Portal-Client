@@ -1,7 +1,10 @@
 import { APIRequest, baseURL } from ".";
 
-const authBaseURL = baseURL + '/placementcycle';
-const adminBaseURL = authBaseURL + '/admin';
+const studentBaseURL = baseURL + '/placementcycle';
+const adminBaseURL = studentBaseURL + '/admin';
 
 export const fetchAllPlacementCycles = async () =>
 await APIRequest(adminBaseURL, "GET");
+
+export const fetchEnrolledPlacementCycles = async () =>
+await APIRequest(studentBaseURL + '/enrolled', "GET");
