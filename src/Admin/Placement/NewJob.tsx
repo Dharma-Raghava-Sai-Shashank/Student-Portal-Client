@@ -71,30 +71,6 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
-// const ITEM_HEIGHT = 80;
-// const ITEM_PADDING_TOP = 8;
-// const MenuProps = {
-//   PaperProps: {
-//     style: {
-//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-//       // width: "50%",
-//     },
-//   },
-// };
-
-// const names = [
-//   "Oliver Hansen",
-//   "Van Henry",
-//   "April Tucker",
-//   "Ralph Hubbard",
-//   "Omar Alexander",
-//   "Carlos Abbott",
-//   "Miriam Wagner",
-//   "Bradley Wilkerson",
-//   "Virginia Andrews",
-//   "Kelly Snyder",
-// ];
-
 const currencies = ["+91", "+87", "+71"];
 
 const modules = {
@@ -121,19 +97,19 @@ const initialJobData = {
   hasPPO: 0,
   ismOffersMax: 5,
   ismOffersMin: 3,
-  company:  {
+  company: {
     companyName: "",
     companyWebsite: "",
     category: {},
-},
+  },
   nfEligibility: [],
   nf_stages: [],
   nfHistoryCriteria: [],
   nf_docs: [],
   placementCycle: {
     placementCycleId: 4,
-    placementCycleName: 'FT Cycle 2022-23',
-    acadYear: '2022-2023'
+    placementCycleName: "FT Cycle 2022-23",
+    acadYear: "2022-2023",
   },
   HRs: [],
   spocs: [],
@@ -181,14 +157,14 @@ const initialHRData = {
 
 const initialStageData = {
   stage: 0,
-  stageType: '',
-  stageMode: ''
-}
+  stageType: "",
+  stageMode: "",
+};
 
 interface StageData {
-  stage: number,
-  stageType: string,
-  stageMode: string
+  stage: number;
+  stageType: string;
+  stageMode: string;
 }
 
 export const NewJob = ({ option, setOption, session, setSession }: props) => {
@@ -214,7 +190,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [primaryHr, setPrimaryHr] = React.useState<any>(initialHRData);
   const [secondaryHr, setSecondaryHr] = React.useState<any>(initialHRData);
   const [selectionStages, setSelectionStages] = React.useState<any>([]);
-  const [isUploading, setIsUploading] = React.useState<boolean>(false)
+  const [isUploading, setIsUploading] = React.useState<boolean>(false);
 
   const formData = new FormData();
 
@@ -235,8 +211,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       setSelectionStages(stages);
     };
     fetchData();
-  setIsUploading(false);
-
+    setIsUploading(false);
   }, []);
 
   React.useEffect(() => {
@@ -275,7 +250,9 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       ...prevData,
       {
         id: uid(4),
-        stage: selectionStages.find((stage: any) => stage.stageId === stageData.stage),
+        stage: selectionStages.find(
+          (stage: any) => stage.stageId === stageData.stage
+        ),
         stageType: stageData.stageType,
         stageMode: stageData.stageMode,
       },
@@ -291,7 +268,13 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       const newList = Array.from(new Set([...selected, ...specializations]));
       setSelected(newList as any);
       return;
-    } else setSelected(selected.filter((spec: any) => !specializations.find((item: any) => spec.specId === item.specId)));
+    } else
+      setSelected(
+        selected.filter(
+          (spec: any) =>
+            !specializations.find((item: any) => spec.specId === item.specId)
+        )
+      );
   };
 
   const handleClick = (
@@ -300,13 +283,20 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   ) => {
     if (event.target?.checked) {
       setSelected([...selected, spec]);
-    } else setSelected(selected.filter((item: any) => item.specId !== spec.specId));
+    } else
+      setSelected(selected.filter((item: any) => item.specId !== spec.specId));
   };
 
-  const isSelected = (id: number) => selected.find((spec: any) => spec.specId === id);
+  const isSelected = (id: number) =>
+    selected.find((spec: any) => spec.specId === id);
   const isAllSelected = () => {
     for (let i in specializations)
-      if (!selected.find((spec: any) => spec.specId === specializations[i]?.specId)) return false;
+      if (
+        !selected.find(
+          (spec: any) => spec.specId === specializations[i]?.specId
+        )
+      )
+        return false;
     return true;
   };
   const [sameCgpaChecked, setSameCgpaChecked] = React.useState(true);
@@ -322,12 +312,12 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   };
 
   const uploadFiles = async (files: any) => {
-    for(let i in files){
-      formData.set("file",files[i]);
+    for (let i in files) {
+      formData.set("file", files[i]);
       files[i] = await uploadFile(formData);
     }
     return files;
-  }
+  };
 
   const handleUploadClick = async (e: any) => {
     e.preventDefault();
@@ -337,7 +327,9 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     setIsUploading((prev) => !prev);
     setUploadedDocs([]);
     const docs = await uploadFiles(Array.from(fileList));
-    setUploadedDocs(docs.map((doc:any) => ({ docType: 'JNF', document: doc.document })));
+    setUploadedDocs(
+      docs.map((doc: any) => ({ docType: "JNF", document: doc.document }))
+    );
     setIsUploading((prev) => !prev);
   };
   // 👇 files is not an array, but it's iterable, spread to get an array of files
@@ -357,27 +349,33 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     const HRs: any = [];
     const primary = await createHR(primaryHr);
     const secondary = await createHR(secondaryHr);
-    HRs.push({ isPrimary: 1, hr: primary?.HR});
-    HRs.push({ isPrimary: 0, hr: secondary?.HR});
+    HRs.push({ isPrimary: 1, hr: primary?.HR });
+    HRs.push({ isPrimary: 0, hr: secondary?.HR });
 
-    setJobData((prevData: any) => ({ ...prevData, nf_docs: uploadedDocs, spocs, HRs, nf_stages: ScheduleList as any, nfEligibility: selected.map((spec: any) => {
-      return {
-        spec,
-        minLPA: 10,
-        maxLPA: 30,
-        cgpaValue: 7.5
-      }
-    }) as any}));
+    setJobData((prevData: any) => ({
+      ...prevData,
+      nf_docs: uploadedDocs,
+      spocs,
+      HRs,
+      nf_stages: ScheduleList as any,
+      nfEligibility: selected.map((spec: any) => {
+        return {
+          spec,
+          minLPA: 10,
+          maxLPA: 30,
+          cgpaValue: 7.5,
+        };
+      }) as any,
+    }));
 
     const nfEligibility: any = [];
-    for(let i in selected)
-    {
+    for (let i in selected) {
       nfEligibility.push({
         spec: selected[i],
         minLPA: 10,
         maxLPA: 30,
-        cgpaValue: 7.5
-      })
+        cgpaValue: 7.5,
+      });
     }
 
     return {
@@ -387,8 +385,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       HRs,
       nf_stages: [...ScheduleList],
       nfEligibility,
-      placementCycle: initialJobData.placementCycle
-    }
+      placementCycle: initialJobData.placementCycle,
+    };
   };
 
   const handleAddNewJob = async (e: any) => {
@@ -792,7 +790,9 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                         (row: any, index: number) => {
                                           const isItemSelected = isSelected(
                                             row.specId
-                                          ) ? true : false;
+                                          )
+                                            ? true
+                                            : false;
                                           const labelId = row.specId;
 
                                           return (
@@ -839,10 +839,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                                     "aria-labelledby": labelId,
                                                   }}
                                                   onChange={(event) =>
-                                                    handleClick(
-                                                      event,
-                                                      row
-                                                    )
+                                                    handleClick(event, row)
                                                   }
                                                 />
                                               </TableCell>
@@ -945,82 +942,101 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                 <div className="my-4">
                   <div>
                     <div className="row my-4">
-                      {[{
-                        label: "Stage",
-                        name: "stage",
-                        value: stageData?.stage,
-                        dropdownData: selectionStages.map((stage: any) => {
-                          return ({ name: stage.stageName, value: stage.stageId });
-                        })
-                      },{
-                        label: "Stage Type",
-                        name: "stageType",
-                        value: stageData?.stageType,
-                        dropdownData: [{ name: 'Technical', value: 'Tech' }, { name: 'Aptitude', value: 'Apti' }, { name: 'Other', value: 'Other' }]
-                      },{
-                        label: "Stage Mode",
-                        name: "stageMode",
-                        value: stageData?.stageMode,
-                        dropdownData: ['Virtual', 'Physical'].map((mode: string) => {
-                          return ({ name: mode, value: mode });
-                        })
-                      }].map(
-                        (item: any) => {
-                          return (
-                            <div className="col-3">
-                              <div className="d-flex justify-content-center w-100">
-                                <div
-                                  className="mb-3 dropdownBody"
-                                  style={{ height: "40px", width: "200px" }}
-                                >
-                                  <label htmlFor="mode" className="newjobLabel">
-                                    {item.label}
-                                  </label>
-                                  <div className="dropdown">
-                                    <button
-                                      type="button"
-                                      style={{
-                                        height: "40px",
-                                        width: "200px",
-                                        lineHeight: "40px",
-                                      }}
-                                      className="dropdown-toggle button-select"
-                                      onClick={() => {
-                                        setOpenSchedule(item.label);
-                                        // setOpenCategoryOption(() => "");
-                                      }}
-                                    >
-                                      {(item.value === '' || item.value===0)? "Select an option": item.dropdownData?.find((data: any) => data.value===item.value)?.name}
-                                    </button>
+                      {[
+                        {
+                          label: "Stage",
+                          name: "stage",
+                          value: stageData?.stage,
+                          dropdownData: selectionStages.map((stage: any) => {
+                            return {
+                              name: stage.stageName,
+                              value: stage.stageId,
+                            };
+                          }),
+                        },
+                        {
+                          label: "Stage Type",
+                          name: "stageType",
+                          value: stageData?.stageType,
+                          dropdownData: [
+                            { name: "Technical", value: "Tech" },
+                            { name: "Aptitude", value: "Apti" },
+                            { name: "Other", value: "Other" },
+                          ],
+                        },
+                        {
+                          label: "Stage Mode",
+                          name: "stageMode",
+                          value: stageData?.stageMode,
+                          dropdownData: ["Virtual", "Physical"].map(
+                            (mode: string) => {
+                              return { name: mode, value: mode };
+                            }
+                          ),
+                        },
+                      ].map((item: any) => {
+                        return (
+                          <div className="col-3">
+                            <div className="d-flex justify-content-center w-100">
+                              <div
+                                className="mb-3 dropdownBody"
+                                style={{ height: "40px", width: "200px" }}
+                              >
+                                <label htmlFor="mode" className="newjobLabel">
+                                  {item.label}
+                                </label>
+                                <div className="dropdown">
+                                  <button
+                                    type="button"
+                                    style={{
+                                      height: "40px",
+                                      width: "200px",
+                                      lineHeight: "40px",
+                                    }}
+                                    className="dropdown-toggle button-select"
+                                    onClick={() => {
+                                      setOpenSchedule(item.label);
+                                      // setOpenCategoryOption(() => "");
+                                    }}
+                                  >
+                                    {item.value === "" || item.value === 0
+                                      ? "Select an option"
+                                      : item.dropdownData?.find(
+                                          (data: any) =>
+                                            data.value === item.value
+                                        )?.name}
+                                  </button>
 
-                                    <ul
-                                      className={`dropdown-menu ${
-                                        openSchedule===item.label ? " show" : ""
-                                      }`}
-                                    >
-                                      {item.dropdownData.map((data: any) => (
-                                        <li className="dropdown-item">
-                                          <button
-                                            type="button"
-                                            value={data.value}
-                                            className="dropdown-option"
-                                            onClick={() => {
-                                              setOpenSchedule("None");
-                                              setStageData({ ...stageData, [item.name]: data.value })
-                                            }}
-                                          >
-                                            {data.name}
-                                          </button>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
+                                  <ul
+                                    className={`dropdown-menu ${
+                                      openSchedule === item.label ? " show" : ""
+                                    }`}
+                                  >
+                                    {item.dropdownData.map((data: any) => (
+                                      <li className="dropdown-item">
+                                        <button
+                                          type="button"
+                                          value={data.value}
+                                          className="dropdown-option"
+                                          onClick={() => {
+                                            setOpenSchedule("None");
+                                            setStageData({
+                                              ...stageData,
+                                              [item.name]: data.value,
+                                            });
+                                          }}
+                                        >
+                                          {data.name}
+                                        </button>
+                                      </li>
+                                    ))}
+                                  </ul>
                                 </div>
                               </div>
                             </div>
-                          );
-                        }
-                      )}
+                          </div>
+                        );
+                      })}
                       <div className="col-3">
                         <div className="d-flex justify-content-center mt-4 pt-2">
                           <Button
@@ -1483,8 +1499,10 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       ))}
                     </ul>
 
-                    <button onClick={handleUploadClick} disabled={isUploading}>Upload</button>
-                    {isUploading && (<h6>Uploading...</h6>)}
+                    <button onClick={handleUploadClick} disabled={isUploading}>
+                      Upload
+                    </button>
+                    {isUploading && <h6>Uploading...</h6>}
                   </div>
                 </div>
               </div>
@@ -1513,7 +1531,11 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                 </div>
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={isUploading}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={isUploading}
+              >
                 Submit
               </button>
             </form>
