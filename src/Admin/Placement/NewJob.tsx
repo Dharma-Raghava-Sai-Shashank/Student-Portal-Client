@@ -71,30 +71,6 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
-// const ITEM_HEIGHT = 80;
-// const ITEM_PADDING_TOP = 8;
-// const MenuProps = {
-//   PaperProps: {
-//     style: {
-//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-//       // width: "50%",
-//     },
-//   },
-// };
-
-// const names = [
-//   "Oliver Hansen",
-//   "Van Henry",
-//   "April Tucker",
-//   "Ralph Hubbard",
-//   "Omar Alexander",
-//   "Carlos Abbott",
-//   "Miriam Wagner",
-//   "Bradley Wilkerson",
-//   "Virginia Andrews",
-//   "Kelly Snyder",
-// ];
-
 const currencies = ["+91", "+87", "+71"];
 
 const modules = {
@@ -109,63 +85,34 @@ const modules = {
     ],
   ],
 };
+
 const initialJobData = {
-  type: "INF",
-  profile: "Business Analyst",
-  placeOfPosting: "Gurgaon",
-  jobDescription: "NA",
-  modeOfInternship: "NA",
-  ctc: "10LPA",
-  ctcBreakup: "NA",
-  bondDetails: "NA",
-  hasPPO: 0,
-  ismOffersMax: 5,
-  ismOffersMin: 3,
-  company:  {
+  type: "",
+  profile: "",
+  placeOfPosting: "",
+  jobDescription: "",
+  modeOfInternship: "",
+  ctc: "",
+  ctcBreakup: "",
+  bondDetails: "",
+  hasPPO: "",
+  ismOffersMax: "",
+  ismOffersMin: "",
+  company: {
     companyName: "",
     companyWebsite: "",
     category: {},
-},
-  nfEligibility: [],
+    sector: {},
+  },
+  nfEligibilty: [],
   nf_stages: [],
   nfHistoryCriteria: [],
   nf_docs: [],
-  placementCycle: {
-    placementCycleId: 4,
-    placementCycleName: 'FT Cycle 2022-23',
-    acadYear: '2022-2023'
-  },
+  placementCycle: {},
   HRs: [],
   spocs: [],
-  additionalDetails: "NA",
+  additionalDetails: "",
 };
-// const initialJobData = {
-//   type: "",
-//   profile: "",
-//   placeOfPosting: "",
-//   jobDescription: "",
-//   modeOfInternship: "",
-//   ctc: "",
-//   ctcBreakup: "",
-//   bondDetails: "",
-//   hasPPO: "",
-//   ismOffersMax: "",
-//   ismOffersMin: "",
-//   company: {
-//     companyName: "",
-//     companyWebsite: "",
-//     category: {},
-//     sector: {},
-//   },
-//   nfEligibilty: [],
-//   nf_stages: [],
-//   nfHistoryCriteria: [],
-//   nf_docs: [],
-//   placementCycle: {},
-//   HRs: [],
-//   spocs: [],
-//   additionalDetails: "",
-// };
 
 const initialHRData = {
   name: "",
@@ -242,7 +189,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   React.useEffect(() => {
     const fetchSpecialization = async () => {
       const { specializations } = await fetchSpecializationForCourses(
-        currCourse
+        [currCourse]
       );
 
       setSpecializations(specializations);
