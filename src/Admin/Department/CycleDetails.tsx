@@ -202,9 +202,9 @@ export const CycleDetails = () => {
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
-      const { specializations } = await fetchSpecializationForCourses(
-        currCourse
-      );
+      const { specializations } = await fetchSpecializationForCourses([
+        currCourse,
+      ]);
 
       setSpecializations(specializations);
     };
