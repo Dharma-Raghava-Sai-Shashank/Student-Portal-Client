@@ -85,63 +85,34 @@ const modules = {
     ],
   ],
 };
+
 const initialJobData = {
-  type: "INF",
-  profile: "Business Analyst",
-  placeOfPosting: "Gurgaon",
-  jobDescription: "NA",
-  modeOfInternship: "NA",
-  ctc: "10LPA",
-  ctcBreakup: "NA",
-  bondDetails: "NA",
-  hasPPO: 0,
-  ismOffersMax: 5,
-  ismOffersMin: 3,
+  type: "",
+  profile: "",
+  placeOfPosting: "",
+  jobDescription: "",
+  modeOfInternship: "",
+  ctc: "",
+  ctcBreakup: "",
+  bondDetails: "",
+  hasPPO: "",
+  ismOffersMax: "",
+  ismOffersMin: "",
   company: {
     companyName: "",
     companyWebsite: "",
     category: {},
+    sector: {},
   },
-  nfEligibility: [],
+  nfEligibilty: [],
   nf_stages: [],
   nfHistoryCriteria: [],
   nf_docs: [],
-  placementCycle: {
-    placementCycleId: 4,
-    placementCycleName: "FT Cycle 2022-23",
-    acadYear: "2022-2023",
-  },
+  placementCycle: {},
   HRs: [],
   spocs: [],
-  additionalDetails: "NA",
+  additionalDetails: "",
 };
-// const initialJobData = {
-//   type: "",
-//   profile: "",
-//   placeOfPosting: "",
-//   jobDescription: "",
-//   modeOfInternship: "",
-//   ctc: "",
-//   ctcBreakup: "",
-//   bondDetails: "",
-//   hasPPO: "",
-//   ismOffersMax: "",
-//   ismOffersMin: "",
-//   company: {
-//     companyName: "",
-//     companyWebsite: "",
-//     category: {},
-//     sector: {},
-//   },
-//   nfEligibilty: [],
-//   nf_stages: [],
-//   nfHistoryCriteria: [],
-//   nf_docs: [],
-//   placementCycle: {},
-//   HRs: [],
-//   spocs: [],
-//   additionalDetails: "",
-// };
 
 const initialHRData = {
   name: "",
@@ -216,9 +187,9 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
-      const { specializations } = await fetchSpecializationForCourses(
-        currCourse
-      );
+      const { specializations } = await fetchSpecializationForCourses([
+        currCourse,
+      ]);
 
       setSpecializations(specializations);
     };
