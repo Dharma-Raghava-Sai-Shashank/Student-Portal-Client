@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { setMessage } from "./message";
 import * as AuthService from "../api/auth.service";
+import { catchError } from "../common/handleError";
 
-interface AuthState {
+export interface AuthState {
   isLoggedIn: boolean;
   accessToken: string | null;
   role: string | null;
@@ -31,14 +32,7 @@ export const login = createAsyncThunk(
 
       return { token: data.token, role: data.role };
     } catch (error: any) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      thunkAPI.dispatch(setMessage({ message, type: 'error' }));
-      return thunkAPI.rejectWithValue(message);
+      return catchError(error, thunkAPI);
     }
   }
 );
