@@ -194,7 +194,7 @@ export const CycleDetails = () => {
       const { courses } = await fetchAllCourses();
 
       setCourses(courses);
-      setCurrCourse(courses?.[0]?.courseId);
+      // setCurrCourse(courses?.[0]?.courseId);
     };
     fetchData();
     // setIsUploading(false);
@@ -202,9 +202,7 @@ export const CycleDetails = () => {
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
-      const { specializations } = await fetchSpecializationForCourses([
-        currCourse,
-      ]);
+      const { specializations } = await fetchSpecializationForCourses([1, 2]);
 
       setSpecializations(specializations);
     };
@@ -429,7 +427,7 @@ export const CycleDetails = () => {
                               </TableHead>
                               <TableBody>
                                 {/* <>{console.log(courses)}</> */}
-                                {courses.map((row: any, index: number) => {
+                                {courses?.map((row: any, index: number) => {
                                   const isItemSelected = isSelectedCourses(
                                     row.courseId
                                   )
@@ -682,7 +680,7 @@ export const CycleDetails = () => {
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {courses.map((row: any, index: number) => {
+                              {courses?.map((row: any, index: number) => {
                                 const labelId = row.courseId;
                                 return (
                                   <TableRow tabIndex={-1} key={row.courseId}>
