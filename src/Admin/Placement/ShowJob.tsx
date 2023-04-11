@@ -21,6 +21,26 @@ import { MainSidebar } from "../Sidebars/MainSidebar";
 import { Header1 } from "../Headers/Header1";
 import { AddstudentsModal } from "./AddStudentModal";
 import "./style.scss";
+import { alpha, styled } from "@mui/material/styles";
+import { pink } from "@mui/material/colors";
+import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
+
+const PinkSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: pink[600],
+    "&:hover": {
+      backgroundColor: alpha(pink[600], theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: pink[600],
+  },
+}));
+
+const label = { inputProps: { "aria-label": "Color switch demo" } };
 
 const Schedule = [
   {
@@ -69,6 +89,7 @@ const html = (
     </ol>
   </div>
 );
+
 export const generateDetails = (detailType: string, detail: string) => {
   return (
     <div className="row mt-3 border-bottom mx-2">
@@ -107,8 +128,15 @@ export const ShowJob = () => {
   const [showCheckbox, setShowCheckbox] = useState(true);
 
   const [showStudentModal, setshowStudentModal] = useState(false);
+
   const params = useParams();
   const applicationId = params.applicationId as string;
+
+  const [checked, setChecked] = React.useState(true);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
   return (
     <div>
       <div className="d-flex">
@@ -121,10 +149,7 @@ export const ShowJob = () => {
               <div>
                 <span className="fs-14">Placement | </span>
 
-                <span className={`fs-14  green1c fw-500`}>
-                  {" "}
-                  {applicationId}{" "}
-                </span>
+                <span className={`fs-14  green1c fw-500`}>{applicationId}</span>
               </div>
               <div className="bg-white my-2 shadow-lg ">
                 <div>
@@ -140,7 +165,7 @@ export const ShowJob = () => {
                         </Avatar>
                       </div>
                     </div>
-                    <div className="col-9 my-5">
+                    <div className="col-6 my-5">
                       <Box sx={{ width: "100%", maxWidth: 500 }}>
                         <div className="ms-1">
                           <Typography variant="h4" gutterBottom>
@@ -160,6 +185,68 @@ export const ShowJob = () => {
                           </div>
                         </div>
                         <Chip label={"Full time 2022-23"} variant="outlined" />
+                      </Box>
+                    </div>
+                    <div className="col-3 my-2 d-flex align-self-end ">
+                      <Box>
+                        <div className="ms-1 ">
+                          <div>
+                            <Typography
+                              variant="button"
+                              className={`me-3 fw-600 ms-2 ${
+                                checked ? "green1c" : "text-danger"
+                              }`}
+                              display="block"
+                            >
+                              Status:
+                              {checked ? " In Progress" : " Application Closed"}
+                            </Typography>
+                            <div className="d-flex">
+                              <Switch
+                                {...label}
+                                checked={checked}
+                                onChange={handleChange}
+                                color="success"
+                              />
+                              <FormHelperText className="my-2">
+                                Click to {checked ? " close" : "open"} the
+                                application
+                              </FormHelperText>
+                            </div>
+                          </div>
+
+                          {/* <div>
+                            <Typography
+                              variant="button"
+                              className="me-3 fw-600"
+                              display="block"
+                            >
+                              Close Application ?
+                            </Typography>
+                            <div className="mb-2">
+                              <FormGroup>
+                                <FormControlLabel
+                                  control={
+                                    <Switch
+                                      {...label}
+                                      checked={checked}
+                                      onChange={handleChange}
+                                      color="success"
+                                    />
+                                  }
+                                  label={`${
+                                    checked
+                                      ? "Status: In Progress"
+                                      : "Status: Application Closed"
+                                  }`}
+                                />
+                              </FormGroup>
+                              <FormHelperText>
+                                Click to close the application
+                              </FormHelperText>
+                            </div>
+                          </div> */}
+                        </div>
                       </Box>
                     </div>
                   </div>
