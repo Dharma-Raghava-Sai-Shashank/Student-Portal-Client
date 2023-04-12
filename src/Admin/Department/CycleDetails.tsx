@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { useParams } from "react-router";
-import Box from "@mui/material/Box";
+// import { useParams } from "react-router";
 import Button from "@mui/material/Button";
 import Modal from "react-bootstrap/Modal";
-import Chip from "@mui/material/Chip";
-import TextField from "@mui/material/TextField";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,13 +9,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import Switch from "@mui/material/Switch";
 import Popover from "@mui/material/Popover";
-import AddIcon from "@mui/icons-material/Add";
-import Select from "react-select";
 
 import { fetchAllCourses } from "../../api/course.service";
 import { fetchSpecializationForCourses } from "../../api/specialization.service";
@@ -86,12 +78,12 @@ export const CycleDetails = () => {
   const [opentype, setOpentype] = useState<boolean>(false);
   const [opentypeOption, setOpentypeOption] = useState<string>("");
 
-  const params = useParams();
-  const cycleId = params.cycleId;
+  // const params = useParams();
+  // const cycleId = params.cycleId;
 
   const [courses, setCourses] = React.useState<any>([]);
   const [specializations, setSpecializations] = React.useState<any>([]);
-  const [currCourse, setCurrCourse] = React.useState<number>(0);
+  const [currCourses, setCurrCourses] = React.useState<number[]>([]);
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
@@ -195,6 +187,7 @@ export const CycleDetails = () => {
 
       setCourses(courses);
       // setCurrCourse(courses?.[0]?.courseId);
+      setCurrCourses(courses.map((course: any) => course.courseId));
     };
     fetchData();
     // setIsUploading(false);
@@ -202,12 +195,12 @@ export const CycleDetails = () => {
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
-      const { specializations } = await fetchSpecializationForCourses([1, 2]);
+      const { specializations } = await fetchSpecializationForCourses(currCourses);
 
       setSpecializations(specializations);
     };
-    if (currCourse && currCourse !== 0) fetchSpecialization();
-  }, [currCourse]);
+    if (currCourses && currCourses.length) fetchSpecialization();
+  }, [currCourses]);
 
   return (
     <div>
