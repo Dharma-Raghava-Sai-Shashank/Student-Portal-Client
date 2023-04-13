@@ -8,3 +8,6 @@ await APIRequest(adminBaseURL, "GET");
 
 export const fetchEnrolledPlacementCycles = async () =>
 await APIRequest(studentBaseURL + '/enrolled', "GET");
+
+export const createPlacementCycle = async (cycleDetails: any) =>
+await APIRequest(adminBaseURL, "POST", cycleDetails);
