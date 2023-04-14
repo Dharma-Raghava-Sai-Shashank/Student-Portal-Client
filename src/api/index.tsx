@@ -19,7 +19,6 @@ export const APIRequest = async (url: string, method: string, data?: Object | Fo
   })
     .then((response: any) => response.json())
     .catch((error) => {
-      console.log({error});
       return ({ success: false, message: error.message });
     });
 };

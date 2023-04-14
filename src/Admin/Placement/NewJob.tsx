@@ -189,7 +189,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     const fetchSpecialization = async () => {
       const { specializations } = await fetchSpecializationForCourses([
         currCourse,
-      ]);
+      ], "2022-2023");
 
       setSpecializations(specializations);
     };

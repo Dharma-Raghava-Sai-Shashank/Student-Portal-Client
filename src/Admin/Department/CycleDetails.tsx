@@ -20,6 +20,7 @@ import { MainSidebar } from "../Sidebars/MainSidebar";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { generateDetails } from "../Placement/ShowJob";
 import { generateHeading } from "../Placement/ShowJob";
+import { fetchCurrentAcadYear } from '../../api/acadYear.service';
 
 interface HeadCell {
   id: string;
@@ -84,6 +85,7 @@ export const CycleDetails = () => {
   const [courses, setCourses] = React.useState<any>([]);
   const [specializations, setSpecializations] = React.useState<any>([]);
   const [currCourses, setCurrCourses] = React.useState<number[]>([]);
+  const [acadYear, setAcadYear] = React.useState<any>();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
@@ -184,8 +186,10 @@ export const CycleDetails = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       const { courses } = await fetchAllCourses();
+      const response = await fetchCurrentAcadYear();
 
       setCourses(courses);
+      setAcadYear(response?.acadYear);
       // setCurrCourse(courses?.[0]?.courseId);
       setCurrCourses(courses.map((course: any) => course.courseId));
     };
@@ -195,12 +199,12 @@ export const CycleDetails = () => {
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
-      const { specializations } = await fetchSpecializationForCourses(currCourses);
+      const { specializations } = await fetchSpecializationForCourses(currCourses, acadYear?.year);
 
       setSpecializations(specializations);
     };
-    if (currCourses && currCourses.length) fetchSpecialization();
-  }, [currCourses]);
+    if (currCourses && currCourses.length && acadYear) fetchSpecialization();
+  }, [currCourses, acadYear]);
 
   return (
     <div>

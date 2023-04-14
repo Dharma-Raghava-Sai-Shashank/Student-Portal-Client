@@ -17,8 +17,6 @@ export const signin = async (data: User.AuthData) => {
 export const adminSignin = async (data: User.AuthData) => {
     const response = await APIRequest(adminAuthURL + `/signin`, "POST", data);
 
-    console.log({ response });
-
     if(!response.success)
     return { ...response, role: 'admin'};
 
