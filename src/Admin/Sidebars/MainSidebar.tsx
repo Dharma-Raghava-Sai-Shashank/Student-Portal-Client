@@ -136,12 +136,16 @@ export const MainSidebar = () => {
                   {collapseadmin === true && (
                     <div>
                       <Link to="/admin/placementcycle">
-                        <button
-                          className="MainSidebarOptionButton ps-4"
-                          onClick={() => {}}
-                        >
+                        <button className="MainSidebarOptionButton ps-4">
                           <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
                             <div className="fs-14 mx-3">Placement Cycle</div>
+                          </div>
+                        </button>
+                      </Link>
+                      <Link to="/admin/programs">
+                        <button className="MainSidebarOptionButton ps-4">
+                          <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
+                            <div className="fs-14 mx-3">Edit Programs</div>
                           </div>
                         </button>
                       </Link>

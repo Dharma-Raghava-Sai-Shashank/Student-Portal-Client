@@ -31,6 +31,7 @@ const cycle = {
   startDate: "15 June 2022",
   endDate: "30 March 2023",
   type: "Placement",
+  gradYear: 2023,
 };
 const headCells: readonly HeadCell[] = [
   {
@@ -57,13 +58,8 @@ const headCoursesTable: readonly HeadCell[] = [
     label: "Course",
   },
   {
-    id: "startYear",
-    label: "Start Year",
-  },
-
-  {
-    id: "endYear",
-    label: "End Year",
+    id: "duration",
+    label: "Duration",
   },
 ];
 
@@ -71,7 +67,13 @@ export const CycleDetails = () => {
   const [show, setShow] = useState(false);
   const [selectedSpecialization, setSelectedSpecialization] =
     React.useState<any>([]);
+  const [selectedSpecializationID, setSelectedSpecializationID] =
+    React.useState<number[] | null>([]);
+
   const [selectedCourses, setSelectedCourses] = React.useState<any>([]);
+  const [selectedCoursesIds, setSelectedCoursesIds] = React.useState<number[]>(
+    []
+  );
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -83,7 +85,7 @@ export const CycleDetails = () => {
 
   const [courses, setCourses] = React.useState<any>([]);
   const [specializations, setSpecializations] = React.useState<any>([]);
-  const [currCourses, setCurrCourses] = React.useState<number[]>([]);
+  // const [selectedCoursesIds, setselectedCoursesIds] = React.useState<number[]>([]);
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
@@ -111,6 +113,9 @@ export const CycleDetails = () => {
           (item: any) => item.specId !== spec.specId
         )
       );
+    setSelectedSpecializationID(
+      selectedSpecialization?.map((item: any) => item.specId)
+    );
   };
   const isAllSelectedSpecialization = () => {
     for (let i in specializations)
@@ -138,6 +143,9 @@ export const CycleDetails = () => {
             !specializations.find((item: any) => spec.specId === item.specId)
         )
       );
+    setSelectedSpecializationID(
+      selectedSpecialization?.map((item: any) => item.specId)
+    );
   };
 
   // For Courses
@@ -154,6 +162,7 @@ export const CycleDetails = () => {
       setSelectedCourses(
         selectedCourses.filter((item: any) => item.courseId !== course.courseId)
       );
+    setSelectedCoursesIds(selectedCourses.map((item: any) => item.courseId));
   };
   const isAllSelectedCourses = () => {
     for (let i in courses)
@@ -179,6 +188,7 @@ export const CycleDetails = () => {
             !courses.find((item: any) => course.courseId === item.courseId)
         )
       );
+    setSelectedCoursesIds(selectedCourses.map((item: any) => item.courseId));
   };
 
   React.useEffect(() => {
@@ -187,7 +197,9 @@ export const CycleDetails = () => {
 
       setCourses(courses);
       // setCurrCourse(courses?.[0]?.courseId);
-      setCurrCourses(courses.map((course: any) => course.courseId));
+      setSelectedCoursesIds(
+        selectedCourses.map((course: any) => course.courseId)
+      );
     };
     fetchData();
     // setIsUploading(false);
@@ -195,12 +207,14 @@ export const CycleDetails = () => {
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
-      const { specializations } = await fetchSpecializationForCourses(currCourses);
+      const { specializations } = await fetchSpecializationForCourses(
+        selectedCoursesIds
+      );
 
       setSpecializations(specializations);
     };
-    if (currCourses && currCourses.length) fetchSpecialization();
-  }, [currCourses]);
+    if (selectedCoursesIds && selectedCoursesIds.length) fetchSpecialization();
+  }, [selectedCoursesIds]);
 
   return (
     <div>
@@ -252,6 +266,29 @@ export const CycleDetails = () => {
                               </label>
                               <input
                                 type="text"
+                                className="newjobInput"
+                                id="Cycle Name"
+                              />
+                              <Typography
+                                variant="caption"
+                                display="block"
+                                gutterBottom
+                                style={{ color: "color: rgba(0, 0, 0, 0.6)" }}
+                              >
+                                Kindly mention start and end month too (Ex: May
+                                – July 2022 Pre-final year students of ALL
+                                courses)
+                              </Typography>
+                            </div>
+                            <div className="my-3">
+                              <label
+                                htmlFor="Cycle Name"
+                                className="newjobLabel fw-600"
+                              >
+                                Graduating Year
+                              </label>
+                              <input
+                                type="number"
                                 className="newjobInput"
                                 id="Cycle Name"
                               />
@@ -341,6 +378,10 @@ export const CycleDetails = () => {
                     <div>
                       <div className="mt-2 mb-3">
                         {generateDetails("Cycle Name", cycle.name)}
+                        {generateDetails(
+                          "Graduating Year",
+                          cycle.gradYear.toString()
+                        )}
                         {generateDetails("Type", cycle.type)}
                         {generateDetails("Start Date", cycle.startDate)}
                         {generateDetails("End Date", cycle.endDate)}
@@ -434,7 +475,7 @@ export const CycleDetails = () => {
                                       role="checkbox"
                                       aria-checked={isItemSelected}
                                       tabIndex={-1}
-                                      key={row}
+                                      key={row.courseId}
                                       selected={isItemSelected}
                                     >
                                       <TableCell padding="checkbox">
@@ -552,7 +593,7 @@ export const CycleDetails = () => {
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
-                                        key={row}
+                                        key={row.specId}
                                         selected={isItemSelected}
                                       >
                                         <TableCell padding="checkbox">
@@ -684,8 +725,7 @@ export const CycleDetails = () => {
                                     >
                                       {row.courseName}
                                     </TableCell>
-                                    <TableCell align="left">2019</TableCell>
-                                    <TableCell align="left">2023</TableCell>
+                                    <TableCell align="left">4 Years</TableCell>
                                   </TableRow>
                                 );
                               })}
@@ -721,7 +761,7 @@ export const CycleDetails = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {specializations.map(
+                                {specializations?.map(
                                   (row: any, index: number) => {
                                     const labelId = row.specId;
 

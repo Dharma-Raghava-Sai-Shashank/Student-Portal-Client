@@ -9,6 +9,7 @@ import { CompanyDetails } from "./Admin/Companies/CompanyDetails";
 import { ShowJob } from "./Admin/Placement/ShowJob";
 import AdminAuth from "./Admin/Auth/Auth";
 import { CycleDetails } from "./Admin/Department/CycleDetails";
+import { Program } from "typescript";
 import CycleDepartment from "./Admin/Department/CreateDeparment";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -22,6 +23,7 @@ import { logout } from "./Slices/auth";
 import EventBus from "./common/EventBus";
 import AdminRoute from "./common/AdminRoute";
 import StudentRoute from "./common/StudentRoute";
+import { Programs } from "./Admin/Programs/Programs";
 
 const ProtectRoute: any = (Component: React.FC<{}>) => {
   return (
@@ -84,6 +86,7 @@ function App() {
         <Route path="/reg" element={ProtectStudentRoute(Registration)} />
         <Route path="/admin" element={ProtectRoute(Admin)} />
         <Route path="/admin/placement" element={ProtectRoute(Placement)} />
+        <Route path="/admin/programs" element={ProtectRoute(Programs)} />
         <Route
           path="/admin/placement/:applicationId"
           element={ProtectRoute(ShowJob)}
