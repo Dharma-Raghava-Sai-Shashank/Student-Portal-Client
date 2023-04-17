@@ -9,6 +9,7 @@ import { CompanyDetails } from "./Admin/Companies/CompanyDetails";
 import { ShowJob } from "./Admin/Placement/ShowJob";
 import AdminAuth from "./Admin/Auth/Auth";
 import { CycleDetails } from "./Admin/Department/CycleDetails";
+import { AcadYearProgram } from "./Admin/Programs/AcadYearProgram";
 import { Program } from "typescript";
 import CycleDepartment from "./Admin/Department/CreateDeparment";
 import "bootstrap/dist/css/bootstrap.css";
@@ -86,7 +87,11 @@ function App() {
         <Route path="/reg" element={ProtectStudentRoute(Registration)} />
         <Route path="/admin" element={ProtectRoute(Admin)} />
         <Route path="/admin/placement" element={ProtectRoute(Placement)} />
-        <Route path="/admin/programs" element={ProtectRoute(Programs)} />
+        <Route path="/admin/programs" element={ProtectRoute(AcadYearProgram)} />
+        <Route
+          path="/admin/programs/:acadYear"
+          element={ProtectRoute(Programs)}
+        />
         <Route
           path="/admin/placement/:applicationId"
           element={ProtectRoute(ShowJob)}
