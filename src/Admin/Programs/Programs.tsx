@@ -63,6 +63,7 @@ export const Programs = () => {
 
   const [opentype, setOpentype] = useState<boolean>(false);
   const [opentypeOption, setOpentypeOption] = useState<string>("");
+  const [selected, setSelected] = useState([]);
 
   const handleAccordian = (id: any) => {
     if (expandID === id) setExpandID(() => null);
@@ -107,7 +108,8 @@ export const Programs = () => {
       const { departments } = await fetchAllDepartments();
       setAllDepartments(departments);
       const { specializations } = await fetchSpecializationForCourses(
-        courses.map((course: any) => course.courseId)
+        courses.map((course: any) => course.courseId),
+        "2023"
       );
       setAllSpecialization(specializations);
     };
