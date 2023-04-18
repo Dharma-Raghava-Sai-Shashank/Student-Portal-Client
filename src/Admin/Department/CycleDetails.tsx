@@ -86,8 +86,6 @@ export const CycleDetails = () => {
 
   const [courses, setCourses] = React.useState<any>([]);
   const [specializations, setSpecializations] = React.useState<any>([]);
-  // const [selectedCoursesIds, setselectedCoursesIds] = React.useState<number[]>([]);
-  const [currCourses, setCurrCourses] = React.useState<number[]>([]);
   const [acadYear, setAcadYear] = React.useState<any>();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -208,19 +206,19 @@ export const CycleDetails = () => {
     };
     fetchData();
     // setIsUploading(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
       const { specializations } = await fetchSpecializationForCourses(
-        currCourses,
-        acadYear?.year
+        selectedCoursesIds, acadYear?.year
       );
 
       setSpecializations(specializations);
     };
-    if (currCourses && currCourses.length && acadYear) fetchSpecialization();
-  }, [currCourses, acadYear]);
+    if (selectedCoursesIds && selectedCoursesIds.length) fetchSpecialization();
+  }, [selectedCoursesIds, acadYear]);
 
   return (
     <div>
