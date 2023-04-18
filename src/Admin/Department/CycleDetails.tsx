@@ -20,7 +20,7 @@ import { MainSidebar } from "../Sidebars/MainSidebar";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { generateDetails } from "../Placement/ShowJob";
 import { generateHeading } from "../Placement/ShowJob";
-import { fetchCurrentAcadYear } from '../../api/acadYear.service';
+import { fetchCurrentAcadYear } from "../../api/acadYear.service";
 
 interface HeadCell {
   id: string;
@@ -219,12 +219,6 @@ export const CycleDetails = () => {
     };
     if (selectedCoursesIds && selectedCoursesIds.length) fetchSpecialization();
   }, [selectedCoursesIds, acadYear]);
-  //     const { specializations } = await fetchSpecializationForCourses(currCourses, acadYear?.year);
-
-  //     setSpecializations(specializations);
-  //   };
-  //   if (currCourses && currCourses.length && acadYear) fetchSpecialization();
-  // }, [currCourses, acadYear]);
 
   return (
     <div>

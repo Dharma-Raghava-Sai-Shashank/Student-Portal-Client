@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { MainSidebar } from "../Sidebars/MainSidebar";
 import { Header1 } from "../Headers/Header1";
-
 import Button from "@mui/material/Button";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -9,7 +8,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { Theme, useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -25,13 +23,12 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import MapsHomeWorkOutlinedIcon from "@mui/icons-material/MapsHomeWorkOutlined";
 import CircleIcon from "@mui/icons-material/Circle";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
 import Modal from "react-bootstrap/Modal";
 
-import { Link } from "react-router-dom";
 import { fetchAllCourses } from "../../api/course.service";
 import { fetchSpecializationForCourses } from "../../api/specialization.service";
 import { fetchAllDepartments } from "../../api/department.service";
+import { fetchCurrentAcadYear } from "../../api/acadYear.service";
 
 const ITEM_HEIGHT = 70;
 const ITEM_PADDING_TOP = 8;
@@ -60,10 +57,11 @@ export const Programs = () => {
   const handleOpenNewSpecialization = () => setShowNewSpecialization(true);
   const [expandID, setExpandID] = useState<number | null>();
   const [courseModalName, setCourseModalName] = useState("");
+  const [acadYear, setAcadYear] = React.useState<any>();
 
-  const [opentype, setOpentype] = useState<boolean>(false);
-  const [opentypeOption, setOpentypeOption] = useState<string>("");
-  const [selected, setSelected] = useState([]);
+  // const [opentype, setOpentype] = useState<boolean>(false);
+  // const [opentypeOption, setOpentypeOption] = useState<string>("");
+  // const [selected, setSelected] = useState([]);
 
   const handleAccordian = (id: any) => {
     if (expandID === id) setExpandID(() => null);
@@ -92,29 +90,23 @@ export const Programs = () => {
     "Kelly Snyder",
   ];
 
-  function getStyles(name: string, personName: string[], theme: Theme) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
-
   React.useEffect(() => {
     const fetchData = async () => {
       const { courses } = await fetchAllCourses();
+      const response = await fetchCurrentAcadYear();
+
       setCourses(courses);
+      setAcadYear(response?.acadYear);
       const { departments } = await fetchAllDepartments();
       setAllDepartments(departments);
       const { specializations } = await fetchSpecializationForCourses(
-        courses.map((course: any) => course.courseId),
-        "2023"
+        courses?.map((course: any) => course.courseId),
+        acadYear?.year
       );
       setAllSpecialization(specializations);
     };
     fetchData();
-  }, []);
+  }, [acadYear]);
 
   return (
     <div className="d-flex">
@@ -124,7 +116,10 @@ export const Programs = () => {
         <div className="d-flex justify-content-center">
           <div className=" w-100 px-5 py-5 grey2b">
             <div>
-              <span className="fs-14 green1c fw-500">Programs </span>
+              <span className="fs-14">Admin | </span>
+              <span className="fs-14 green1c fw-500">
+                Programs - {acadYear?.year}
+              </span>
             </div>
             <div className="bg-white my-2 shadow-lg ">
               <div className="d-flex justify-content-between border-bottom">
@@ -196,7 +191,7 @@ export const Programs = () => {
                   <hr style={{ height: "1.3px", margin: 0 }} />
                 </div>
                 <div className="pb-4 m-4">
-                  {courses.map((course: any) => (
+                  {courses?.map((course: any) => (
                     <div className="w-75 m-3">
                       <Accordion
                         style={{ boxShadow: "none", padding: 0 }}
@@ -263,7 +258,7 @@ export const Programs = () => {
                         <AccordionDetails>
                           <Typography>
                             {allSpecialization
-                              .filter(
+                              ?.filter(
                                 (specialization: any) =>
                                   specialization.courseId === course.courseId
                               )
@@ -482,7 +477,7 @@ export const Programs = () => {
                   <hr style={{ height: "1.3px", margin: 0 }} />
                 </div>
                 <div className="pb-4">
-                  {allDepartments.map((department: any) => (
+                  {allDepartments?.map((department: any) => (
                     <div className=" mx-3 px-5" key={department.deptId}>
                       <div className="d-flex my-2">
                         <div className="me-4">
