@@ -9,7 +9,11 @@ import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import { Header1 } from "../Headers/Header1";
 import { MainSidebar } from "../Sidebars/MainSidebar";
-import { fetchCompanyById, fetchCompanyHRs, fetchCompanyNFs } from "../../api/company.service";
+import {
+  fetchCompanyById,
+  fetchCompanyHRs,
+  fetchCompanyNFs,
+} from "../../api/company.service";
 
 interface allNFInCycle {
   applicationid: number;
@@ -41,7 +45,7 @@ export const CompanyDetails = () => {
       });
     };
     fetchCompany();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const generateDetails = (detailType: string, detail: string | number) => {
@@ -89,7 +93,7 @@ export const CompanyDetails = () => {
           >
             {allNF.map((item) => (
               <Link
-                to={`/admin/placement/$(item.applicationId)`}
+                to={`/admin/placement/${item.applicationid}`}
                 style={{ textDecoration: "none" }}
                 className="cursor-pointer"
               >
@@ -157,10 +161,19 @@ export const CompanyDetails = () => {
                       <div className="mb-5">
                         {generateHeading("Company Details")}
                         <div className="mt-2 mb-3">
-                          {generateDetails("Company Name", company?.companyName || "")}
+                          {generateDetails(
+                            "Company Name",
+                            company?.companyName || ""
+                          )}
                           {generateDetails("Company Id", companyId)}
-                          {generateDetails("Website", company?.companyWebsite || "")}
-                          {generateDetails("Category", company?.categoryName || "")}
+                          {generateDetails(
+                            "Website",
+                            company?.companyWebsite || ""
+                          )}
+                          {generateDetails(
+                            "Category",
+                            company?.categoryName || ""
+                          )}
                         </div>
                       </div>
                       <div className="mb-5">
@@ -178,17 +191,14 @@ export const CompanyDetails = () => {
                           {companyHRs.map((hr: Company.HR) => {
                             return (
                               <div className="mt-2 mb-5">
-                                {generateDetails(
-                                  "HR Name",
-                                  hr.hrContactName
-                                )}
+                                {generateDetails("HR Name", hr.hrContactName)}
                                 {generateDetails("Phone Number(s)", hr.phones)}
-                                {generateDetails(
-                                  "Email ID(s)",
-                                  hr.emails
-                                )}
+                                {generateDetails("Email ID(s)", hr.emails)}
                                 {generateDetails("LinkedIn", hr.linkedin)}
-                                {generateDetails("Validity Status", hr.validityState)}
+                                {generateDetails(
+                                  "Validity Status",
+                                  hr.validityState
+                                )}
                               </div>
                             );
                           })}

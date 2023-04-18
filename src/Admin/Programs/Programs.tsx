@@ -40,7 +40,10 @@ const MenuProps = {
     },
   },
 };
-
+interface department {
+  deptId: number;
+  deptName: string;
+}
 export const Programs = () => {
   const [courses, setCourses] = React.useState<any>([]);
   const [allDepartments, setAllDepartments] = useState<any>([]);
@@ -59,10 +62,16 @@ export const Programs = () => {
   const [courseModalName, setCourseModalName] = useState("");
   const [acadYear, setAcadYear] = React.useState<any>();
 
-  // const [opentype, setOpentype] = useState<boolean>(false);
-  // const [opentypeOption, setOpentypeOption] = useState<string>("");
-  // const [selected, setSelected] = useState([]);
-
+  const [selected, setSelected] = useState<department[]>([]);
+  const handlecheckbox = (deptId: number) => {
+    if (
+      selected.find((dept) => {
+        return dept.deptId === deptId;
+      })
+    )
+      return true;
+    return false;
+  };
   const handleAccordian = (id: any) => {
     if (expandID === id) setExpandID(() => null);
     else setExpandID(() => id);
@@ -70,12 +79,22 @@ export const Programs = () => {
 
   const [personName, setPersonName] = React.useState<string[]>([]);
 
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(typeof value === "string" ? value.split(",") : value);
-    console.log(personName);
+  const handleChange = (event: any) => {
+    const value = event.target.value;
+    if (
+      selected.find((dept) => {
+        return dept.deptId === value[0]?.deptId;
+      })
+    ) {
+      const newSelectedDept = selected.filter(
+        (item) => item.deptId != value[0]?.deptId
+      );
+      setSelected(() => newSelectedDept);
+    } else {
+      setSelected((prev) => [...prev, value[0]]);
+    }
+    // setSelectedDeptName(selected.map((dept: any) => dept.deptName));
+    console.log(selected);
   };
   const names = [
     "Oliver Hansen",
@@ -378,16 +397,20 @@ export const Programs = () => {
                                 renderValue={(selected) => selected.join(", ")}
                                 MenuProps={MenuProps}
                               >
-                                {names.map((name) => (
+                                {allDepartments.map((department: any) => (
                                   <MenuItem
-                                    key={name}
-                                    value={name}
+                                    key={department.deptId}
+                                    value={department}
                                     // style={getStyles(name, personName, theme)}
                                   >
                                     <Checkbox
-                                      checked={personName.indexOf(name) > -1}
+                                      checked={handlecheckbox(
+                                        department.deptId
+                                      )}
                                     />
-                                    <ListItemText primary={name} />
+                                    <ListItemText
+                                      primary={department.deptName}
+                                    />
                                   </MenuItem>
                                 ))}
                               </Select>
