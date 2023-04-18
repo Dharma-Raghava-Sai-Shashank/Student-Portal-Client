@@ -86,12 +86,7 @@ export const CycleDetails = () => {
 
   const [courses, setCourses] = React.useState<any>([]);
   const [specializations, setSpecializations] = React.useState<any>([]);
-<<<<<<< HEAD
-  // const [selectedCoursesIds, setselectedCoursesIds] = React.useState<number[]>([]);
-=======
-  const [currCourses, setCurrCourses] = React.useState<number[]>([]);
   const [acadYear, setAcadYear] = React.useState<any>();
->>>>>>> a8c26654a6194154cd60dd89c9723ce69c21f986
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
@@ -211,27 +206,25 @@ export const CycleDetails = () => {
     };
     fetchData();
     // setIsUploading(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
-<<<<<<< HEAD
       const { specializations } = await fetchSpecializationForCourses(
-        selectedCoursesIds
+        selectedCoursesIds, acadYear?.year
       );
 
       setSpecializations(specializations);
     };
     if (selectedCoursesIds && selectedCoursesIds.length) fetchSpecialization();
-  }, [selectedCoursesIds]);
-=======
-      const { specializations } = await fetchSpecializationForCourses(currCourses, acadYear?.year);
+  }, [selectedCoursesIds, acadYear]);
+  //     const { specializations } = await fetchSpecializationForCourses(currCourses, acadYear?.year);
 
-      setSpecializations(specializations);
-    };
-    if (currCourses && currCourses.length && acadYear) fetchSpecialization();
-  }, [currCourses, acadYear]);
->>>>>>> a8c26654a6194154cd60dd89c9723ce69c21f986
+  //     setSpecializations(specializations);
+  //   };
+  //   if (currCourses && currCourses.length && acadYear) fetchSpecialization();
+  // }, [currCourses, acadYear]);
 
   return (
     <div>
