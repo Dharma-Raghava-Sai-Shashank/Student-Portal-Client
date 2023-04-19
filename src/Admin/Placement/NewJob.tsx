@@ -75,7 +75,7 @@ const currencies = ["+91", "+87", "+71"];
 
 const modules = {
   toolbar: [
-    [{ header: [2, 3, 4, false] }],
+    [{ header: [false] }],
     ["bold", "italic", "underline"],
     [
       { list: "ordered" },
@@ -187,9 +187,10 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
-      const { specializations } = await fetchSpecializationForCourses([
-        currCourse,
-      ], "2022-2023");
+      const { specializations } = await fetchSpecializationForCourses(
+        [currCourse],
+        "2022-2023"
+      );
 
       setSpecializations(specializations);
     };
