@@ -24,21 +24,9 @@ import "./style.scss";
 import { alpha, styled } from "@mui/material/styles";
 import { pink } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
+import { htmlTypography } from "../../Student/Dashboard/Dashboard";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
-
-const PinkSwitch = styled(Switch)(({ theme }) => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: pink[600],
-    "&:hover": {
-      backgroundColor: alpha(pink[600], theme.palette.action.hoverOpacity),
-    },
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: pink[600],
-  },
-}));
 
 const label = { inputProps: { "aria-label": "Color switch demo" } };
 
@@ -68,59 +56,25 @@ const Schedule = [
     StageDate: "22/04/2022",
   },
 ];
-function convertHTML() {
-  const htmlNew = html;
-}
 
-const temp = `<Typography variant="h6">
-<div>
-  <p>This is a webpage Why do I have to check this??</p>
+export const HtmlText = (
+  <div>
+    <p>This is a webpage Why do I have to check this??</p>
 
-  <p>Because whatever.</p>
-  <p>
-    <strong>Pros:</strong>
-  </p>
-  <ol>
-    <li>
-      <strong>checking</strong>
-    </li>
-    <li>
-      <strong>seeing if it works</strong>
-    </li>
-  </ol>
-</div>
-</Typography>`;
-
-const RenderAddDetails = () => {
-  return JSON.parse(temp);
-};
-const html = (
-  <>
-    <Typography variant="h6">
-      <div>
-        <p>This is a webpage Why do I have to check this??</p>
-
-        <p>Because whatever.</p>
-        <p>
-          <strong>Pros:</strong>
-        </p>
-        <ol>
-          <li>
-            <strong>checking</strong>
-          </li>
-          <li>
-            <strong>seeing if it works</strong>
-          </li>
-        </ol>
-      </div>
-    </Typography>
-    {/* <RenderAddDetails /> */}
-  </>
+    <p>Because whatever.</p>
+    <p>
+      <strong>Pros:</strong>
+    </p>
+    <ol>
+      <li>
+        <strong>checking</strong>
+      </li>
+      <li>
+        <strong>seeing if it works</strong>
+      </li>
+    </ol>
+  </div>
 );
-
-const addDetails = document.createElement("div");
-addDetails.innerHTML = temp;
-const html1 = addDetails.firstChild;
 
 export const generateDetails = (detailType: string, detail: string) => {
   return (
@@ -648,7 +602,7 @@ export const ShowJob = () => {
                               {generateHeading("Additional Infomation")}
 
                               <div className="mt-2 mb-5" id="AdditionalDetails">
-                                {html}
+                                {htmlTypography(HtmlText)}
                               </div>
                             </div>
                           </div>

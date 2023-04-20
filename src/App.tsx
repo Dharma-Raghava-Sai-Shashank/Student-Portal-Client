@@ -13,6 +13,7 @@ import { AcadYearProgram } from "./Admin/Programs/AcadYearProgram";
 import UserProfile from "./Student/Profile/UserProfile";
 import JobProfile from "./Student/Job Profiles/JobProfile";
 import DashBoard from "./Student/Dashboard/Dashboard";
+import { RespExtra } from "./Student/Dashboard/RespExtra";
 import "bootstrap/dist/css/bootstrap.css";
 
 import "./App.css";
@@ -113,6 +114,7 @@ function App() {
         <Route path="/student/profile" element={<UserProfile />} />
         <Route path="/student/jobprofile" element={<JobProfile />} />
         <Route path="/student/dashboard" element={<DashBoard />} />
+        <Route path="/student/extras" element={<RespExtra />} />
       </Routes>
       <AuthVerify logOut={logOut} />
     </>

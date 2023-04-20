@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import MotionPhotosAutoIcon from "@mui/icons-material/MotionPhotosAuto";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import GradingIcon from "@mui/icons-material/Grading";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
+import ViewCompactIcon from "@mui/icons-material/ViewCompact";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import { Link } from "react-router-dom";
 import "./index.scss";
 
@@ -16,8 +18,12 @@ import "./index.scss";
 // }
 
 export const StudentSidebar = () => {
-  const [collapse, setCollapse] = useState(false);
-  const [collapseadmin, setCollapseAdmin] = useState(false);
+  const windowSize = useRef([window.innerWidth, window.innerHeight]);
+  // console.log(windowSize.current[0]);
+
+  const [collapse, setCollapse] = useState(
+    windowSize.current[0] < 720 ? true : false
+  );
 
   return (
     <div>
@@ -66,8 +72,22 @@ export const StudentSidebar = () => {
                   <Link to="/student/jobprofile">
                     <button className="MainSidebarOptionButton my-2">
                       <div className="MainSidebarOptionButtonDiv fs-18">
-                        <GradingIcon className="mx-3" fontSize="large" />
+                        <WorkOutlineIcon className="mx-3" fontSize="large" />
                         Job Profile
+                      </div>
+                    </button>
+                  </Link>
+                  <Link
+                    to="/student/extras"
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    <button className="MainSidebarOptionButton my-2 extras">
+                      <div className="MainSidebarOptionButtonDiv fs-18">
+                        <ViewCompactIcon className="mx-3" fontSize="large" />
+                        Extras
                       </div>
                     </button>
                   </Link>
@@ -76,7 +96,7 @@ export const StudentSidebar = () => {
             </div>
           </div>
         ) : (
-          <div className="topLogoHamburger px-0 py-3">
+          <div className="topLogoHamburger responsiveSidebar px-0 py-3">
             <div className="MainSidebar" style={{ width: "inherit" }}>
               <div className="d-flex justify-content-center">
                 <div className="logo">
@@ -92,7 +112,7 @@ export const StudentSidebar = () => {
                 </button>
               </div>
               <div className="topLogo p-0">
-                <div className="MainSidebarOptions my-5">
+                <div className="MainSidebarOptions my-4">
                   <div className="MainSidebarOption">
                     <div className="d-flex justify-content-center">
                       <Link to="/student/dashboard">
@@ -120,7 +140,17 @@ export const StudentSidebar = () => {
                           className="text-white my-3"
                           style={{ backgroundColor: "inherit", border: "none" }}
                         >
-                          <GradingIcon fontSize="large" />
+                          <WorkOutlineIcon fontSize="large" />
+                        </button>
+                      </Link>
+                    </div>
+                    <div className="extras text-center ">
+                      <Link to="/student/extras">
+                        <button
+                          className="text-white my-3"
+                          style={{ backgroundColor: "inherit", border: "none" }}
+                        >
+                          <ViewCompactIcon fontSize="large" />
                         </button>
                       </Link>
                     </div>
