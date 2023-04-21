@@ -8,14 +8,9 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
+import Tooltip from "@mui/material/Tooltip";
 
+import AddToPhotosOutlinedIcon from "@mui/icons-material/AddToPhotosOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
@@ -49,11 +44,15 @@ export const Programs = () => {
   const [allDepartments, setAllDepartments] = useState<any>([]);
   const [allSpecialization, setAllSpecialization] = useState<any>([]);
 
-  const [showNewSpecialization, setShowNewSpecialization] = useState(false);
   const [showNewCourse, setShowNewCourse] = useState(false);
   const [showNewDepartment, setShowNewDepartment] = useState(false);
+  const [showNewDiscipline, setShowNewDiscipline] = useState(false);
+  const [showNewSpecialization, setShowNewSpecialization] = useState(false);
+
   const handleCloseNewDepartment = () => setShowNewDepartment(false);
   const handleOpenNewDepartment = () => setShowNewDepartment(true);
+  const handleCloseNewDiscipline = () => setShowNewDiscipline(false);
+  const handleOpenNewDiscipline = () => setShowNewDiscipline(true);
   const handleCloseNewCourse = () => setShowNewCourse(false);
   const handleOpenNewCourse = () => setShowNewCourse(true);
   const handleCloseNewSpecialization = () => setShowNewSpecialization(false);
@@ -61,53 +60,44 @@ export const Programs = () => {
   const [expandID, setExpandID] = useState<number | null>();
   const [courseModalName, setCourseModalName] = useState("");
   const [acadYear, setAcadYear] = React.useState<any>();
+  const [openDept, setOpenDept] = useState<boolean>(false);
+  const [openDisp, setOpenDisp] = useState<boolean>(false);
 
-  const [selected, setSelected] = useState<department[]>([]);
-  const handlecheckbox = (deptId: number) => {
-    if (
-      selected.find((dept) => {
-        return dept.deptId === deptId;
-      })
-    )
-      return true;
-    return false;
-  };
+  const [selectedDepartment, setSelectedDepartment] = useState<department>();
+  const [selectedDiscipline, setSelectedDiscipline] = useState<any>();
+
+  // const handlecheckbox = (deptId: number) => {
+
+  //   if (
+  //     selected.find((dept) => {
+  //       return dept.deptId === deptId;
+  //     })
+  //   )
+  //     return true;
+  //   return false;
+  // };
   const handleAccordian = (id: any) => {
     if (expandID === id) setExpandID(() => null);
     else setExpandID(() => id);
   };
 
-  const [personName, setPersonName] = React.useState<string[]>([]);
-
-  const handleChange = (event: any) => {
-    const value = event.target.value;
-    if (
-      selected.find((dept) => {
-        return dept.deptId === value[0]?.deptId;
-      })
-    ) {
-      const newSelectedDept = selected.filter(
-        (item) => item.deptId != value[0]?.deptId
-      );
-      setSelected(() => newSelectedDept);
-    } else {
-      setSelected((prev) => [...prev, value[0]]);
-    }
-    // setSelectedDeptName(selected.map((dept: any) => dept.deptName));
-    console.log(selected);
-  };
-  const names = [
-    "Oliver Hansen",
-    "Van Henry",
-    "April Tucker",
-    "Ralph Hubbard",
-    "Omar Alexander",
-    "Carlos Abbott",
-    "Miriam Wagner",
-    "Bradley Wilkerson",
-    "Virginia Andrews",
-    "Kelly Snyder",
-  ];
+  // const handleChange = (event: any) => {
+  //   console.log(event.target.value);
+  //   setSelected(() => event.target.value);
+  //   // const value = event.target.value;
+  //   // if (
+  //   //   selected.find((dept) => {
+  //   //     return dept.deptId === value[0]?.deptId;
+  //   //   })
+  //   // ) {
+  //   //   const newSelectedDept = selected.filter(
+  //   //     (item) => item.deptId != value[0]?.deptId
+  //   //   );
+  //   //   setSelected(() => newSelectedDept);
+  //   // } else {
+  //   //   setSelected((prev) => [...prev, value[0]]);
+  //   // }
+  // };
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -258,19 +248,36 @@ export const Programs = () => {
                                   color="success"
                                 />
                               </IconButton>
-                              <IconButton
-                                color="primary"
-                                component="label"
-                                onClick={() => {
-                                  handleOpenNewSpecialization();
-                                  setCourseModalName(() => course.courseName);
-                                }}
-                              >
-                                <AddCircleOutlineIcon
-                                  fontSize="small"
-                                  color="success"
-                                />
-                              </IconButton>
+                              <Tooltip title="Add Discipline">
+                                <IconButton
+                                  color="primary"
+                                  component="label"
+                                  onClick={() => {
+                                    handleOpenNewDiscipline();
+                                    setCourseModalName(() => course.courseName);
+                                  }}
+                                >
+                                  <AddCircleOutlineIcon
+                                    fontSize="small"
+                                    color="success"
+                                  />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Add Specialization">
+                                <IconButton
+                                  color="primary"
+                                  component="label"
+                                  onClick={() => {
+                                    handleOpenNewSpecialization();
+                                    setCourseModalName(() => course.courseName);
+                                  }}
+                                >
+                                  <AddToPhotosOutlinedIcon
+                                    fontSize="small"
+                                    color="success"
+                                  />
+                                </IconButton>
+                              </Tooltip>
                             </div>
                           </div>
                         </AccordionSummary>
@@ -283,7 +290,7 @@ export const Programs = () => {
                               )
                               .map((spec: any) => (
                                 <div className=" mx-3 px-5" key={spec.specId}>
-                                  <div className="d-flex my-2">
+                                  <div className="d-flex">
                                     <div className="me-4">
                                       <CircleIcon
                                         sx={{
@@ -360,7 +367,72 @@ export const Programs = () => {
                           className="newjobInput"
                           id="SpecializationName"
                         />
+                        <div className="mt-3 mb-3 dropdownBody">
+                          <label className="newjobLabel fw-600">
+                            Select Discipline
+                          </label>
+                          <div className="dropdown my-3">
+                            <div className="dropdown">
+                              <button
+                                type="button"
+                                className="dropdown-toggle button-select"
+                                onClick={() => {
+                                  setOpenDisp((prev) => !prev);
+                                }}
+                              >
+                                {!selectedDiscipline ||
+                                selectedDiscipline?.deptName === ""
+                                  ? "Select an Option"
+                                  : selectedDiscipline?.deptName}
+                              </button>
+
+                              <ul
+                                className={`dropdown-menu ${
+                                  openDisp ? " show" : ""
+                                }`}
+                              >
+                                {allDepartments.map((dept: department) => (
+                                  <li className="dropdown-item">
+                                    <button
+                                      type="button"
+                                      value={dept.deptName}
+                                      className="dropdown-option"
+                                      onClick={() => {
+                                        setOpenDisp(() => false);
+                                        setSelectedDiscipline(() => dept);
+                                      }}
+                                    >
+                                      {dept.deptName}
+                                    </button>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
                       </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button onClick={handleCloseNewSpecialization}>
+                        Close
+                      </Button>
+                      <Button onClick={handleCloseNewSpecialization}>
+                        Save Changes
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                  <Modal
+                    show={showNewDiscipline}
+                    onHide={handleCloseNewDiscipline}
+                    size="lg"
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>
+                        Add New Discipline for
+                        {" " + courseModalName}
+                      </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                       <div className="my-3">
                         <label
                           htmlFor="DisciplineName"
@@ -381,56 +453,56 @@ export const Programs = () => {
                             Department
                           </label>
                           <div className="dropdown my-3">
-                            <FormControl sx={{ width: "98%", ml: 1 }}>
-                              <InputLabel id="demo-select-small">
-                                Select Department
-                              </InputLabel>
-                              <Select
-                                labelId="demo-simple-select-disabled-label"
-                                id="demo-simple-select-disabled"
-                                multiple
-                                value={personName}
-                                onChange={handleChange}
-                                input={
-                                  <OutlinedInput label="Select Department" />
-                                }
-                                renderValue={(selected) => selected.join(", ")}
-                                MenuProps={MenuProps}
+                            <div className="dropdown">
+                              <button
+                                type="button"
+                                className="dropdown-toggle button-select"
+                                onClick={() => {
+                                  setOpenDept((prev) => !prev);
+                                }}
                               >
-                                {allDepartments.map((department: any) => (
-                                  <MenuItem
-                                    key={department.deptId}
-                                    value={department}
-                                    // style={getStyles(name, personName, theme)}
-                                  >
-                                    <Checkbox
-                                      checked={handlecheckbox(
-                                        department.deptId
-                                      )}
-                                    />
-                                    <ListItemText
-                                      primary={department.deptName}
-                                    />
-                                  </MenuItem>
+                                {!selectedDepartment ||
+                                selectedDepartment?.deptName === ""
+                                  ? "Select an Option"
+                                  : selectedDepartment?.deptName}
+                              </button>
+
+                              <ul
+                                className={`dropdown-menu ${
+                                  openDept ? " show" : ""
+                                }`}
+                              >
+                                {allDepartments.map((dept: department) => (
+                                  <li className="dropdown-item">
+                                    <button
+                                      type="button"
+                                      value={dept.deptName}
+                                      className="dropdown-option"
+                                      onClick={() => {
+                                        setOpenDept(() => false);
+                                        setSelectedDepartment(() => dept);
+                                      }}
+                                    >
+                                      {dept.deptName}
+                                    </button>
+                                  </li>
                                 ))}
-                              </Select>
-                            </FormControl>
+                              </ul>
+                            </div>
                           </div>
-                        </div>{" "}
+                        </div>
                       </div>
                     </Modal.Body>
                     <Modal.Footer>
-                      <Button onClick={handleCloseNewSpecialization}>
-                        Close
-                      </Button>
-                      <Button onClick={handleCloseNewSpecialization}>
+                      <Button onClick={handleCloseNewDiscipline}>Close</Button>
+                      <Button onClick={handleCloseNewDiscipline}>
                         Save Changes
                       </Button>
                     </Modal.Footer>
                   </Modal>
                 </div>
               </div>
-              {/* All departmets */}
+              {/* All departments */}
               <div>
                 <div className=" px-3 py-2">
                   <div className="d-flex justify-content-between my-2">

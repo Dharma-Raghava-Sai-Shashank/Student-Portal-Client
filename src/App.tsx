@@ -10,6 +10,10 @@ import { ShowJob } from "./Admin/Placement/ShowJob";
 import AdminAuth from "./Admin/Auth/Auth";
 import { CycleDetails } from "./Admin/Department/CycleDetails";
 import { AcadYearProgram } from "./Admin/Programs/AcadYearProgram";
+import UserProfile from "./Student/Profile/UserProfile";
+import JobProfile from "./Student/Job Profiles/JobProfile";
+import DashBoard from "./Student/Dashboard/Dashboard";
+import { RespExtra } from "./Student/Dashboard/RespExtra";
 import "bootstrap/dist/css/bootstrap.css";
 
 import "./App.css";
@@ -107,6 +111,10 @@ function App() {
           path="/admin/companies/:companyId"
           element={ProtectRoute(CompanyDetails)}
         />
+        <Route path="/student/profile" element={<UserProfile />} />
+        <Route path="/student/jobprofile" element={<JobProfile />} />
+        <Route path="/student/dashboard" element={<DashBoard />} />
+        <Route path="/student/extras" element={<RespExtra />} />
       </Routes>
       <AuthVerify logOut={logOut} />
     </>

@@ -27,13 +27,16 @@
   color: #419297;
 }
 .grey1b {
-  background-color: #373739;
+  background-color: #373739 !important;
 }
 .grey1c {
   color: #373739;
 }
 .grey2b {
   background-color: #dddddd9c;
+}
+.grey3b {
+  background-color: #f6f7fa;
 }
 .grey2c {
   color: #dddddd9c;
@@ -60,7 +63,7 @@
   font-size: 14px !important;
 }
 .fs-18 {
-  font-size: 18px;
+  font-size: 18px !important;
 }
 .fs-20 {
   font-size: 20px;

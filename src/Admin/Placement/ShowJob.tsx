@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { useParams } from "react-router";
 import Avatar from "@mui/material/Avatar";
 import ApartmentIcon from "@mui/icons-material/Apartment";
@@ -24,21 +24,9 @@ import "./style.scss";
 import { alpha, styled } from "@mui/material/styles";
 import { pink } from "@mui/material/colors";
 import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
+import { htmlTypography } from "../../Student/Dashboard/Dashboard";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
-
-const PinkSwitch = styled(Switch)(({ theme }) => ({
-  "& .MuiSwitch-switchBase.Mui-checked": {
-    color: pink[600],
-    "&:hover": {
-      backgroundColor: alpha(pink[600], theme.palette.action.hoverOpacity),
-    },
-  },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: pink[600],
-  },
-}));
 
 const label = { inputProps: { "aria-label": "Color switch demo" } };
 
@@ -68,13 +56,11 @@ const Schedule = [
     StageDate: "22/04/2022",
   },
 ];
-const html = (
+
+export const HtmlText = (
   <div>
-    <h1>This is a webpage.</h1>
-    <h2>Why do I have to check this??</h2>
-    <p>
-      <br />
-    </p>
+    <p>This is a webpage Why do I have to check this??</p>
+
     <p>Because whatever.</p>
     <p>
       <strong>Pros:</strong>
@@ -615,7 +601,9 @@ export const ShowJob = () => {
                             <div className="mb-5">
                               {generateHeading("Additional Infomation")}
 
-                              <div className="mt-2 mb-5">{html}</div>
+                              <div className="mt-2 mb-5" id="AdditionalDetails">
+                                {htmlTypography(HtmlText)}
+                              </div>
                             </div>
                           </div>
                         </div>
