@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import FooterWave from "../../Images/FooterWave.svg";
 import "./Auth.scss";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { login } from "../../Slices/auth";
 import { clearMessage } from "../../Slices/message";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 function Auth() {
-  let navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
 
   const { isLoggedIn, role } = useAppSelector((state) => state.auth);
@@ -36,8 +34,6 @@ function Auth() {
       .unwrap()
       .then(() => {
         setLoading(false);
-        // navigate("/admin");
-        // window.location.reload();
       })
       .catch(() => {
         setLoading(false);

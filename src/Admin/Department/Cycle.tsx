@@ -4,37 +4,67 @@ import Modal from "react-bootstrap/Modal";
 import Button from "@mui/material/Button";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import Typography from "@mui/material/Typography";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchPlacementCycles, savePlacementCycle } from "../../Slices/placementcycle";
+import { ADMIN } from "../constants";
+import { fetchAcadYears } from "../../Slices/academicYear";
+import {
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+
+const initialData: PlacementCycle.RootObject = {
+  placementCycleName: "",
+  type: "",
+  acadYear: undefined,
+  startDate: "",
+  endDate: "",
+  graduatingYear: "",
+};
+
+const GraduatingYears = ["2023"];
+
+const types = ["placement", "internship"];
 
 export const Cycle = () => {
-  const cycles = [
-    {
-      id: 1,
-      name: "Full Time Placement (2023 batch)",
-      startDate: "15 June 2022",
-      endDate: "30 March 2023",
-      type: "Placement",
-    },
-    {
-      id: 1,
-      name: "Internshp (2024 batch)",
-      startDate: "15 August 2022",
-      endDate: "30 March 2023",
-      type: "Placement",
-    },
-    {
-      id: 1,
-      name: "6 month Internship (2023 batch)",
-      startDate: "15 November 2022",
-      endDate: "30 March 2023",
-      type: "Placement",
-    },
-  ];
   const [show, setShow] = useState(false);
+
+  const dispatch = useAppDispatch();
+
+  const acadYears: AcademicYear.RootObject[] = useAppSelector((state) =>
+    state.academicyear.currAcadYear
+      ? [state.academicyear.currAcadYear, ...state.academicyear.prevAcadYears]
+      : state.academicyear.prevAcadYears
+  );
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [opentype, setOpentype] = useState<boolean>(false);
-  const [opentypeOption, setOpentypeOption] = useState<string>("");
+  const [placementCycle, setPlacementCycle] =
+    useState<PlacementCycle.RootObject>(initialData);
+
+  const cycles = useAppSelector((state) => state.placementcycle);
+
+  React.useEffect(() => {
+    dispatch(fetchPlacementCycles({ type: ADMIN }));
+    dispatch(fetchAcadYears());
+  }, [dispatch]);
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPlacementCycle((prev: PlacementCycle.RootObject) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSaveCycle = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    dispatch(savePlacementCycle(placementCycle));
+    setShow(false);
+  }
+
   return (
     <div className="d-flex justify-content-center w-100">
       <div className="w-100 px-5 py-5 grey2b">
@@ -67,6 +97,9 @@ export const Cycle = () => {
                       type="text"
                       className="newjobInput"
                       id="Cycle Name"
+                      name="placementCycleName"
+                      value={placementCycle.placementCycleName}
+                      onChange={handleOnChange}
                     />
                     <Typography
                       variant="caption"
@@ -78,54 +111,103 @@ export const Cycle = () => {
                       2022 Pre-final year students of ALL courses)
                     </Typography>
                   </div>
-                  <div className="my-3">
-                    <label htmlFor="Cycle Name" className="newjobLabel fw-600">
-                      Graduating Year
-                    </label>
-                    <input
-                      type="number"
-                      className="newjobInput"
-                      id="Cycle Name"
-                    />
-                  </div>
-                  <div className="mb-3 dropdownBody">
-                    <label htmlFor="Website" className="newjobLabel fw-600">
-                      Type
-                    </label>
-                    <div className="dropdown">
-                      <button
-                        type="button"
-                        className="dropdown-toggle button-select"
-                        onClick={() => {
-                          setOpentype((prev) => !prev);
-                        }}
+                  <Grid
+                    container
+                    rowSpacing={1}
+                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                  >
+                    <Grid item xs={6}>
+                      <InputLabel id="demo-simple-select-label">
+                        Academic Year
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={
+                          placementCycle.acadYear
+                            ? placementCycle.acadYear.year
+                            : ""
+                        }
+                        label="Academic Year"
+                        onChange={(e: SelectChangeEvent) =>
+                          setPlacementCycle(
+                            (prev: PlacementCycle.RootObject) => ({
+                              ...prev,
+                              acadYear: acadYears.find(
+                                (item) => item.year === e.target.value
+                              ),
+                            })
+                          )
+                        }
                       >
-                        {opentypeOption === ""
-                          ? "Select an Option"
-                          : opentypeOption}
-                      </button>
-
-                      <ul
-                        className={`dropdown-menu ${opentype ? " show" : ""}`}
+                        {acadYears?.map((item: AcademicYear.RootObject) => {
+                          return (
+                            <MenuItem value={item?.year} key={item?.year}>
+                              {item?.year}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <InputLabel id="demo-simple-select-label">
+                        Graduating Year
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={placementCycle.graduatingYear}
+                        label="Graduating Year"
+                        onChange={(e: SelectChangeEvent) =>
+                          setPlacementCycle(
+                            (prev: PlacementCycle.RootObject) => ({
+                              ...prev,
+                              graduatingYear: e.target.value,
+                            })
+                          )
+                        }
                       >
-                        {["Full Time", "Internship"].map((item) => (
-                          <li className="dropdown-item">
-                            <button
-                              type="button"
-                              value={item}
-                              className="dropdown-option"
-                              onClick={() => {
-                                setOpentype(() => false);
-                                setOpentypeOption(() => item);
-                              }}
-                            >
+                        {GraduatingYears?.map((item: any) => {
+                          return (
+                            <MenuItem value={item} key={item}>
                               {item}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <InputLabel id="demo-simple-select-label">
+                        Type
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={placementCycle.type}
+                        label="Type"
+                        onChange={(e: SelectChangeEvent) =>
+                          setPlacementCycle(
+                            (prev: PlacementCycle.RootObject) => ({
+                              ...prev,
+                              type: e.target.value,
+                            })
+                          )
+                        }
+                      >
+                        {types?.map((item: any) => {
+                          return (
+                            <MenuItem value={item} key={item}>
+                              {item}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </Grid>
+                  </Grid>
+
                   <div className="my-3">
                     <div className="row">
                       <div className="col-6 px-3">
@@ -139,6 +221,9 @@ export const Cycle = () => {
                           type="date"
                           className="newjobInput"
                           id="StartDate"
+                          name="startDate"
+                          value={placementCycle.startDate}
+                          onChange={handleOnChange}
                         />
                       </div>
                       <div className="col-6">
@@ -149,6 +234,9 @@ export const Cycle = () => {
                           type="date"
                           className="newjobInput"
                           id="EndDate"
+                          name="endDate"
+                          value={placementCycle.endDate}
+                          onChange={handleOnChange}
                         />
                       </div>
                     </div>
@@ -156,7 +244,7 @@ export const Cycle = () => {
                 </Modal.Body>
                 <Modal.Footer>
                   <Button onClick={handleClose}>Close</Button>
-                  <Button onClick={handleClose}>Save Changes</Button>
+                  <Button onClick={handleSaveCycle}>Save Changes</Button>
                 </Modal.Footer>
               </Modal>
             </div>
@@ -173,10 +261,10 @@ export const Cycle = () => {
               <hr style={{ height: "1.3px", margin: 0 }} />
             </div>
             <div className="pb-4">
-              {cycles.map((cycle) => (
+              {cycles.ongoing.map((cycle: PlacementCycle.RootObject) => (
                 <div className=" mx-3 px-5">
                   <Link
-                    to={`/admin/placementcycle/${cycle.id}`}
+                    to={`/admin/placementcycle/${cycle.placementCycleId}`}
                     style={{
                       textDecoration: "none",
                       color: "inherit",
@@ -205,7 +293,7 @@ export const Cycle = () => {
                               textTransform: "capitalize",
                             }}
                           >
-                            {cycle.name}
+                            {cycle.placementCycleName}
                           </Typography>
                         </div>
                         <div className="d-flex">
@@ -236,10 +324,10 @@ export const Cycle = () => {
               <hr style={{ height: "1.3px", margin: 0 }} />
             </div>
             <div className="pb-4">
-              {cycles.map((cycle) => (
+              {cycles.previous.map((cycle: PlacementCycle.RootObject) => (
                 <div className=" mx-3 px-5">
                   <Link
-                    to={`/admin/placementcycle/${cycle.id}`}
+                    to={`/admin/placementcycle/${cycle.placementCycleId}`}
                     style={{
                       textDecoration: "none",
                       color: "inherit",
@@ -268,7 +356,7 @@ export const Cycle = () => {
                               textTransform: "capitalize",
                             }}
                           >
-                            {cycle.name}
+                            {cycle.placementCycleName}
                           </Typography>
                         </div>
                         <div className="d-flex">

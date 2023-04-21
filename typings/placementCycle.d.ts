@@ -1,9 +1,12 @@
 declare namespace PlacementCycle{
-    interface Response {
-        placementCycleId: number,
+    interface RootObject {
+        placementCycleId?: number,
         placementCycleName: string,
-        acadYear: string,
+        type: string
+        acadYear: AcademicYear.RootObject | undefined,
         startDate:string,
         endDate:string,
+        specializations?: Specialization.RootObject,
+        graduatingYear?: string
     }
 }

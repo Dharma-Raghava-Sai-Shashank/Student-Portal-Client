@@ -36,6 +36,8 @@ import { fetchSpecializationForCourses } from "../../api/specialization.service"
 import { uploadFile } from "../../api/document.service";
 import { createHR } from "../../api/hr.service";
 import { createJob } from "../../api/job.service";
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { getAllCourses } from '../../Slices/course';
 
 interface Schedule {
   id: string;
@@ -154,7 +156,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [secondaryspoc, setsecondaryspoc] = React.useState("");
   const [jobData, setJobData] = React.useState(initialJobData);
   const [categories, setCategories] = React.useState<any>([]);
-  const [courses, setCourses] = React.useState<any>([]);
+  const courses = useAppSelector(state => state.course);
+  // const [courses, setCourses] = React.useState<any>([]);
   const [specializations, setSpecializations] = React.useState<any>([]);
   const [currCourse, setCurrCourse] = React.useState<number>(0);
   const [scpts, setScpts] = React.useState<any>([]);
@@ -165,24 +168,28 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
 
   const formData = new FormData();
 
+  const dispatch = useAppDispatch();
+
   const handleCloseCourse = () => setShow(false);
   const handleShowCourse = () => setShow(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
       const { categories } = await fetchAllCategories();
-      const { courses } = await fetchAllCourses();
+      // const { courses } = await fetchAllCourses();
+      dispatch(getAllCourses());
       const { scpts } = await fetchAllScpts();
       const { stages } = await fetchAllStages();
 
       setCategories(categories);
-      setCourses(courses);
-      setCurrCourse(courses?.[0]?.courseId);
+      // setCourses(courses);
+      setCurrCourse(courses?.[0]?.courseId as number);
       setScpts(scpts);
       setSelectionStages(stages);
     };
     fetchData();
     setIsUploading(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -195,16 +202,6 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     };
     if (currCourse && currCourse !== 0) fetchSpecialization();
   }, [currCourse]);
-
-  // const handleChangeSkill = (event: SelectChangeEvent<typeof personName>) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   setPersonName(
-  //     // On autofill we get a stringified value.
-  //     typeof value === "string" ? value.split(",") : value
-  //   );
-  // };
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
@@ -460,7 +457,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       className={`dropdown-menu ${openCategory ? " show" : ""}`}
                     >
                       {categories.map((item: any) => (
-                        <li className="dropdown-item">
+                        <li className="dropdown-item" key={item?.categoryId}>
                           <button
                             type="button"
                             value={item.categoryName}
@@ -854,7 +851,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                               </div>
                               <div>
                                 {branches.map((row, index) => (
-                                  <div>
+                                  <div key={row}>
                                     <div className="row">
                                       <div className="col-5">{row}</div>
                                       <div className="col-5">{row}</div>
@@ -886,7 +883,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                               </div>
                               <div>
                                 {branches.map((row, index) => (
-                                  <div>
+                                  <div key={row}>
                                     <div className="row">
                                       <div className="col-5">{row}</div>
                                       <div className="col-5">{row}</div>
@@ -947,7 +944,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         },
                       ].map((item: any) => {
                         return (
-                          <div className="col-3">
+                          <div className="col-3" key={item.name}>
                             <div className="d-flex justify-content-center w-100">
                               <div
                                 className="mb-3 dropdownBody"
@@ -984,7 +981,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                     }`}
                                   >
                                     {item.dropdownData.map((data: any) => (
-                                      <li className="dropdown-item">
+                                      <li className="dropdown-item" key={data.value}>
                                         <button
                                           type="button"
                                           value={data.value}
@@ -1029,11 +1026,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       ghostClass="blue-background-class"
                     >
                       {ScheduleList.map((item, stage) => (
-                        <div className="d-flex justify-content-center">
-                          <div
-                            key={item.stage?.stageId}
-                            className="scrollSchedule"
-                          >
+                        <div className="d-flex justify-content-center" key={item.stage?.stageId}>
+                          <div className="scrollSchedule">
                             <div>
                               <div>
                                 <Typography
@@ -1392,7 +1386,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             <em>None</em>
                           </MenuItem>
                           {scpts.map((scpt: any) => (
-                            <MenuItem value={scpt.scptId}>{scpt.name}</MenuItem>
+                            <MenuItem value={scpt.scptId} key={scpt.scptId}>{scpt.name}</MenuItem>
                           ))}
                         </Select>
                       </FormControl>
@@ -1419,7 +1413,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             <em>None</em>
                           </MenuItem>
                           {scpts.map((scpt: any) => (
-                            <MenuItem value={scpt.scptId}>{scpt.name}</MenuItem>
+                            <MenuItem value={scpt.scptId} key={scpt.scptId}>{scpt.name}</MenuItem>
                           ))}
                         </Select>
                       </FormControl>

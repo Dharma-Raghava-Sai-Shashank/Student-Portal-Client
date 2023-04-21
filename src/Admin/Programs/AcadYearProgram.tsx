@@ -10,42 +10,35 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Dayjs } from "dayjs";
-import { YearCalendar } from "@mui/x-date-pickers";
+
+import { fetchAcadYears, saveAcadYear } from '../../Slices/academicYear';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 export const AcadYearProgram = () => {
-  const cycles = [
-    {
-      id: 1,
-      name: "Full Time Placement (2023 batch)",
-      startDate: "15 June 2022",
-      endDate: "30 March 2023",
-      type: "Placement",
-    },
-    {
-      id: 1,
-      name: "Internshp (2024 batch)",
-      startDate: "15 August 2022",
-      endDate: "30 March 2023",
-      type: "Placement",
-    },
-    {
-      id: 1,
-      name: "6 month Internship (2023 batch)",
-      startDate: "15 November 2022",
-      endDate: "30 March 2023",
-      type: "Placement",
-    },
-  ];
   const [show, setShow] = useState(false);
-  const [inputdeadlineTime, setInputDeadlineTime] =
-    React.useState<Dayjs | null>();
-  //   const [deadlineTime, setDeadlineTime] = React.useState<Dayjs | null>();
+  const [inputdeadlineTime, setInputDeadlineTime] = React.useState<any>();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [opentype, setOpentype] = useState<boolean>(false);
-  const [opentypeOption, setOpentypeOption] = useState<string>("");
+
+  const prevAcadYears = useAppSelector(state => state.academicyear.prevAcadYears)
+  const currAcadYear = useAppSelector(state => state.academicyear.currAcadYear)
+
+  const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    dispatch(fetchAcadYears());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
+  const handleSaveAcademicYear = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    inputdeadlineTime && dispatch(saveAcadYear({ year: `${(inputdeadlineTime)?.['$y']-1}-${inputdeadlineTime?.['$y']}`}));
+
+    setShow(false);
+
+  };
   return (
     <div className="d-flex">
       <MainSidebar />
@@ -112,7 +105,9 @@ export const AcadYearProgram = () => {
                     </Modal.Body>
                     <Modal.Footer>
                       <Button onClick={handleClose}>Close</Button>
-                      <Button onClick={handleClose}>Save Changes</Button>
+                      <Button onClick={handleSaveAcademicYear}>
+                        Save Changes
+                      </Button>
                     </Modal.Footer>
                   </Modal>
                 </div>
@@ -160,7 +155,7 @@ export const AcadYearProgram = () => {
                                 textTransform: "capitalize",
                               }}
                             >
-                              2023
+                              {currAcadYear?.year}
                             </Typography>
                           </div>
                         </div>
@@ -181,10 +176,10 @@ export const AcadYearProgram = () => {
                   <hr style={{ height: "1.3px", margin: 0 }} />
                 </div>
                 <div className="pb-4">
-                  {["2021", "2022"].map((year) => (
-                    <div className=" mx-3 px-5">
+                  {prevAcadYears.map((acadYear: AcademicYear.RootObject) => (
+                    <div className=" mx-3 px-5" key={acadYear?.year}>
                       <Link
-                        to={`/admin/programs/${year}`}
+                        to={`/admin/programs/${acadYear?.year}`}
                         style={{
                           textDecoration: "none",
                           color: "inherit",
@@ -213,7 +208,7 @@ export const AcadYearProgram = () => {
                                   textTransform: "capitalize",
                                 }}
                               >
-                                {year}
+                                {acadYear?.year}
                               </Typography>
                             </div>
                           </div>

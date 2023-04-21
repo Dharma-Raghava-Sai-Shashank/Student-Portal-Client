@@ -1,2 +1,2 @@
 export const STUDENT = 'student'
-export const ADMIN = 'ADMIN'
+export const ADMIN = 'admin'

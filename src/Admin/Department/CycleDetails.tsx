@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-// import { useParams } from "react-router";
+import React from "react";
+import { useParams } from "react-router";
 import Button from "@mui/material/Button";
 import Modal from "react-bootstrap/Modal";
 import Table from "@mui/material/Table";
@@ -12,15 +12,35 @@ import Typography from "@mui/material/Typography";
 import Checkbox from "@mui/material/Checkbox";
 import Popover from "@mui/material/Popover";
 
-import { fetchAllCourses } from "../../api/course.service";
-import { fetchSpecializationForCourses } from "../../api/specialization.service";
-
 import { Header1 } from "../Headers/Header1";
 import { MainSidebar } from "../Sidebars/MainSidebar";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { generateDetails } from "../Placement/ShowJob";
 import { generateHeading } from "../Placement/ShowJob";
-import { fetchCurrentAcadYear } from "../../api/acadYear.service";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  getPlacementCycleById,
+  savePlacementCycle,
+  saveSpecializationForCycle,
+} from "../../Slices/placementcycle";
+import { getAllCourses } from "../../Slices/course";
+import {
+  getCourseIds,
+  getData,
+  handleCheckBoxClick,
+  isAllSelected,
+  isSelected,
+  validateSelectedSpecsForCourses,
+} from "../../helpers";
+import { getSpecializationsByCourse } from "../../Slices/specialization";
+import { fetchAcadYears } from "../../Slices/academicYear";
+import {
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 
 interface HeadCell {
   id: string;
@@ -64,32 +84,104 @@ const headCoursesTable: readonly HeadCell[] = [
   },
 ];
 
+const GraduatingYears = ["2023"];
+
+const types = ["placement", "internship"];
+
 export const CycleDetails = () => {
-  const [show, setShow] = useState(false);
-  const [selectedSpecialization, setSelectedSpecialization] =
-    React.useState<any>([]);
-  const [selectedSpecializationID, setSelectedSpecializationID] =
-    React.useState<number[] | null>([]);
-
-  const [selectedCourses, setSelectedCourses] = React.useState<any>([]);
-  const [selectedCoursesIds, setSelectedCoursesIds] = React.useState<number[]>(
-    []
-  );
-
+  const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [opentype, setOpentype] = useState<boolean>(false);
-  const [opentypeOption, setOpentypeOption] = useState<string>("");
-
-  // const params = useParams();
-  // const cycleId = params.cycleId;
-
-  const [courses, setCourses] = React.useState<any>([]);
-  const [specializations, setSpecializations] = React.useState<any>([]);
-  const [acadYear, setAcadYear] = React.useState<any>();
-
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
+
+  const { cycleId } = useParams();
+  const dispatch = useAppDispatch();
+
+  const acadYears: AcademicYear.RootObject[] = useAppSelector((state) =>
+    state.academicyear.currAcadYear
+      ? [state.academicyear.currAcadYear, ...state.academicyear.prevAcadYears]
+      : state.academicyear.prevAcadYears
+  );
+
+  const courses = useAppSelector((state) => state.course);
+  const cycleSpecs = useAppSelector(
+    (state) => state.placementcycle.specializations
+  );
+  const placementCycle = useAppSelector(
+    (state) => state.placementcycle.currCycle
+  );
+  const specializations = useAppSelector((state) => state.specialization);
+
+  const [courseIds, setCourseIds] = React.useState<number[]>([]);
+  const [selectedCourseIds, setSelectedCourseIds] = React.useState<number[]>(
+    []
+  );
+  const [specializationIds, setSpecializationIds] = React.useState<number[]>(
+    []
+  );
+  const [selectedSpecIds, setSelectedSpecIds] = React.useState<number[]>([]);
+  const [isEditing, setIsEditing] = React.useState<boolean>(false);
+  const [placementCycleData, setPlacementCycleData] =
+    React.useState<PlacementCycle.RootObject>(
+      placementCycle as PlacementCycle.RootObject
+    );
+
+  React.useEffect(() => {
+    dispatch(getAllCourses());
+    dispatch(
+      getPlacementCycleById({ placementCycleId: parseInt(cycleId as string) })
+    );
+    dispatch(fetchAcadYears());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cycleId, dispatch]);
+
+  React.useEffect(() => {
+    setCourseIds(
+      courses.map((course: Course.RootObject) => course.courseId as number)
+    );
+  }, [courses]);
+
+  React.useEffect(() => {
+    setSelectedCourseIds(getCourseIds(cycleSpecs));
+    setSelectedSpecIds(
+      cycleSpecs.map((spec: Specialization.Response) => spec.specId)
+    );
+  }, [cycleSpecs, isEditing]);
+
+  React.useEffect(() => {
+    if (selectedCourseIds.length > 0 && placementCycle)
+      dispatch(
+        getSpecializationsByCourse({
+          courseIds: selectedCourseIds,
+          acadYear: placementCycle?.acadYear?.year as string,
+        })
+      );
+  }, [selectedCourseIds, placementCycle, dispatch]);
+
+  React.useEffect(() => {
+    setSpecializationIds(
+      specializations.map((spec: Specialization.Response) => spec.specId)
+    );
+  }, [specializations]);
+
+  React.useEffect(() => {
+    setSelectedSpecIds((prevIds) =>
+      validateSelectedSpecsForCourses(prevIds, specializationIds)
+    );
+  }, [specializationIds]);
+
+  React.useEffect(() => {
+    show
+      ? setPlacementCycleData(placementCycle as PlacementCycle.RootObject)
+      : dispatch(
+          getPlacementCycleById({
+            placementCycleId: parseInt(cycleId as string),
+          })
+        );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -97,128 +189,33 @@ export const CycleDetails = () => {
     setAnchorEl(null);
   };
 
-  const [editBranches, setEditBranches] = useState(false);
+  const handleSaveSpecializations = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
 
-  // For Specialization
-  const isSelectedSpecializtion = (id: number) =>
-    selectedSpecialization.find((spec: any) => spec.specId === id);
-  const handleClickSpecializtion = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    spec: any
-  ) => {
-    if (event.target?.checked) {
-      setSelectedSpecialization([...selectedSpecialization, spec]);
-    } else
-      setSelectedSpecialization(
-        selectedSpecialization.filter(
-          (item: any) => item.specId !== spec.specId
-        )
-      );
-    setSelectedSpecializationID(
-      selectedSpecialization?.map((item: any) => item.specId)
+    dispatch(
+      saveSpecializationForCycle({
+        placementCycleId: parseInt(cycleId as string),
+        specIds: selectedSpecIds,
+      })
     );
-  };
-  const isAllSelectedSpecialization = () => {
-    for (let i in specializations)
-      if (
-        !selectedSpecialization.find(
-          (spec: any) => spec.specId === specializations[i]?.specId
-        )
-      )
-        return false;
-    return true;
-  };
-  const handleSelectAllSpecialization = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.checked) {
-      const newList = Array.from(
-        new Set([...selectedSpecialization, ...specializations])
-      );
-      setSelectedSpecialization(newList as any);
-      return;
-    } else
-      setSelectedSpecialization(
-        selectedSpecialization.filter(
-          (spec: any) =>
-            !specializations.find((item: any) => spec.specId === item.specId)
-        )
-      );
-    setSelectedSpecializationID(
-      selectedSpecialization?.map((item: any) => item.specId)
-    );
+
+    setIsEditing(false);
   };
 
-  // For Courses
-  const isSelectedCourses = (id: number) =>
-    selectedCourses.find((course: any) => course.courseId === id);
+  const handleEditing = () => setIsEditing(true);
 
-  const handleClickCourses = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    course: any
-  ) => {
-    if (event.target?.checked) {
-      setSelectedCourses([...selectedCourses, course]);
-    } else
-      setSelectedCourses(
-        selectedCourses.filter((item: any) => item.courseId !== course.courseId)
-      );
-    setSelectedCoursesIds(selectedCourses.map((item: any) => item.courseId));
-  };
-  const isAllSelectedCourses = () => {
-    for (let i in courses)
-      if (
-        !selectedCourses.find(
-          (course: any) => course.courseId === courses[i]?.courseId
-        )
-      )
-        return false;
-    return true;
-  };
-  const handleSelectAllCourses = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.checked) {
-      const newList = Array.from(new Set([...selectedCourses, ...courses]));
-      setSelectedCourses(newList as any);
-      return;
-    } else
-      setSelectedCourses(
-        selectedCourses.filter(
-          (course: any) =>
-            !courses.find((item: any) => course.courseId === item.courseId)
-        )
-      );
-    setSelectedCoursesIds(selectedCourses.map((item: any) => item.courseId));
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPlacementCycleData((prev: PlacementCycle.RootObject) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const { courses } = await fetchAllCourses();
-      const response = await fetchCurrentAcadYear();
-
-      setCourses(courses);
-      setAcadYear(response?.acadYear);
-      // setCurrCourse(courses?.[0]?.courseId);
-      setSelectedCoursesIds(
-        selectedCourses.map((course: any) => course.courseId)
-      );
-    };
-    fetchData();
-    // setIsUploading(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    const fetchSpecialization = async () => {
-      const { specializations } = await fetchSpecializationForCourses(
-        selectedCoursesIds, acadYear?.year
-      );
-
-      setSpecializations(specializations);
-    };
-    if (selectedCoursesIds && selectedCoursesIds.length) fetchSpecialization();
-  }, [selectedCoursesIds, acadYear]);
+  const handleSaveCycle = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    dispatch(savePlacementCycle(placementCycleData));
+    setShow(false);
+  };
 
   return (
     <div>
@@ -258,7 +255,7 @@ export const CycleDetails = () => {
                         </Button>
                         <Modal show={show} onHide={handleClose} size="lg">
                           <Modal.Header closeButton>
-                            <Modal.Title>Edit Placement Cycle</Modal.Title>
+                            <Modal.Title>Add New Placement Cycle</Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
                             <div className="my-3">
@@ -272,6 +269,9 @@ export const CycleDetails = () => {
                                 type="text"
                                 className="newjobInput"
                                 id="Cycle Name"
+                                name="placementCycleName"
+                                value={placementCycleData?.placementCycleName}
+                                onChange={handleOnChange}
                               />
                               <Typography
                                 variant="caption"
@@ -284,62 +284,108 @@ export const CycleDetails = () => {
                                 courses)
                               </Typography>
                             </div>
-                            <div className="my-3">
-                              <label
-                                htmlFor="Cycle Name"
-                                className="newjobLabel fw-600"
-                              >
-                                Graduating Year
-                              </label>
-                              <input
-                                type="number"
-                                className="newjobInput"
-                                id="Cycle Name"
-                              />
-                            </div>
-                            <div className="mb-3 dropdownBody">
-                              <label
-                                htmlFor="Website"
-                                className="newjobLabel fw-600"
-                              >
-                                Type
-                              </label>
-                              <div className="dropdown">
-                                <button
-                                  type="button"
-                                  className="dropdown-toggle button-select"
-                                  onClick={() => {
-                                    setOpentype((prev) => !prev);
-                                  }}
+                            <Grid
+                              container
+                              rowSpacing={1}
+                              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                            >
+                              <Grid item xs={6}>
+                                <InputLabel id="demo-simple-select-label">
+                                  Academic Year
+                                </InputLabel>
+                                <Select
+                                  fullWidth
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={
+                                    placementCycleData?.acadYear
+                                      ? placementCycleData?.acadYear.year
+                                      : ""
+                                  }
+                                  label="Academic Year"
+                                  onChange={(e: SelectChangeEvent) =>
+                                    setPlacementCycleData(
+                                      (prev: PlacementCycle.RootObject) => ({
+                                        ...prev,
+                                        acadYear: acadYears.find(
+                                          (item) => item.year === e.target.value
+                                        ),
+                                      })
+                                    )
+                                  }
                                 >
-                                  {opentypeOption === ""
-                                    ? "Select an Option"
-                                    : opentypeOption}
-                                </button>
-
-                                <ul
-                                  className={`dropdown-menu ${
-                                    opentype ? " show" : ""
-                                  }`}
+                                  {acadYears?.map(
+                                    (item: AcademicYear.RootObject) => {
+                                      return (
+                                        <MenuItem
+                                          value={item?.year}
+                                          key={item?.year}
+                                        >
+                                          {item?.year}
+                                        </MenuItem>
+                                      );
+                                    }
+                                  )}
+                                </Select>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <InputLabel id="demo-simple-select-label">
+                                  Graduating Year
+                                </InputLabel>
+                                <Select
+                                  fullWidth
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={placementCycleData?.graduatingYear}
+                                  label="Graduating Year"
+                                  onChange={(e: SelectChangeEvent) =>
+                                    setPlacementCycleData(
+                                      (prev: PlacementCycle.RootObject) => ({
+                                        ...prev,
+                                        graduatingYear: e.target.value,
+                                      })
+                                    )
+                                  }
                                 >
-                                  {["Full Time", "Internship"].map((item) => (
-                                    <li className="dropdown-item">
-                                      <button
-                                        type="button"
-                                        value={item}
-                                        className="dropdown-option"
-                                        onClick={() => {
-                                          setOpentype(() => false);
-                                          setOpentypeOption(() => item);
-                                        }}
-                                      >
+                                  {GraduatingYears?.map((item: any) => {
+                                    return (
+                                      <MenuItem value={item} key={item}>
                                         {item}
-                                      </button>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <InputLabel id="demo-simple-select-label">
+                                  Type
+                                </InputLabel>
+                                <Select
+                                  fullWidth
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={placementCycleData?.type}
+                                  label="Type"
+                                  onChange={(e: SelectChangeEvent) =>
+                                    setPlacementCycleData(
+                                      (prev: PlacementCycle.RootObject) => ({
+                                        ...prev,
+                                        type: e.target.value,
+                                      })
+                                    )
+                                  }
+                                >
+                                  {types?.map((item: any) => {
+                                    return (
+                                      <MenuItem value={item} key={item}>
+                                        {item}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </Grid>
+                            </Grid>
+
                             <div className="my-3">
                               <div className="row">
                                 <div className="col-6 px-3">
@@ -353,6 +399,9 @@ export const CycleDetails = () => {
                                     type="date"
                                     className="newjobInput"
                                     id="StartDate"
+                                    name="startDate"
+                                    value={placementCycleData?.startDate}
+                                    onChange={handleOnChange}
                                   />
                                 </div>
                                 <div className="col-6">
@@ -366,6 +415,9 @@ export const CycleDetails = () => {
                                     type="date"
                                     className="newjobInput"
                                     id="EndDate"
+                                    name="endDate"
+                                    value={placementCycleData?.endDate}
+                                    onChange={handleOnChange}
                                   />
                                 </div>
                               </div>
@@ -373,7 +425,9 @@ export const CycleDetails = () => {
                           </Modal.Body>
                           <Modal.Footer>
                             <Button onClick={handleClose}>Close</Button>
-                            <Button onClick={handleClose}>Save Changes</Button>
+                            <Button onClick={handleSaveCycle}>
+                              Save Changes
+                            </Button>
                           </Modal.Footer>
                         </Modal>
                       </div>
@@ -381,18 +435,18 @@ export const CycleDetails = () => {
                     <hr style={{ height: "1.3px", margin: 0 }} />
                     <div>
                       <div className="mt-2 mb-3">
-                        {generateDetails("Cycle Name", cycle.name)}
+                        {generateDetails("Cycle Name", placementCycle?.placementCycleName)}
                         {generateDetails(
                           "Graduating Year",
-                          cycle.gradYear.toString()
+                          placementCycle?.graduatingYear
                         )}
-                        {generateDetails("Type", cycle.type)}
-                        {generateDetails("Start Date", cycle.startDate)}
-                        {generateDetails("End Date", cycle.endDate)}
+                        {generateDetails("Type", placementCycle?.type)}
+                        {generateDetails("Start Date", placementCycle?.startDate)}
+                        {generateDetails("End Date", placementCycle?.endDate)}
                       </div>
                     </div>
                   </div>
-                  {editBranches ? (
+                  {isEditing ? (
                     <div>
                       <div className="mx-5 mt-2 mb-5">
                         {generateHeading("Select Eligible Degrees")}
@@ -410,12 +464,17 @@ export const CycleDetails = () => {
                                       <Checkbox
                                         color="primary"
                                         indeterminate={
-                                          selectedCourses.length > 0 &&
-                                          selectedCourses.length <
+                                          selectedCourseIds.length > 0 &&
+                                          selectedCourseIds.length <
                                             courses.length
                                         }
-                                        checked={isAllSelectedCourses()}
-                                        onChange={handleSelectAllCourses}
+                                        checked={isAllSelected(
+                                          selectedCourseIds,
+                                          courseIds
+                                        )}
+                                        onChange={() =>
+                                          setSelectedCourseIds(courseIds)
+                                        }
                                         inputProps={{
                                           "aria-label": "select all",
                                         }}
@@ -464,14 +523,19 @@ export const CycleDetails = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {/* <>{console.log(courses)}</> */}
-                                {courses?.map((row: any, index: number) => {
-                                  const isItemSelected = isSelectedCourses(
-                                    row.courseId
+                                {courseIds?.map((row: any, index: number) => {
+                                  const isItemSelected = isSelected(
+                                    selectedCourseIds,
+                                    row
                                   )
                                     ? true
                                     : false;
-                                  const labelId = row.courseId;
+                                  const labelId = row;
+                                  const course = getData(
+                                    row,
+                                    "courseId",
+                                    courses
+                                  );
 
                                   return (
                                     <TableRow
@@ -490,7 +554,11 @@ export const CycleDetails = () => {
                                             "aria-labelledby": labelId,
                                           }}
                                           onChange={(event) =>
-                                            handleClickCourses(event, row)
+                                            handleCheckBoxClick(
+                                              event,
+                                              row,
+                                              setSelectedCourseIds
+                                            )
                                           }
                                         />
                                       </TableCell>
@@ -499,7 +567,7 @@ export const CycleDetails = () => {
                                         id={labelId}
                                         scope="row"
                                       >
-                                        {row.courseName}
+                                        {course.courseName}
                                       </TableCell>
                                       <TableCell align="left">2019</TableCell>
                                       <TableCell align="left">2023</TableCell>
@@ -510,7 +578,6 @@ export const CycleDetails = () => {
                             </Table>
                           </TableContainer>
                         </div>
-                        {/* <>{console.log(selectedCourses)}</> */}
                       </div>
 
                       <div className="mx-5 mt-2 mb-5">
@@ -529,12 +596,17 @@ export const CycleDetails = () => {
                                       <Checkbox
                                         color="primary"
                                         indeterminate={
-                                          selectedSpecialization.length > 0 &&
-                                          selectedSpecialization.length <
+                                          selectedSpecIds.length > 0 &&
+                                          selectedSpecIds.length <
                                             specializations.length
                                         }
-                                        checked={isAllSelectedSpecialization()}
-                                        onChange={handleSelectAllSpecialization}
+                                        checked={isAllSelected(
+                                          selectedSpecIds,
+                                          specializationIds
+                                        )}
+                                        onChange={() =>
+                                          setSelectedSpecIds(specializationIds)
+                                        }
                                         inputProps={{
                                           "aria-label": "select all",
                                         }}
@@ -583,13 +655,20 @@ export const CycleDetails = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {specializations.map(
+                                {specializationIds.map(
                                   (row: any, index: number) => {
-                                    const isItemSelected =
-                                      isSelectedSpecializtion(row.specId)
-                                        ? true
-                                        : false;
-                                    const labelId = row.specId;
+                                    const isItemSelected = isSelected(
+                                      selectedSpecIds,
+                                      row
+                                    )
+                                      ? true
+                                      : false;
+                                    const labelId = row;
+                                    const specialization = getData(
+                                      row,
+                                      "specId",
+                                      specializations
+                                    );
 
                                     return (
                                       <TableRow
@@ -608,9 +687,10 @@ export const CycleDetails = () => {
                                               "aria-labelledby": labelId,
                                             }}
                                             onChange={(event) =>
-                                              handleClickSpecializtion(
+                                              handleCheckBoxClick(
                                                 event,
-                                                row
+                                                row,
+                                                setSelectedSpecIds
                                               )
                                             }
                                           />
@@ -620,16 +700,16 @@ export const CycleDetails = () => {
                                           id={labelId}
                                           scope="row"
                                         >
-                                          {row.courseName}
+                                          {specialization?.courseName}
                                         </TableCell>
                                         <TableCell align="left">
-                                          {row.specName}
+                                          {specialization?.specName}
                                         </TableCell>
                                         <TableCell align="left">
-                                          {row.disciplineName}
+                                          {specialization?.disciplineName}
                                         </TableCell>
                                         <TableCell align="left">
-                                          {row.departmentName}
+                                          {specialization?.deptName}
                                         </TableCell>
                                       </TableRow>
                                     );
@@ -646,7 +726,7 @@ export const CycleDetails = () => {
                           className="mx-3 px-4"
                           color="error"
                           onClick={() => {
-                            setEditBranches(() => false);
+                            setIsEditing(() => false);
                           }}
                         >
                           Cancel
@@ -655,9 +735,7 @@ export const CycleDetails = () => {
                           variant="outlined"
                           color="success"
                           className="mx-3 px-4"
-                          onClick={() => {
-                            setEditBranches(() => true);
-                          }}
+                          onClick={handleSaveSpecializations}
                         >
                           Save Changes
                         </Button>
@@ -681,9 +759,7 @@ export const CycleDetails = () => {
                             startIcon={
                               <EditOutlinedIcon sx={{ fontSize: "8px" }} />
                             }
-                            onClick={() => {
-                              setEditBranches(() => true);
-                            }}
+                            onClick={handleEditing}
                           >
                             Edit Selected Courses
                           </Button>
@@ -718,21 +794,30 @@ export const CycleDetails = () => {
                               </TableRow>
                             </TableHead>
                             <TableBody>
-                              {courses?.map((row: any, index: number) => {
-                                const labelId = row.courseId;
-                                return (
-                                  <TableRow tabIndex={-1} key={row.courseId}>
-                                    <TableCell
-                                      component="th"
-                                      id={labelId}
-                                      scope="row"
-                                    >
-                                      {row.courseName}
-                                    </TableCell>
-                                    <TableCell align="left">4 Years</TableCell>
-                                  </TableRow>
-                                );
-                              })}
+                              {selectedCourseIds?.map(
+                                (row: any, index: number) => {
+                                  const labelId = row;
+                                  const course = getData(
+                                    row,
+                                    "courseId",
+                                    courses
+                                  );
+                                  return (
+                                    <TableRow tabIndex={-1} key={row}>
+                                      <TableCell
+                                        component="th"
+                                        id={labelId}
+                                        scope="row"
+                                      >
+                                        {course?.courseName}
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        {course?.duration}
+                                      </TableCell>
+                                    </TableRow>
+                                  );
+                                }
+                              )}
                             </TableBody>
                           </Table>
                         </TableContainer>
@@ -765,27 +850,32 @@ export const CycleDetails = () => {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {specializations?.map(
+                                {selectedSpecIds?.map(
                                   (row: any, index: number) => {
-                                    const labelId = row.specId;
+                                    const labelId = row;
+                                    const specialization = getData(
+                                      row,
+                                      "specId",
+                                      cycleSpecs
+                                    );
 
                                     return (
-                                      <TableRow tabIndex={-1} key={row.specId}>
+                                      <TableRow tabIndex={-1} key={row}>
                                         <TableCell
                                           component="th"
                                           id={labelId}
                                           scope="row"
                                         >
-                                          {row.courseName}
+                                          {specialization?.courseName}
                                         </TableCell>
                                         <TableCell align="left">
-                                          {row.specName}
+                                          {specialization?.specName}
                                         </TableCell>
                                         <TableCell align="left">
-                                          {row.disciplineName}
+                                          {specialization?.disciplineName}
                                         </TableCell>
                                         <TableCell align="left">
-                                          {row.departmentName}
+                                          {specialization?.deptName}
                                         </TableCell>
                                       </TableRow>
                                     );

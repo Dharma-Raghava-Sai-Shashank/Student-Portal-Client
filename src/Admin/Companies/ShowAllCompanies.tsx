@@ -88,7 +88,7 @@ export const ShowAllCompanies = ({
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [companies, setCompanies] = React.useState<Data[]>([]);
   const [query, setQuery] = React.useState<string>("");
-  const [placementCycles, setPlacementCycles] = React.useState<PlacementCycle.Response[]>([]);
+  const [placementCycles, setPlacementCycles] = React.useState<PlacementCycle.RootObject[]>([]);
   const [placementCycleId, setPlacementCycleId] = React.useState<number>(0);
   const [acadYears, setAcadYears] = React.useState<string[]>([]);
 
@@ -109,9 +109,9 @@ export const ShowAllCompanies = ({
 
       setPlacementCycles(cycles);
       const years: string[] = []
-      cycles.map((cycle: PlacementCycle.Response) => {
-        if (!years.includes(cycle?.acadYear))
-          years.push(cycle.acadYear);
+      cycles.map((cycle: PlacementCycle.RootObject) => {
+        if (!years.includes(cycle?.acadYear?.year as string))
+          years.push(cycle?.acadYear?.year as string);
         return cycle;
       });
       setAcadYears(years);
@@ -183,7 +183,7 @@ export const ShowAllCompanies = ({
         return (
           <>
             <List>
-              {placementCycles.filter((cycle: PlacementCycle.Response) => cycle.acadYear === year).map((cycle: PlacementCycle.Response) => (
+              {placementCycles.filter((cycle: PlacementCycle.RootObject) => cycle?.acadYear?.year === year).map((cycle: PlacementCycle.RootObject) => (
                 <ListItem
                   key={cycle.placementCycleId}
                   disablePadding
@@ -199,7 +199,7 @@ export const ShowAllCompanies = ({
                     }`,
                   }}
                   onClickCapture={() =>
-                    handlePlacementCycleSelection(cycle.placementCycleId)
+                    handlePlacementCycleSelection(cycle.placementCycleId as number)
                   }
                 >
                   <ListItemButton>

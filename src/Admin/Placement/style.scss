@@ -126,6 +126,7 @@
     overflow-y: scroll;
     border-color: rgba(224, 226, 231, 0.5);
     box-shadow: 0 4px 9px 0 rgba(63, 65, 80, 0.1);
+    z-index: 99;
   }
 
   .dropdown-option {

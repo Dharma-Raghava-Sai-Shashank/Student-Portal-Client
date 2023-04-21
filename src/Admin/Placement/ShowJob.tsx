@@ -90,7 +90,7 @@ const html = (
   </div>
 );
 
-export const generateDetails = (detailType: string, detail: string) => {
+export const generateDetails = (detailType: string, detail: string | undefined) => {
   return (
     <div className="row mt-3 border-bottom mx-2">
       <div className="col-3 ">

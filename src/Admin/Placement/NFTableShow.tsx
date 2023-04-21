@@ -136,7 +136,7 @@ export const NFTableShow = ({
   const [jobs, setJobs] = React.useState<Data[]>([]);
   const [query, setQuery] = React.useState<string>("");
   const [placementCycles, setPlacementCycles] = React.useState<
-    PlacementCycle.Response[]
+    PlacementCycle.RootObject[]
   >([]);
   const [placementCycleId, setPlacementCycleId] = React.useState<number>(0);
   const [acadYears, setAcadYears] = React.useState<string[]>([]);
@@ -157,8 +157,8 @@ export const NFTableShow = ({
 
       setPlacementCycles(cycles);
       const years: string[] = [];
-      cycles?.map((cycle: PlacementCycle.Response) => {
-        if (!years.includes(cycle?.acadYear)) years.push(cycle.acadYear);
+      cycles?.map((cycle: PlacementCycle.RootObject) => {
+        if (!years.includes(cycle?.acadYear?.year as string)) years.push(cycle.acadYear?.year as string);
         return cycle;
       });
       setAcadYears(years);
@@ -241,13 +241,13 @@ export const NFTableShow = ({
     >
       {acadYears.map((year: string) => {
         return (
-          <>
+          <div key={year}>
             <List>
               {placementCycles
                 .filter(
-                  (cycle: PlacementCycle.Response) => cycle.acadYear === year
+                  (cycle: PlacementCycle.RootObject) => cycle.acadYear?.year === year
                 )
-                .map((cycle: PlacementCycle.Response) => (
+                .map((cycle: PlacementCycle.RootObject) => (
                   <ListItem
                     key={cycle.placementCycleId}
                     disablePadding
@@ -263,7 +263,7 @@ export const NFTableShow = ({
                       }`,
                     }}
                     onClickCapture={() =>
-                      handlePlacementCycleSelection(cycle.placementCycleId)
+                      handlePlacementCycleSelection(cycle.placementCycleId as number)
                     }
                   >
                     <ListItemButton>
@@ -276,7 +276,7 @@ export const NFTableShow = ({
                 ))}
             </List>
             <Divider />
-          </>
+          </div>
         );
       })}
     </Box>

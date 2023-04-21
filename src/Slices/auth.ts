@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { setMessage } from "./message";
 import * as AuthService from "../api/auth.service";
 import { catchError } from "../common/handleError";
+import { STUDENT } from '../Admin/constants';
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -21,7 +22,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ username, password, type }: User.AuthData, thunkAPI) => {
     try {
-      const data = type==='student' ? await AuthService.signin({ username, password }) : await AuthService.adminSignin({ username, password });
+      const data = type===STUDENT ? await AuthService.signin({ username, password }) : await AuthService.adminSignin({ username, password });
       if(!data?.success)
       {
         thunkAPI.dispatch(setMessage({ message: data.message || 'Something went wrong!! Please try again.', type: 'error' }));
