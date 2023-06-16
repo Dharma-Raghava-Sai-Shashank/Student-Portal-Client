@@ -13,6 +13,7 @@ import { AcadYearProgram } from "./Admin/Programs/AcadYearProgram";
 import UserProfile from "./Student/Profile/UserProfile";
 import JobProfile from "./Student/Job Profiles/JobProfile";
 import DashBoard from "./Student/Dashboard/Dashboard";
+import { Notices } from "./Admin/Notices/Notices";
 import { RespExtra } from "./Student/Dashboard/RespExtra";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -102,6 +103,7 @@ function App() {
           path="/admin/placementcycle"
           element={ProtectRoute(PlacementCycle)}
         />
+        <Route path="/admin/notices" element={ProtectRoute(Notices)} />
         <Route
           path="/admin/placementcycle/:cycleId"
           element={ProtectRoute(CycleDetails)}
