@@ -1,0 +1,20 @@
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  min-height: 60vh;
+}
+
+@media (max-width: 768px) {
+  .center {
+    min-height: 40vh;
+  }
+}
+
+@media (min-width: 1200px) {
+  .center {
+    min-height: 80vh;
+  }
+}
