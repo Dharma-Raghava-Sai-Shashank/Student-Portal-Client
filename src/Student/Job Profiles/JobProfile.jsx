@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HeaderStudent } from '../Headers/HeaderStudent';
 import { StudentSidebar } from '../Sidebars/StudentSidebar';
 import { jobProfileData } from './jobProfileData';
@@ -7,6 +8,7 @@ import './styles.css';
 export default function JobProfile() {
   const [filter, setFilter] = useState('');
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const navigate = useNavigate();
 
   const handleProfileClick = (profile) => {
     setSelectedProfile(profile);
@@ -15,6 +17,32 @@ export default function JobProfile() {
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
+
+  const handleApply = (profile) => {
+    const { eligibilityCriteria } = profile;
+  
+    const isEligible =
+      eligibilityCriteria.length > 0;
+  
+    if (isEligible) {
+      // Proceed with the application logic
+      const updatedProfile = {
+        ...profile,
+        status: 'applied',
+      };
+      const updatedProfiles = jobProfileData.map((p) =>
+        p.id === updatedProfile.id ? updatedProfile : p
+      );
+      setSelectedProfile(updatedProfile);
+      navigate(`/student/jobprofile/${updatedProfile.id}`);
+    } else {
+      // Student is not eligible, handle the error or show a message
+      console.log('Student is not eligible for this job');
+    }
+  };
+  
+  
+  
 
   const filteredProfiles = jobProfileData.filter((profile) => {
     if (filter === 'closed-deadline') {
@@ -30,7 +58,7 @@ export default function JobProfile() {
     <div className="d-flex">
       <StudentSidebar />
       <div className="w-100">
-        <HeaderStudent />
+        <HeaderStudent /> 
         <div className="container mt-4">
           <h1>Job Profiles</h1>
           <div className="mb-3">
@@ -52,8 +80,8 @@ export default function JobProfile() {
           <table className="table">
             <thead>
               <tr>
-                <th>Profile/Designation</th>
                 <th>Company</th>
+                <th>Profile/Designation</th>
                 <th>Type</th>
                 <th>Status</th>
               </tr>
@@ -61,33 +89,33 @@ export default function JobProfile() {
             <tbody>
               {filteredProfiles.map((profile) => (
                 <tr key={profile.id} onClick={() => handleProfileClick(profile)}>
-                  <td>{profile.name}</td>
                   <td>{profile.company}</td>
+                  <td>{profile.name}</td>
                   <td>{profile.type}</td>
-                  <td style={{ cursor: 'pointer' }}>{profile.status}</td>
+                  <td>
+                    {profile.status === 'eligible' && (
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApply(profile);
+                        }}
+                      >
+                        Apply
+                      </button>
+                    )}
+                    {profile.status === 'ineligible' && (
+                      <span className="text-danger">Ineligible</span>
+                    )}
+                    {profile.status === 'applied' && (
+                      <span className="text-success">Applied</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {selectedProfile && (
-          <div className="container mt-4 center">
-            <h1>{selectedProfile.name}</h1>
-            {/* <p>Company: {selectedProfile.company}</p>
-            <p>Type: {selectedProfile.type}</p>
-            <p>Status: {selectedProfile.status}</p> */}
-            <h3>Eligibility Criteria:</h3>
-            {selectedProfile.eligibilityCriteria.map((criteria) => (
-              <div key={criteria.spec.specId}>
-                <p>Specialization: {criteria.spec.specName}</p>
-                <p>
-                  Min LPA: {criteria.minLPA}, Max LPA: {criteria.maxLPA}, CGPA: {criteria.cgpaValue}
-                </p>
-              </div>
-            ))}
-            <button className="btn btn-primary">Apply</button> {/* don't know what to do after this route */}
-          </div>
-        )}
       </div>
     </div>
   );
