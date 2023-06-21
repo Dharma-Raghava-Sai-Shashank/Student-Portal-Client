@@ -28,6 +28,7 @@ import Select from "@mui/material/Select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./style.scss";
+
 import { fetchAllCategories } from "../../api/companycategory.service";
 import { fetchAllCourses } from "../../api/course.service";
 import { fetchAllScpts } from "../../api/scpt.service";
@@ -36,8 +37,8 @@ import { fetchSpecializationForCourses } from "../../api/specialization.service"
 import { uploadFile } from "../../api/document.service";
 import { createHR } from "../../api/hr.service";
 import { createJob } from "../../api/job.service";
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { getAllCourses } from '../../Slices/course';
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getAllCourses } from "../../Slices/course";
 
 interface Schedule {
   id: string;
@@ -156,7 +157,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [secondaryspoc, setsecondaryspoc] = React.useState("");
   const [jobData, setJobData] = React.useState(initialJobData);
   const [categories, setCategories] = React.useState<any>([]);
-  const courses = useAppSelector(state => state.course);
+  const courses = useAppSelector((state) => state.course);
   // const [courses, setCourses] = React.useState<any>([]);
   const [specializations, setSpecializations] = React.useState<any>([]);
   const [currCourse, setCurrCourse] = React.useState<number>(0);
@@ -189,7 +190,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     };
     fetchData();
     setIsUploading(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -982,7 +983,10 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                     }`}
                                   >
                                     {item.dropdownData.map((data: any) => (
-                                      <li className="dropdown-item" key={data.value}>
+                                      <li
+                                        className="dropdown-item"
+                                        key={data.value}
+                                      >
                                         <button
                                           type="button"
                                           value={data.value}
@@ -1027,7 +1031,10 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       ghostClass="blue-background-class"
                     >
                       {ScheduleList.map((item, stage) => (
-                        <div className="d-flex justify-content-center" key={item.stage?.stageId}>
+                        <div
+                          className="d-flex justify-content-center"
+                          key={item.stage?.stageId}
+                        >
                           <div className="scrollSchedule">
                             <div>
                               <div>
@@ -1387,7 +1394,9 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             <em>None</em>
                           </MenuItem>
                           {scpts.map((scpt: any) => (
-                            <MenuItem value={scpt.scptId} key={scpt.scptId}>{scpt.name}</MenuItem>
+                            <MenuItem value={scpt.scptId} key={scpt.scptId}>
+                              {scpt.name}
+                            </MenuItem>
                           ))}
                         </Select>
                       </FormControl>
@@ -1414,7 +1423,9 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             <em>None</em>
                           </MenuItem>
                           {scpts.map((scpt: any) => (
-                            <MenuItem value={scpt.scptId} key={scpt.scptId}>{scpt.name}</MenuItem>
+                            <MenuItem value={scpt.scptId} key={scpt.scptId}>
+                              {scpt.name}
+                            </MenuItem>
                           ))}
                         </Select>
                       </FormControl>
