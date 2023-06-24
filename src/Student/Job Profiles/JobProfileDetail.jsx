@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { jobProfileData } from './jobProfileData';
-import './JobProfileDetail.css';
-import { HeaderStudent } from '../Headers/HeaderStudent';
-import { StudentSidebar } from '../Sidebars/StudentSidebar';
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { jobProfileData } from './jobProfileData'
+import './JobProfileDetail.css'
+import { HeaderStudent } from '../Headers/HeaderStudent'
+import { StudentSidebar } from '../Sidebars/StudentSidebar'
 
 export default function JobProfileDetail() {
-  const { id } = useParams();
-  const jobId = parseInt(id);
-  const selectedProfile = jobProfileData.find((profile) => profile.id === jobId);
+  const { id } = useParams()
+  const jobId = parseInt(id)
+  const selectedProfile = jobProfileData.find((profile) => profile.id === jobId)
 
-  const [activeSection, setActiveSection] = useState('jobDescription');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [resumeName, setResumeName] = useState('');
-  const [isApplied, setIsApplied] = useState(false);
+  const [activeSection, setActiveSection] = useState('jobDescription')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [resumeName, setResumeName] = useState('')
+  const [isApplied, setIsApplied] = useState(false)
+
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
 
   if (!selectedProfile) {
-    return <div className="job-profile-detail">Job profile not found.</div>;
+    return <div className="job-profile-detail">Job profile not found.</div>
   }
 
   const {
@@ -25,7 +29,7 @@ export default function JobProfileDetail() {
     hiringWorkflow,
     studentInfo,
     eligibilityCriteria,
-  } = selectedProfile;
+  } = selectedProfile
 
   const renderJobDescription = () => (
     <div className="column">
@@ -49,7 +53,7 @@ export default function JobProfileDetail() {
 
       <strong>About {jobDescription.companyName}</strong>
     </div>
-  );
+  )
 
   const renderHiringWorkflow = () => (
     <div className="column">
@@ -62,38 +66,108 @@ export default function JobProfileDetail() {
         </div>
       ))}
     </div>
-  );
+  )
 
   const renderEligibilityCriteria = () => (
     <div className="column">
       <strong>Eligibility Criteria</strong>
-      {eligibilityCriteria.map((criteria) => (
-        <div key={criteria.spec.specId}>
-          <p>Specialization: {criteria.spec.specName}</p>
-          <p>CGPA Value: {criteria.cgpaValue}</p>
-          {/* <p>Min LPA: {criteria.minLPA}</p>
-          <p>Max LPA: {criteria.maxLPA}</p> */}
-          {/* Additional fields */}
-        </div>
-      ))}
+      {eligibilityCriteria &&
+        eligibilityCriteria.map((criteria) => (
+          <div key={criteria?.spec?.specId}>
+            <p>Specialization: {criteria?.spec?.specName}</p>
+            <p>CGPA Value: {criteria?.cgpaValue}</p>
+            <p>
+              Is Eligible:{' '}
+              {criteria?.isProfileVerified?.isEligible &&
+              criteria?.placementCyclEligibility?.isEligible &&
+              criteria?.isNotPalced?.isEligible &&
+              criteria?.backlogEligibility?.isEligible &&
+              criteria?.courseEligibility?.isEligible &&
+              criteria?.academicEligibility?.isEligible &&
+              criteria?.edu_History_10_Eligibility?.isEligible &&
+              criteria?.edu_History_12_Eligibility?.isEligible
+                ? 'Yes'
+                : 'No'}
+            </p>
+            <p>
+              Profile Verified:{' '}
+              {criteria?.isProfileVerified?.isEligible
+                ? criteria?.isProfileVerified?.message
+                : 'N/A'}
+            </p>
+            <p>
+              Placement Cycle Eligibility:{' '}
+              {criteria?.placementCyclEligibility?.isEligible
+                ? criteria?.placementCyclEligibility?.message
+                : 'N/A'}
+            </p>
+            <p>
+              Not Placed:{' '}
+              {criteria?.isNotPalced?.isEligible
+                ? criteria?.isNotPalced?.message
+                : 'N/A'}
+            </p>
+            <p>
+              Backlog Eligibility:{' '}
+              {criteria?.backlogEligibility?.isEligible
+                ? criteria?.backlogEligibility?.message
+                : 'N/A'}
+            </p>
+            <p>
+              Course Eligibility:{' '}
+              {criteria?.courseEligibility?.isEligible
+                ? criteria?.courseEligibility?.message
+                : 'N/A'}
+            </p>
+            <p>
+              Academic Eligibility:{' '}
+              {criteria?.academicEligibility?.message?.Required} (Required) -{' '}
+              {criteria?.academicEligibility?.message?.Actual} (Actual)
+            </p>
+            <p>
+              10th Grade Eligibility:{' '}
+              {criteria?.edu_History_10_Eligibility?.message?.Required}{' '}
+              (Required) -{' '}
+              {criteria?.edu_History_10_Eligibility?.message?.Actual} (Actual)
+            </p>
+            <p>
+              12th Grade Eligibility:{' '}
+              {criteria?.edu_History_12_Eligibility?.message?.Required}{' '}
+              (Required) -{' '}
+              {criteria?.edu_History_12_Eligibility?.message?.Actual} (Actual)
+            </p>
+            {/* Additional fields */}
+          </div>
+        ))}
     </div>
-  );
+  )
 
   const handleSectionClick = (section) => {
-    setActiveSection(section);
-  };
+    setActiveSection(section)
+  }
 
   const handleResumeUpload = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]
     // Perform any necessary file validation or processing here
-    setResumeName(file.name);
-  };
+    setResumeName(file.name)
+  }
 
   const handleSubmitApplication = () => {
     // Perform any necessary backend API calls or data processing here
-    setIsApplied(true);
-    setIsModalOpen(false);
-  };
+    setIsApplied(true)
+    setIsModalOpen(false)
+  }
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+    setFullName('')
+    setEmail('')
+    setPhone('')
+  }
 
   return (
     <div className="d-flex">
@@ -141,7 +215,7 @@ export default function JobProfileDetail() {
                 borderWidth: '1px',
                 borderColor: 'rgba(0, 0, 0, 0.453)',
               }}
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleModalOpen}
             >
               {isApplied ? 'Applied' : 'Apply'}
             </button>
@@ -207,15 +281,53 @@ export default function JobProfileDetail() {
         </div>
 
         {isModalOpen && (
-          <div className="modal">
-            <h2>Upload Resume</h2>
-            <input type="file" onChange={handleResumeUpload} />
-            {resumeName && <p>Selected Resume: {resumeName}</p>}
-            <button onClick={handleSubmitApplication}>Submit</button>
-            <button onClick={() => setIsModalOpen(false)}>Close</button>
+          <div id="popup">
+            <div id="form">
+              <span id="close" onClick={handleModalClose}>
+                &times;
+              </span>
+              <h2>Apply for {jobDescription.profile}</h2>
+              <div className="form-group">
+                <label htmlFor="fullName">
+                  Why are you a perfect fit for this job?
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Why should we hire you?</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone">Mention your skills </label>
+                <input
+                  type="text"
+                  id="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="resume">Resume</label>
+                <input type="file" id="resume" onChange={handleResumeUpload} />
+                {resumeName && <p>Selected resume: {resumeName}</p>}
+              </div>
+              <button className="applyButton" onClick={handleSubmitApplication}>
+                Submit Application
+              </button>
+            </div>
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }
