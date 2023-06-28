@@ -10,4 +10,4 @@ export const createNotice = async (
   placementCycleId: number,
   noticeDetails: Notice.RootObject
 ) =>
-  await APIRequest(adminBaseUrl + `${placementCycleId}`, "POST", noticeDetails);
+  await APIRequest(adminBaseUrl + `/${placementCycleId}`, "POST", noticeDetails);

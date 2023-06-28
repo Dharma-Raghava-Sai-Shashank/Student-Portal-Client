@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import { ADMIN } from "../constants";
 import { fetchPlacementCycles } from "../../Slices/placementcycle";
+import { createNotice } from "../../api/notice.service";
 
 const style = {
   position: "absolute" as "absolute",
@@ -66,8 +67,11 @@ export const Notices = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const OnSubmit = () => {
-    console.log(newnotices);
+  const OnSubmit = async () => {
+    await createNotice(newnotices.placementCycleId as number, {
+      ...newnotices,
+      description: `<Typography>${newnotices.description}</Typography>`,
+    });
   };
   const OnClearAll = () => {
     setNewnotices((prev: Notice.RootObject) => ({
@@ -86,7 +90,7 @@ export const Notices = () => {
   // };
 
   React.useEffect(() => {
-    dispatch(getNoticeForCycles([4]));
+    dispatch(getNoticeForCycles([6]));
     dispatch(fetchPlacementCycles({ type: ADMIN }));
   }, [dispatch]);
 
