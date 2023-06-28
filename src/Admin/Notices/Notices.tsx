@@ -8,63 +8,87 @@ import "react-quill/dist/quill.snow.css";
 import EachNotice from "../../Student/Dashboard/EachNotice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getNoticeForCycles } from "../../Slices/notice";
-import { Autocomplete, Select } from "@mui/material";
+import { Select } from "@mui/material";
 import "./styles.scss";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { Form } from "react-bootstrap";
-import { FormControl, InputLabel, Input, MenuItem , TextField} from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Input,
+  MenuItem,
+  TextField,
+  SelectChangeEvent,
+} from "@mui/material";
+import { ADMIN } from "../constants";
+import { fetchPlacementCycles } from "../../Slices/placementcycle";
 
+const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "65%",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+};
+const modules = {
+  toolbar: [
+    [{ header: [false] }],
+    ["bold", "italic", "underline"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+  ],
+};
 
 export const Notices = () => {
   const dispatch = useAppDispatch();
 
+  const prevnotices = useAppSelector((state) => state.notice);
+  const cycles = useAppSelector((state) => state.placementcycle);
+  // const notice = Notice.RootObject;
+  const [newnotices, setNewnotices] = useState<Notice.RootObject>({
+    title: "",
+    description: "",
+    placementCycleId: 0,
+  });
 
-  const notices = useAppSelector((state) => state.notice);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-
-  const style = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 800,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
+  const OnSubmit = () => {
+    console.log(newnotices);
+  };
+  const OnClearAll = () => {
+    setNewnotices((prev: Notice.RootObject) => ({
+      ...prev,
+      title: "",
+      description: "",
+      placementCycleId: 0,
+    }));
   };
 
+  // const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setNewnotices((prev: Notice.RootObject) => ({
+  //     ...prev,
+  //     [e.target.name]: e.target.value,
+  //   }));
+  // };
 
   React.useEffect(() => {
     dispatch(getNoticeForCycles([4]));
+    dispatch(fetchPlacementCycles({ type: ADMIN }));
   }, [dispatch]);
-  const modules = {
-    toolbar: [
-      [{ header: [false] }],
-      ["bold", "italic", "underline"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-      ],
-    ],
-  };
-
-
-  const [newnotices, setNewnotices] = useState("");
-  const [show, setShow] = useState(false);
-
-
-  // const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
 
   return (
     <div>
@@ -77,7 +101,6 @@ export const Notices = () => {
               <div>
                 <span className="fs-14">Admin | </span>
 
-
                 <span className={`fs-14  green1c fw-500`}>Notices</span>
               </div>
               <div className="bg-white my-2 shadow-lg ">
@@ -85,7 +108,6 @@ export const Notices = () => {
                   <label htmlFor="Company Name" className="newjobLabel ms-2">
                     Notice description
                   </label>
-
 
                   {/* */}
                   <div className="addNotices pe-5">
@@ -100,7 +122,6 @@ export const Notices = () => {
                     </Fab>
                   </div>
 
-
                   <Modal
                     open={open}
                     onClose={handleClose}
@@ -108,27 +129,6 @@ export const Notices = () => {
                     aria-describedby="modal-modal-description"
                   >
                     <Box sx={style}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h4"
-                      >
-                        Notice Title
-                      </Typography>
-                      <div>
-                      <TextField id="outlined-basic" variant="outlined" size='small' fullWidth/>
-                      </div>
-                      <Typography id="modal-modal-description" sx={{ mt: 3 }}>
-                        Description of Notice
-                      </Typography>
-                      <div>
-                        <ReactQuill
-                          theme="snow"
-                          value={newnotices}
-                          modules={modules}
-                          style={{ height: "200px", marginBottom: "150px" }}
-                        />
-                      </div>
                       <div>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                           Placement Cycle
@@ -138,27 +138,96 @@ export const Notices = () => {
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={0}
-                            label="Age"
+                            value={newnotices.placementCycleId}
+                            label="Select Cycle"
+                            name="placementCycleId"
                           >
-                            <MenuItem value={1}>First</MenuItem>
-                            <MenuItem value={2}>Second</MenuItem>
-                            <MenuItem value={3}>Third</MenuItem>
-                            <MenuItem value={4}>Fourth</MenuItem>
+                            {cycles.previous.map(
+                              (cycle: PlacementCycle.RootObject) => (
+                                <MenuItem
+                                  value={cycle.placementCycleId}
+                                  onClick={() => {
+                                    setNewnotices(
+                                      (prev: Notice.RootObject) => ({
+                                        ...prev,
+                                        placementCycleId:
+                                          cycle.placementCycleId,
+                                      })
+                                    );
+                                  }}
+                                >
+                                  {cycle.placementCycleName}
+                                </MenuItem>
+                              )
+                            )}
                           </Select>
-                          <h1> </h1>
-                          <Button
-                            variant="contained"
-                            style={{
-                              maxWidth: "20%",
-                              maxHeight: "30px",
-                              minWidth: "30px",
-                              minHeight: "30px",
-                            }}
-                          >
-                            Submit
-                          </Button>
                         </FormControl>
+                      </div>
+                      <Typography id="modal-modal-description" sx={{ mt: 3 }}>
+                        Notice Title
+                      </Typography>
+                      <div>
+                        <TextField
+                          id="outlined-basic"
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          name="title"
+                          value={newnotices.title}
+                          onChange={(e) => {
+                            setNewnotices((prev: Notice.RootObject) => ({
+                              ...prev,
+                              title: e.target.value,
+                            }));
+                          }}
+                        />
+                      </div>
+                      <Typography id="modal-modal-description" sx={{ mt: 3 }}>
+                        Description of Notice
+                      </Typography>
+                      <div className="mb-5 pb-3">
+                        <ReactQuill
+                          theme="snow"
+                          value={newnotices?.description}
+                          modules={modules}
+                          style={{ height: "250px" }}
+                          onChange={(value) => {
+                            setNewnotices((prev: Notice.RootObject) => ({
+                              ...prev,
+                              description: value,
+                            }));
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <div className="row">
+                          <div className="col-6">
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              onClick={handleClose}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              color="info"
+                              onClick={OnClearAll}
+                              sx={{ ml: 3 }}
+                            >
+                              Clear All
+                            </Button>
+                          </div>
+                          <div className="col-6 d-flex justify-content-end">
+                            <Button
+                              variant="outlined"
+                              color="success"
+                              onClick={OnSubmit}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     </Box>
                   </Modal>
@@ -167,7 +236,7 @@ export const Notices = () => {
                       className="border-right"
                       style={{ backgroundColor: "#dddddd64" }}
                     >
-                      {notices?.map((item: Notice.RootObject) => (
+                      {prevnotices?.map((item: Notice.RootObject) => (
                         <EachNotice notice={item} />
                       ))}
                     </div>
@@ -181,7 +250,3 @@ export const Notices = () => {
     </div>
   );
 };
-
-
-
-

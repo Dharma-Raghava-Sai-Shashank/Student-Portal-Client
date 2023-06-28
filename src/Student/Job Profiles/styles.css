@@ -93,10 +93,8 @@
   }
 }
 
-
-
 .modal {
-  position: fixed;
+  /* position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -104,11 +102,11 @@
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 9999;
+  z-index: 9999; */
 }
 
 .modal h2 {
-  margin-top: 0;
+  /* margin-top: 0; */
 }
 
 .modal input[type="file"] {
@@ -116,23 +114,22 @@
 }
 
 .modal button {
-  margin-top: 10px;
+  /* margin-top: 10px;
   padding: 8px 16px;
   border-radius: 4px;
   background-color: #007bff;
   color: #ffffff;
   border: none;
-  cursor: pointer;
+  cursor: pointer; */
 }
 
-.modal button:first-child {
+/* .modal button:first-child {
   margin-right: 10px;
 }
 
 .modal button:hover {
   background-color: #0056b3;
-}
-
+} */
 
 #popup {
   display: flex;
@@ -145,7 +142,6 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(3px);
-  
 }
 
 #form {
