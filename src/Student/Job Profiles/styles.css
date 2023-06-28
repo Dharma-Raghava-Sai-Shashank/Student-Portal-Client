@@ -1,3 +1,23 @@
+.profile-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.profile-row:hover {
+  background-color: #f2f2f2;
+}
+
+/* Style the Apply button */
+.btn-primary {
+  background-color: #4caf50;
+  border-color: #4caf50;
+}
+
+.btn-primary:hover {
+  background-color: #45a049;
+  border-color: #45a049;
+}
+
 .center {
   display: flex;
   justify-content: center;

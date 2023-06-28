@@ -56,17 +56,32 @@ export default function JobProfileDetail() {
   )
 
   const renderHiringWorkflow = () => (
-    <div className="column">
-      <h3>Hiring Workflow</h3>
+    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
+      <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>Hiring Workflow</h3>
       {hiringWorkflow.map((stage) => (
-        <div key={stage.stageId}>
-          <p>Stage Type: {stage.stageType}</p>
-          <p>Stage Mode: {stage.stageMode}</p>
-          {/* Additional fields */}
+        <div
+          key={stage.stageId}
+          style={{
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            marginBottom: '10px',
+            backgroundColor: stage.isSelected === 1 ? '#e6f7ff' : stage.isCompleted === 1 ? '#e0ffe0' : ''
+          }}
+        >
+          <p style={{ margin: '5px 0' }}>Stage Type: {stage.stageType}</p>
+          <p style={{ margin: '5px 0' }}>Stage Mode: {stage.stageMode}</p>
+          {stage.isSelected === 1 ? (
+            <p style={{ margin: '5px 0', color: 'green' }}>Eligible for Further Rounds</p>
+          ) : (
+            <p style={{ margin: '5px 0', color: 'red' }}>Not Eligible for Further Rounds</p>
+          )}
         </div>
       ))}
     </div>
-  )
+  );
+  
+  
 
   const renderEligibilityCriteria = () => (
     <div className="column">
@@ -74,73 +89,22 @@ export default function JobProfileDetail() {
       {eligibilityCriteria &&
         eligibilityCriteria.map((criteria) => (
           <div key={criteria?.spec?.specId}>
-            <p>Specialization: {criteria?.spec?.specName}</p>
-            <p>CGPA Value: {criteria?.cgpaValue}</p>
-            <p>
-              Is Eligible:{' '}
-              {criteria?.isProfileVerified?.isEligible &&
-              criteria?.placementCyclEligibility?.isEligible &&
-              criteria?.isNotPalced?.isEligible &&
-              criteria?.backlogEligibility?.isEligible &&
-              criteria?.courseEligibility?.isEligible &&
-              criteria?.academicEligibility?.isEligible &&
-              criteria?.edu_History_10_Eligibility?.isEligible &&
-              criteria?.edu_History_12_Eligibility?.isEligible
-                ? 'Yes'
-                : 'No'}
-            </p>
-            <p>
-              Profile Verified:{' '}
-              {criteria?.isProfileVerified?.isEligible
-                ? criteria?.isProfileVerified?.message
-                : 'N/A'}
-            </p>
-            <p>
-              Placement Cycle Eligibility:{' '}
-              {criteria?.placementCyclEligibility?.isEligible
-                ? criteria?.placementCyclEligibility?.message
-                : 'N/A'}
-            </p>
-            <p>
-              Not Placed:{' '}
-              {criteria?.isNotPalced?.isEligible
-                ? criteria?.isNotPalced?.message
-                : 'N/A'}
-            </p>
-            <p>
-              Backlog Eligibility:{' '}
-              {criteria?.backlogEligibility?.isEligible
-                ? criteria?.backlogEligibility?.message
-                : 'N/A'}
-            </p>
-            <p>
-              Course Eligibility:{' '}
-              {criteria?.courseEligibility?.isEligible
-                ? criteria?.courseEligibility?.message
-                : 'N/A'}
-            </p>
-            <p>
-              Academic Eligibility:{' '}
-              {criteria?.academicEligibility?.message?.Required} (Required) -{' '}
-              {criteria?.academicEligibility?.message?.Actual} (Actual)
-            </p>
-            <p>
-              10th Grade Eligibility:{' '}
-              {criteria?.edu_History_10_Eligibility?.message?.Required}{' '}
-              (Required) -{' '}
-              {criteria?.edu_History_10_Eligibility?.message?.Actual} (Actual)
-            </p>
-            <p>
-              12th Grade Eligibility:{' '}
-              {criteria?.edu_History_12_Eligibility?.message?.Required}{' '}
-              (Required) -{' '}
-              {criteria?.edu_History_12_Eligibility?.message?.Actual} (Actual)
-            </p>
-            {/* Additional fields */}
+            {Object.entries(criteria).map(([key, value]) => {
+              const formattedKey = key
+                .replace(/_/g, ' ');
+                // .toUpperCase();
+              return (
+                <p key={key}>
+                  {formattedKey}: {value?.isEligible ? 'Yes' : 'No'}
+                </p>
+              );
+            })}
           </div>
         ))}
     </div>
-  )
+  );
+  
+  
 
   const handleSectionClick = (section) => {
     setActiveSection(section)

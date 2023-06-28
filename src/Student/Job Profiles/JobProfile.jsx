@@ -20,10 +20,9 @@ export default function JobProfile() {
 
   const handleApply = (profile) => {
     const { eligibilityCriteria } = profile;
-  
-    const isEligible =
-      eligibilityCriteria.length > 0;
-  
+
+    const isEligible = eligibilityCriteria.length > 0;
+
     if (isEligible) {
       // Proceed with the application logic
       const updatedProfile = {
@@ -40,9 +39,6 @@ export default function JobProfile() {
       console.log('Student is not eligible for this job');
     }
   };
-  
-  
-  
 
   const filteredProfiles = jobProfileData.filter((profile) => {
     if (filter === 'closed-deadline') {
@@ -58,7 +54,7 @@ export default function JobProfile() {
     <div className="d-flex">
       <StudentSidebar />
       <div className="w-100">
-        <HeaderStudent /> 
+        <HeaderStudent />
         <div className="container mt-4">
           <h1>Job Profiles</h1>
           <div className="mb-3">
@@ -88,14 +84,25 @@ export default function JobProfile() {
             </thead>
             <tbody>
               {filteredProfiles.map((profile) => (
-                <tr key={profile.id} onClick={() => handleProfileClick(profile)}>
+                <tr
+                  key={profile.id}
+                  onClick={() => handleProfileClick(profile)}
+                  className="profile-row"
+                >
                   <td>{profile.company}</td>
                   <td>{profile.name}</td>
                   <td>{profile.type}</td>
                   <td>
                     {profile.status === 'eligible' && (
                       <button
-                        className="btn btn-primary btn-sm"
+                      className="applyButton"
+                      style={{
+                        borderRadius: '8px',
+                        // backgroundColor: 'transparent',
+                        borderWidth: '1px',
+                        borderColor: 'rgba(0, 0, 0, 0.453)',
+                        transition: 'background-color 0.2s',
+                      }}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleApply(profile);
