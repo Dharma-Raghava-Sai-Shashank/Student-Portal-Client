@@ -12,7 +12,9 @@ import { CycleDetails } from "./Admin/Department/CycleDetails";
 import { AcadYearProgram } from "./Admin/Programs/AcadYearProgram";
 import UserProfile from "./Student/Profile/UserProfile";
 import JobProfile from "./Student/Job Profiles/JobProfile";
+import JobProfileDetail from './Student/Job Profiles/JobProfileDetail';
 import DashBoard from "./Student/Dashboard/Dashboard";
+import { Notices } from "./Admin/Notices/Notices";
 import { RespExtra } from "./Student/Dashboard/RespExtra";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -102,6 +104,7 @@ function App() {
           path="/admin/placementcycle"
           element={ProtectRoute(PlacementCycle)}
         />
+        <Route path="/admin/notices" element={ProtectRoute(Notices)} />
         <Route
           path="/admin/placementcycle/:cycleId"
           element={ProtectRoute(CycleDetails)}
@@ -113,6 +116,7 @@ function App() {
         />
         <Route path="/student/profile" element={<UserProfile />} />
         <Route path="/student/jobprofile" element={<JobProfile />} />
+        <Route path="/student/jobprofile/:id" element={<JobProfileDetail />} />
         <Route path="/student/dashboard" element={<DashBoard />} />
         <Route path="/student/extras" element={<RespExtra />} />
       </Routes>

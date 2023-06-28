@@ -92,11 +92,13 @@ export const MainSidebar = () => {
                       </div>
                     </button>
                   </Link>
-                  <button className="MainSidebarOptionButton">
-                    <div className="MainSidebarOptionButtonDiv">
-                      <DescriptionOutlinedIcon className="mx-3" /> Notices
-                    </div>
-                  </button>
+                  <Link to="/admin/notices">
+                    <button className="MainSidebarOptionButton">
+                      <div className="MainSidebarOptionButtonDiv">
+                        <DescriptionOutlinedIcon className="mx-3" /> Notices
+                      </div>
+                    </button>
+                  </Link>
                   <Link to="/admin/companies">
                     <button className="MainSidebarOptionButton">
                       <div className="MainSidebarOptionButtonDiv">

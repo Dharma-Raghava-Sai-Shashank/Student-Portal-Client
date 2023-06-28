@@ -76,7 +76,10 @@ export const HtmlText = (
   </div>
 );
 
-export const generateDetails = (detailType: string, detail: string | undefined) => {
+export const generateDetails = (
+  detailType: string,
+  detail: string | undefined
+) => {
   return (
     <div className="row mt-3 border-bottom mx-2">
       <div className="col-3 ">
@@ -350,6 +353,19 @@ export const ShowJob = () => {
                               }}
                             >
                               Final Selected Students
+                            </Button>
+                            <Button
+                              variant="text"
+                              fullWidth
+                              color="success"
+                              sx={{ p: 0, textTransform: "capitalize" }}
+                              onClick={() => {
+                                setshowStudentModal(true);
+                                setShowCheckbox(() => true);
+                                setStageName(() => "Final Shortlist");
+                              }}
+                            >
+                              Recieved PPO
                             </Button>
                             <AddstudentsModal
                               open={showStudentModal}

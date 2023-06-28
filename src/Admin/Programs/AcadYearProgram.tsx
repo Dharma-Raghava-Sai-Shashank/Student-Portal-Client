@@ -9,35 +9,57 @@ import Typography from "@mui/material/Typography";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
-import { fetchAcadYears, saveAcadYear } from '../../Slices/academicYear';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { fetchAcadYears, saveAcadYear } from "../../Slices/academicYear";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 export const AcadYearProgram = () => {
   const [show, setShow] = useState(false);
+  const [showOngoing, setShowOngoing] = useState(false);
   const [inputdeadlineTime, setInputDeadlineTime] = React.useState<any>();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleCloseOngoing = () => setShowOngoing(false);
+  const handleShowOngoing = () => setShowOngoing(true);
 
-  const prevAcadYears = useAppSelector(state => state.academicyear.prevAcadYears)
-  const currAcadYear = useAppSelector(state => state.academicyear.currAcadYear)
+  const prevAcadYears = useAppSelector(
+    (state) => state.academicyear.prevAcadYears
+  );
+  const currAcadYear = useAppSelector(
+    (state) => state.academicyear.currAcadYear
+  );
+  const [ongoing, setOngoing] = React.useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setOngoing(event.target.value as string);
+  };
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     dispatch(fetchAcadYears());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const handleSaveAcademicYear = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
-    inputdeadlineTime && dispatch(saveAcadYear({ year: `${(inputdeadlineTime)?.['$y']-1}-${inputdeadlineTime?.['$y']}`}));
+    inputdeadlineTime &&
+      dispatch(
+        saveAcadYear({
+          year: `${inputdeadlineTime?.["$y"] - 1}-${inputdeadlineTime?.["$y"]}`,
+        })
+      );
 
     setShow(false);
-
   };
   return (
     <div className="d-flex">
@@ -113,7 +135,81 @@ export const AcadYearProgram = () => {
                 </div>
               </div>
               <div>
-                <div className="mx-3 pb-4">
+                <div className="mx-2 mt-2 mb-5 pt-4 ">
+                  <div className="d-flex justify-content-between mt-1">
+                    <div className="mx-2">
+                      <Typography
+                        variant="subtitle2"
+                        sx={{ fontSize: "1.25rem" }}
+                        gutterBottom
+                      >
+                        Ongoing Academic Year
+                      </Typography>
+                    </div>
+                    <div className="ms-5">
+                      <Button
+                        sx={{ color: "#00ae57", fontSize: "12px" }}
+                        startIcon={
+                          <EditOutlinedIcon sx={{ fontSize: "8px" }} />
+                        }
+                        onClick={handleShowOngoing}
+                      >
+                        Edit
+                      </Button>
+                      <Modal
+                        show={showOngoing}
+                        onHide={handleCloseOngoing}
+                        size="lg"
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title>
+                            Change Ongoing Academic Year
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <div className="my-3">
+                            <label
+                              htmlFor="Cycle Name"
+                              className="newjobLabel fw-600"
+                            >
+                              Select Academic Year
+                            </label>
+                            <Box sx={{ minWidth: 120, my: 3 }}>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  Select
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={ongoing}
+                                  label="Select"
+                                  onChange={handleChange}
+                                >
+                                  {prevAcadYears.map(
+                                    (acadYear: AcademicYear.RootObject) => (
+                                      <MenuItem value={acadYear.year}>
+                                        {acadYear?.year}
+                                      </MenuItem>
+                                    )
+                                  )}
+                                </Select>
+                              </FormControl>
+                            </Box>
+                          </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button onClick={handleCloseOngoing}>Close</Button>
+                          <Button onClick={handleCloseOngoing}>
+                            Save Changes
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
+                    </div>
+                  </div>
+                  <hr style={{ height: "1.3px", margin: 0 }} />
+                </div>
+                {/* <div className="mx-3 pb-4">
                   <Typography
                     variant="subtitle2"
                     sx={{ fontSize: "1.25rem" }}
@@ -122,11 +218,11 @@ export const AcadYearProgram = () => {
                     Ongoing Academic Year
                   </Typography>
                   <hr style={{ height: "1.3px", margin: 0 }} />
-                </div>
+                </div> */}
                 <div className="pb-4">
                   <div className=" mx-3 px-5">
                     <Link
-                      to={`/admin/programs/2023`}
+                      to={`/admin/programs/${currAcadYear?.year}`}
                       style={{
                         textDecoration: "none",
                         color: "inherit",

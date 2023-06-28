@@ -14,17 +14,17 @@ export const StudentSidebar = () => {
 
   const resizeWindow = () => {
     setWidth(window.innerWidth);
-  }
+  };
 
   React.useEffect(() => {
     resizeWindow();
     window.addEventListener("resize", resizeWindow);
     return () => window.removeEventListener("resize", resizeWindow);
-  }, [])
+  }, []);
 
   return (
     <>
-      {width>=700 ? (
+      {width >= 700 ? (
         <Box className="d-flex">
           <div className="d-flex">
             <div className="MainSidebar">
@@ -99,7 +99,7 @@ export const StudentSidebar = () => {
         >
           <div
             className="topLogoHamburger responsiveSidebar"
-            style={{ width: "100vw", height: "70px", padding: 0, zIndex: 99 }}
+            style={{ width: "100vw", height: "60px", padding: 0, zIndex: 99 }}
           >
             <div
               className="MainSidebar"
@@ -120,7 +120,7 @@ export const StudentSidebar = () => {
                 >
                   <Link to="/student/dashboard">
                     <button
-                      className="text-white my-3"
+                      className="text-white my-1"
                       style={{
                         backgroundColor: "inherit",
                         border: "none",
@@ -136,7 +136,7 @@ export const StudentSidebar = () => {
                 >
                   <Link to="/student/profile">
                     <button
-                      className="text-white my-3"
+                      className="text-white my-1"
                       style={{
                         backgroundColor: "inherit",
                         border: "none",
@@ -152,7 +152,7 @@ export const StudentSidebar = () => {
                 >
                   <Link to="/student/jobprofile">
                     <button
-                      className="text-white my-3"
+                      className="text-white my-1"
                       style={{
                         backgroundColor: "inherit",
                         border: "none",
@@ -168,7 +168,7 @@ export const StudentSidebar = () => {
                 >
                   <Link to="/student/extras">
                     <button
-                      className="text-white my-3"
+                      className="text-white my-1"
                       style={{
                         backgroundColor: "inherit",
                         border: "none",
