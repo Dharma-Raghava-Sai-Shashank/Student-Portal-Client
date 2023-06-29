@@ -64,6 +64,7 @@ export const Notices = () => {
       ...newnotices,
       description: `<Typography>${newnotices.description}</Typography>`,
     });
+    dispatch(getNoticeForCycles([1, 2, 3, 4, 5, 6]));
   };
   const OnClearAll = () => {
     setNewnotices((prev: Notice.RootObject) => ({
