@@ -5,7 +5,6 @@ import { MainSidebar } from "../Sidebars/MainSidebar";
 import { Header1 } from "../Headers/Header1";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import EachNotice from "../../Student/Dashboard/EachNotice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getNoticeForCycles } from "../../Slices/notice";
 import { Select } from "@mui/material";
@@ -14,19 +13,13 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import {
-  FormControl,
-  InputLabel,
-  Input,
-  MenuItem,
-  TextField,
-  SelectChangeEvent,
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, TextField } from "@mui/material";
 import { ADMIN } from "../constants";
 import { fetchPlacementCycles } from "../../Slices/placementcycle";
 import { createNotice } from "../../api/notice.service";
+import AdminNotice from "./AdminNotice";
 
-const style = {
+export const BoxStyle = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
@@ -38,7 +31,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const modules = {
+export const QuillModules = {
   toolbar: [
     [{ header: [false] }],
     ["bold", "italic", "underline"],
@@ -56,7 +49,6 @@ export const Notices = () => {
 
   const prevnotices = useAppSelector((state) => state.notice);
   const cycles = useAppSelector((state) => state.placementcycle);
-  // const notice = Notice.RootObject;
   const [newnotices, setNewnotices] = useState<Notice.RootObject>({
     title: "",
     description: "",
@@ -82,15 +74,8 @@ export const Notices = () => {
     }));
   };
 
-  // const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setNewnotices((prev: Notice.RootObject) => ({
-  //     ...prev,
-  //     [e.target.name]: e.target.value,
-  //   }));
-  // };
-
   React.useEffect(() => {
-    dispatch(getNoticeForCycles([6]));
+    dispatch(getNoticeForCycles([1, 2, 3, 4, 5, 6]));
     dispatch(fetchPlacementCycles({ type: ADMIN }));
   }, [dispatch]);
 
@@ -102,19 +87,9 @@ export const Notices = () => {
           <div className="w-100">
             <Header1 />
             <div className=" w-100 px-5 py-5 grey2b">
-              <div>
-                <span className="fs-14">Admin | </span>
-
-                <span className={`fs-14  green1c fw-500`}>Notices</span>
-              </div>
-              <div className="bg-white my-2 shadow-lg ">
+              <div className="my-2">
                 <div className="my-3">
-                  <label htmlFor="Company Name" className="newjobLabel ms-2">
-                    Notice description
-                  </label>
-
-                  {/* */}
-                  <div className="addNotices pe-5">
+                  <div className="addNotices pe-5 me-5">
                     <Fab
                       color="primary"
                       aria-label="add"
@@ -125,14 +100,13 @@ export const Notices = () => {
                       <AddIcon sx={{ mr: 2 }} /> Add New Notice
                     </Fab>
                   </div>
-
                   <Modal
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                   >
-                    <Box sx={style}>
+                    <Box sx={BoxStyle}>
                       <div>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                           Placement Cycle
@@ -193,7 +167,7 @@ export const Notices = () => {
                         <ReactQuill
                           theme="snow"
                           value={newnotices?.description}
-                          modules={modules}
+                          modules={QuillModules}
                           style={{ height: "250px" }}
                           onChange={(value) => {
                             setNewnotices((prev: Notice.RootObject) => ({
@@ -238,10 +212,10 @@ export const Notices = () => {
                   <div className="row w-100 m-0">
                     <div
                       className="border-right"
-                      style={{ backgroundColor: "#dddddd64" }}
+                      style={{ backgroundColor: "inherit" }}
                     >
                       {prevnotices?.map((item: Notice.RootObject) => (
-                        <EachNotice notice={item} />
+                        <AdminNotice notice={item} />
                       ))}
                     </div>
                   </div>
