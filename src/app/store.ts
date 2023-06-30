@@ -8,6 +8,7 @@ import courseReducer from '../Slices/course';
 import departmentReducer from '../Slices/department';
 import disciplineReducer from '../Slices/discipline';
 import specializationReducer from '../Slices/specialization';
+import noticeReducer from '../Slices/notice';
 
 export const store = configureStore({
     reducer:{
@@ -19,6 +20,7 @@ export const store = configureStore({
         department: departmentReducer,
         discipline: disciplineReducer,
         specialization: specializationReducer,
+        notice: noticeReducer
     },
     devTools: true
 })

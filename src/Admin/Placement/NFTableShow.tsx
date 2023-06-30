@@ -32,7 +32,11 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import moment from "moment";
 import { fetchAllPlacementCycles } from "../../api/placementCycle.service";
-import { deleteJob, fetchJobsForAdmin, searchJobsForAdmin } from "../../api/job.service";
+import {
+  deleteJob,
+  fetchJobsForAdmin,
+  searchJobsForAdmin,
+} from "../../api/job.service";
 
 type Anchor = "top" | "left" | "bottom" | "right";
 
@@ -55,7 +59,7 @@ const columns: Column[] = [
 ];
 
 interface Data {
-  id: number,
+  id: number;
   name: string;
   designation: string;
   status: string;
@@ -66,8 +70,13 @@ function createData(job: any): Data {
     id: job.nfId,
     name: job.companyName,
     designation: job.profile,
-    status: (job.status === "Draft") ? "Draft" : (moment(Date.now()) < moment(job.deadline)) ? "Accepting Application" : "Applications Closed"
-  }
+    status:
+      job.status === "Draft"
+        ? "Draft"
+        : moment(Date.now()) < moment(job.deadline)
+        ? "Accepting Application"
+        : "Applications Closed",
+  };
 }
 
 // const jobs = [
@@ -158,7 +167,8 @@ export const NFTableShow = ({
       setPlacementCycles(cycles);
       const years: string[] = [];
       cycles?.map((cycle: PlacementCycle.RootObject) => {
-        if (!years.includes(cycle?.acadYear?.year as string)) years.push(cycle.acadYear?.year as string);
+        if (!years.includes(cycle?.acadYear?.year as string))
+          years.push(cycle.acadYear?.year as string);
         return cycle;
       });
       setAcadYears(years);
@@ -180,9 +190,8 @@ export const NFTableShow = ({
 
   const handleDeleteJob = async (jobId: number) => {
     const { success } = await deleteJob(jobId);
-    if(success)
-    setJobs(jobs.filter((job: Data) => job.id!==jobId));
-  }
+    if (success) setJobs(jobs.filter((job: Data) => job.id !== jobId));
+  };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -245,7 +254,8 @@ export const NFTableShow = ({
             <List>
               {placementCycles
                 .filter(
-                  (cycle: PlacementCycle.RootObject) => cycle.acadYear?.year === year
+                  (cycle: PlacementCycle.RootObject) =>
+                    cycle.acadYear?.year === year
                 )
                 .map((cycle: PlacementCycle.RootObject) => (
                   <ListItem
@@ -263,7 +273,9 @@ export const NFTableShow = ({
                       }`,
                     }}
                     onClickCapture={() =>
-                      handlePlacementCycleSelection(cycle.placementCycleId as number)
+                      handlePlacementCycleSelection(
+                        cycle.placementCycleId as number
+                      )
                     }
                   >
                     <ListItemButton>
@@ -444,7 +456,12 @@ export const NFTableShow = ({
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {jobs.filter((job: any) => currentstatus === "All" || job.status === currentstatus)
+                      {jobs
+                        ?.filter(
+                          (job: any) =>
+                            currentstatus === "All" ||
+                            job.status === currentstatus
+                        )
                         .slice(
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage
@@ -534,8 +551,12 @@ export const NFTableShow = ({
                                 >
                                   <EditOutlinedIcon fontSize="small" />
                                 </IconButton>
-                                <IconButton aria-label="delete" sx={{ mx: 1 }} onClick={() => handleDeleteJob(row.id)}>
-                                  <DeleteIcon fontSize="small"/>
+                                <IconButton
+                                  aria-label="delete"
+                                  sx={{ mx: 1 }}
+                                  onClick={() => handleDeleteJob(row.id)}
+                                >
+                                  <DeleteIcon fontSize="small" />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -547,7 +568,7 @@ export const NFTableShow = ({
                 <TablePagination
                   rowsPerPageOptions={[10, 25, 100]}
                   component="div"
-                  count={jobs.length}
+                  count={jobs?.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}

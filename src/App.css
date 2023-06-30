@@ -33,13 +33,17 @@
   color: #373739;
 }
 .grey2b {
-  background-color: #dddddd9c;
+  background-color: #dddddd71;
 }
 .grey3b {
   background-color: #f6f7fa;
 }
 .grey2c {
   color: #dddddd9c;
+}
+b,
+strong {
+  font-weight: 500;
 }
 .fw-300 {
   font-weight: 300 !important;
