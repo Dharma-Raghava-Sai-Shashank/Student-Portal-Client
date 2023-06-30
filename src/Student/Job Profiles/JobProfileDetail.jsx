@@ -1,26 +1,29 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { jobProfileData } from './jobProfileData'
-import './JobProfileDetail.css'
-import { HeaderStudent } from '../Headers/HeaderStudent'
-import { StudentSidebar } from '../Sidebars/StudentSidebar'
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { jobProfileData } from "./jobProfileData";
+import "./JobProfileDetail.css";
+import { HeaderStudent } from "../Headers/HeaderStudent";
+import { StudentSidebar } from "../Sidebars/StudentSidebar";
+import { HiringWorkflow } from "./HiringWorkflow";
 
 export default function JobProfileDetail() {
-  const { id } = useParams()
-  const jobId = parseInt(id)
-  const selectedProfile = jobProfileData.find((profile) => profile.id === jobId)
+  const { id } = useParams();
+  const jobId = parseInt(id);
+  const selectedProfile = jobProfileData.find(
+    (profile) => profile.id === jobId
+  );
 
-  const [activeSection, setActiveSection] = useState('jobDescription')
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [resumeName, setResumeName] = useState('')
-  const [isApplied, setIsApplied] = useState(false)
+  const [activeSection, setActiveSection] = useState("jobDescription");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [resumeName, setResumeName] = useState("");
+  const [isApplied, setIsApplied] = useState(false);
 
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   if (!selectedProfile) {
-    return <div className="job-profile-detail">Job profile not found.</div>
+    return <div className="job-profile-detail">Job profile not found.</div>;
   }
 
   const {
@@ -29,7 +32,7 @@ export default function JobProfileDetail() {
     hiringWorkflow,
     studentInfo,
     eligibilityCriteria,
-  } = selectedProfile
+  } = selectedProfile;
 
   const renderJobDescription = () => (
     <div className="column">
@@ -53,20 +56,21 @@ export default function JobProfileDetail() {
 
       <strong>About {jobDescription.companyName}</strong>
     </div>
-  )
+  );
 
   const renderHiringWorkflow = () => (
     <div className="column">
-      <h3>Hiring Workflow</h3>
+      <HiringWorkflow hiringWorkflow={hiringWorkflow} />
+      {/* <h3>Hiring Workflow</h3>
       {hiringWorkflow.map((stage) => (
         <div key={stage.stageId}>
           <p>Stage Type: {stage.stageType}</p>
           <p>Stage Mode: {stage.stageMode}</p>
-          {/* Additional fields */}
+          {/* Additional fields 
         </div>
-      ))}
+      ))} */}
     </div>
-  )
+  );
 
   const renderEligibilityCriteria = () => (
     <div className="column">
@@ -77,7 +81,7 @@ export default function JobProfileDetail() {
             <p>Specialization: {criteria?.spec?.specName}</p>
             <p>CGPA Value: {criteria?.cgpaValue}</p>
             <p>
-              Is Eligible:{' '}
+              Is Eligible:{" "}
               {criteria?.isProfileVerified?.isEligible &&
               criteria?.placementCyclEligibility?.isEligible &&
               criteria?.isNotPalced?.isEligible &&
@@ -86,88 +90,88 @@ export default function JobProfileDetail() {
               criteria?.academicEligibility?.isEligible &&
               criteria?.edu_History_10_Eligibility?.isEligible &&
               criteria?.edu_History_12_Eligibility?.isEligible
-                ? 'Yes'
-                : 'No'}
+                ? "Yes"
+                : "No"}
             </p>
             <p>
-              Profile Verified:{' '}
+              Profile Verified:{" "}
               {criteria?.isProfileVerified?.isEligible
                 ? criteria?.isProfileVerified?.message
-                : 'N/A'}
+                : "N/A"}
             </p>
             <p>
-              Placement Cycle Eligibility:{' '}
+              Placement Cycle Eligibility:{" "}
               {criteria?.placementCyclEligibility?.isEligible
                 ? criteria?.placementCyclEligibility?.message
-                : 'N/A'}
+                : "N/A"}
             </p>
             <p>
-              Not Placed:{' '}
+              Not Placed:{" "}
               {criteria?.isNotPalced?.isEligible
                 ? criteria?.isNotPalced?.message
-                : 'N/A'}
+                : "N/A"}
             </p>
             <p>
-              Backlog Eligibility:{' '}
+              Backlog Eligibility:{" "}
               {criteria?.backlogEligibility?.isEligible
                 ? criteria?.backlogEligibility?.message
-                : 'N/A'}
+                : "N/A"}
             </p>
             <p>
-              Course Eligibility:{' '}
+              Course Eligibility:{" "}
               {criteria?.courseEligibility?.isEligible
                 ? criteria?.courseEligibility?.message
-                : 'N/A'}
+                : "N/A"}
             </p>
             <p>
-              Academic Eligibility:{' '}
-              {criteria?.academicEligibility?.message?.Required} (Required) -{' '}
+              Academic Eligibility:{" "}
+              {criteria?.academicEligibility?.message?.Required} (Required) -{" "}
               {criteria?.academicEligibility?.message?.Actual} (Actual)
             </p>
             <p>
-              10th Grade Eligibility:{' '}
-              {criteria?.edu_History_10_Eligibility?.message?.Required}{' '}
-              (Required) -{' '}
+              10th Grade Eligibility:{" "}
+              {criteria?.edu_History_10_Eligibility?.message?.Required}{" "}
+              (Required) -{" "}
               {criteria?.edu_History_10_Eligibility?.message?.Actual} (Actual)
             </p>
             <p>
-              12th Grade Eligibility:{' '}
-              {criteria?.edu_History_12_Eligibility?.message?.Required}{' '}
-              (Required) -{' '}
+              12th Grade Eligibility:{" "}
+              {criteria?.edu_History_12_Eligibility?.message?.Required}{" "}
+              (Required) -{" "}
               {criteria?.edu_History_12_Eligibility?.message?.Actual} (Actual)
             </p>
             {/* Additional fields */}
           </div>
         ))}
     </div>
-  )
+  );
 
   const handleSectionClick = (section) => {
-    setActiveSection(section)
-  }
+    setActiveSection(section);
+  };
 
   const handleResumeUpload = (event) => {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
     // Perform any necessary file validation or processing here
-    setResumeName(file.name)
-  }
+    setResumeName(file.name);
+  };
 
   const handleSubmitApplication = () => {
     // Perform any necessary backend API calls or data processing here
-    setIsApplied(true)
-    setIsModalOpen(false)
-  }
+    setIsApplied(true);
+    setIsModalOpen(false);
+  };
 
   const handleModalOpen = () => {
-    setIsModalOpen(true)
-  }
+    setIsModalOpen(true);
+  };
 
   const handleModalClose = () => {
-    setIsModalOpen(false)
-    setFullName('')
-    setEmail('')
-    setPhone('')
-  }
+    setIsModalOpen(false);
+    setFullName("");
+    setEmail("");
+    setPhone("");
+  };
 
   return (
     <div className="d-flex">
@@ -177,16 +181,16 @@ export default function JobProfileDetail() {
         <div
           className="mainHead"
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '30px 0 30px 3rem',
+            display: "flex",
+            alignItems: "center",
+            padding: "30px 0 30px 3rem",
           }}
         >
           <img
             src={jobDescription.logo}
             height={90}
             width={100}
-            style={{ marginRight: '10px' }}
+            style={{ marginRight: "10px" }}
           />
           <div>
             <h3>
@@ -197,27 +201,27 @@ export default function JobProfileDetail() {
             </p>
             <button
               style={{
-                borderRadius: '18px',
-                backgroundColor: 'transparent',
-                borderWidth: '1px',
-                borderColor: 'rgba(0, 0, 0, 0.453)',
+                borderRadius: "18px",
+                backgroundColor: "transparent",
+                borderWidth: "1px",
+                borderColor: "rgba(0, 0, 0, 0.453)",
               }}
             >
               Full time 2022-23
             </button>
           </div>
-          <div style={{ marginLeft: '50%' }}>
+          <div style={{ marginLeft: "50%" }}>
             <button
               className="applyButton"
               style={{
-                borderRadius: '18px',
-                backgroundColor: 'transparent',
-                borderWidth: '1px',
-                borderColor: 'rgba(0, 0, 0, 0.453)',
+                borderRadius: "18px",
+                backgroundColor: "transparent",
+                borderWidth: "1px",
+                borderColor: "rgba(0, 0, 0, 0.453)",
               }}
               onClick={handleModalOpen}
             >
-              {isApplied ? 'Applied' : 'Apply'}
+              {isApplied ? "Applied" : "Apply"}
             </button>
           </div>
         </div>
@@ -225,48 +229,48 @@ export default function JobProfileDetail() {
         <div
           className="navbar"
           style={{
-            backgroundColor: '#ffffff',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            padding: '10px',
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            marginBottom: '-5px',
-            marginTop: '-8px',
+            backgroundColor: "#ffffff",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            padding: "10px",
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            marginBottom: "-5px",
+            marginTop: "-8px",
           }}
         >
           <button
             className={`nav-button ${
-              activeSection === 'jobDescription' ? 'active' : ''
+              activeSection === "jobDescription" ? "active" : ""
             }`}
-            onClick={() => handleSectionClick('jobDescription')}
+            onClick={() => handleSectionClick("jobDescription")}
             style={{
-              marginRight: '10px',
-              color: '#333333',
+              marginRight: "10px",
+              color: "#333333",
             }}
           >
             Job Description
           </button>
           <button
             className={`nav-button ${
-              activeSection === 'hiringWorkflow' ? 'active' : ''
+              activeSection === "hiringWorkflow" ? "active" : ""
             }`}
-            onClick={() => handleSectionClick('hiringWorkflow')}
+            onClick={() => handleSectionClick("hiringWorkflow")}
             style={{
-              marginRight: '10px',
-              color: '#333333',
+              marginRight: "10px",
+              color: "#333333",
             }}
           >
             Hiring Workflow
           </button>
           <button
             className={`nav-button ${
-              activeSection === 'eligibilityCriteria' ? 'active' : ''
+              activeSection === "eligibilityCriteria" ? "active" : ""
             }`}
-            onClick={() => handleSectionClick('eligibilityCriteria')}
+            onClick={() => handleSectionClick("eligibilityCriteria")}
             style={{
-              marginRight: '10px',
-              color: '#333333',
+              marginRight: "10px",
+              color: "#333333",
             }}
           >
             Eligibility Criteria
@@ -274,9 +278,9 @@ export default function JobProfileDetail() {
         </div>
 
         <div className="details">
-          {activeSection === 'jobDescription' && renderJobDescription()}
-          {activeSection === 'hiringWorkflow' && renderHiringWorkflow()}
-          {activeSection === 'eligibilityCriteria' &&
+          {activeSection === "jobDescription" && renderJobDescription()}
+          {activeSection === "hiringWorkflow" && renderHiringWorkflow()}
+          {activeSection === "eligibilityCriteria" &&
             renderEligibilityCriteria()}
         </div>
 
@@ -329,5 +333,5 @@ export default function JobProfileDetail() {
         )}
       </div>
     </div>
-  )
+  );
 }

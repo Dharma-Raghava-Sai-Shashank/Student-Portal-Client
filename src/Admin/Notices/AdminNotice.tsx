@@ -27,8 +27,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { fetchPlacementCycles } from "../../Slices/placementcycle";
 import { ADMIN } from "../constants";
-import { deleteNotice, updateNotice } from '../../api/notice.service';
-import { getNoticeForCycles } from '../../Slices/notice';
+import { deleteNotice, updateNotice } from "../../api/notice.service";
+import { getNoticeForCycles } from "../../Slices/notice";
 
 interface props {
   notice: Notice.RootObject;
@@ -36,7 +36,6 @@ interface props {
 
 export default function AdminNotice({ notice }: props) {
   const dispatch = useAppDispatch();
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -47,7 +46,6 @@ export default function AdminNotice({ notice }: props) {
   };
 
   const [ModalOpen, setModalOpen] = useState(false);
-
   const handleModalClose = () => {
     setModalOpen(false);
   };
@@ -58,6 +56,7 @@ export default function AdminNotice({ notice }: props) {
 
   const cycles = useAppSelector((state) => state.placementcycle);
   const [EditNotice, setEditNotice] = useState<Notice.RootObject>(notice);
+
   React.useEffect(() => {
     dispatch(fetchPlacementCycles({ type: ADMIN }));
   }, [dispatch]);
@@ -69,9 +68,12 @@ export default function AdminNotice({ notice }: props) {
     handleModalClose();
   };
   const handleDelete = async (noticeId: number) => {
-    await deleteNotice(noticeId);
-    dispatch(getNoticeForCycles([1, 2, 3, 4, 5, 6]));
-    window.alert("Are you sure you want to delete this notice");
+    if (
+      window.confirm("Are you sure you want to permanently delete this notice?")
+    ) {
+      await deleteNotice(noticeId);
+      dispatch(getNoticeForCycles([1, 2, 3, 4, 5, 6]));
+    }
     handleClose();
     handleModalClose();
   };
