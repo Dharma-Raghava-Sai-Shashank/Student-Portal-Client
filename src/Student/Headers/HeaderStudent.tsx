@@ -10,7 +10,7 @@ export const HeaderStudent = () => {
   const windowSize = useRef([window.innerWidth, window.innerHeight]);
   return (
     <div className="header1 d-flex justify-content-between mx-0 pt-2 text-black border">
-      <div className="CollegeName flex-grow-1 d-flex align-items-center ms-3 ">
+      <div className="CollegeName flex-grow-1 d-flex align-items-center ms-3 fw-400">
         {windowSize.current[0] > 720 ? (
           <Typography variant="h6" gutterBottom>
             Indian Institute of Technology (ISM), Dhanbad

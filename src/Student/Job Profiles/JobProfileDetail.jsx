@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { jobProfileData } from "./jobProfileData";
-import "./JobProfileDetail.css";
+import Avatar from "@mui/material/Avatar";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import "./JobProfileDetail.scss";
 import { HeaderStudent } from "../Headers/HeaderStudent";
 import { StudentSidebar } from "../Sidebars/StudentSidebar";
 import { HiringWorkflow } from "./HiringWorkflow";
+import Navbar from "./Navbar";
 
 export default function JobProfileDetail() {
   const { id } = useParams();
@@ -178,7 +186,91 @@ export default function JobProfileDetail() {
       <StudentSidebar />
       <div className="w-100">
         <HeaderStudent />
-        <div
+        <div className="p-4 grey2b">
+          <div className="bg-white">
+            <div className="NFHead ">
+              <div className="row pt-5">
+                <div className="col-12 col-sm-6 col-md-3 responsivecenter">
+                  <div className="d-flex justify-content-center">
+                    <Avatar
+                      className={"doctorcolor"}
+                      aria-label="recipe"
+                      sx={{ width: 120, height: 120 }}
+                    >
+                      <ApartmentIcon sx={{ fontSize: "80px" }} />
+                    </Avatar>
+                  </div>
+                </div>
+                <div className="col-12 col-sm-6 col-md-5 responsivecenter">
+                  <Box sx={{ width: "100%" }}>
+                    <div className="">
+                      <Typography variant="h5" gutterBottom>
+                        {jobDescription.companyName}
+                      </Typography>
+                      <Typography
+                        variant="button"
+                        className="me-3 fw-400 fs-14"
+                        display="block"
+                      >
+                        {jobDescription.profile}
+                      </Typography>
+                      <div className="mb-2">
+                        <Typography variant="button" className="fs-14 fw-400">
+                          {jobDescription.placeOfPosting}
+                        </Typography>
+                      </div>
+                    </div>
+                    <Chip label={jobDescription.type} variant="outlined" />
+                  </Box>
+                </div>
+                <div className="responsivecenter col-12 col-sm-12 col-md-4 d-flex justify-content-center">
+                  <div className="d-flex align-items-end">
+                    <Box>
+                      <div className="ms-1 ">
+                        <div className="mb-5 mx-2 MarginSmall">
+                          <Button
+                            variant="contained"
+                            color={`${isApplied ? "success" : "error"}`}
+                            onClick={handleModalOpen}
+                          >
+                            {isApplied ? "Applied" : "Apply"}
+                          </Button>
+                        </div>
+                        <div className="mt-4 ms-2 MarginSmall">
+                          <div>
+                            <div>
+                              <strong className="text-danger fs-14">
+                                Deadline Date:
+                              </strong>
+                              <strong className="ms-2 fs-16">
+                                26th June, 2023
+                              </strong>
+                            </div>
+                            <div>
+                              <strong className="text-danger fs-14">
+                                Deadline Time:
+                              </strong>
+                              <strong className="ms-2 fs-16">2:00 pm</strong>
+                            </div>
+                            <div>
+                              <strong className="text-danger fs-14">
+                                Status:
+                              </strong>
+                              <strong className="ms-2 fs-16">
+                                In Progress
+                              </strong>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Box>
+                  </div>
+                </div>
+              </div>
+              <hr className="my-0" />
+            </div>
+            <div>
+              {/* <div
           className="mainHead"
           style={{
             display: "flex",
@@ -224,113 +316,129 @@ export default function JobProfileDetail() {
               {isApplied ? "Applied" : "Apply"}
             </button>
           </div>
-        </div>
-
-        <div
-          className="navbar"
-          style={{
-            backgroundColor: "#ffffff",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-            padding: "10px",
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            marginBottom: "-5px",
-            marginTop: "-8px",
-          }}
-        >
-          <button
-            className={`nav-button ${
-              activeSection === "jobDescription" ? "active" : ""
-            }`}
-            onClick={() => handleSectionClick("jobDescription")}
-            style={{
-              marginRight: "10px",
-              color: "#333333",
-            }}
-          >
-            Job Description
-          </button>
-          <button
-            className={`nav-button ${
-              activeSection === "hiringWorkflow" ? "active" : ""
-            }`}
-            onClick={() => handleSectionClick("hiringWorkflow")}
-            style={{
-              marginRight: "10px",
-              color: "#333333",
-            }}
-          >
-            Hiring Workflow
-          </button>
-          <button
-            className={`nav-button ${
-              activeSection === "eligibilityCriteria" ? "active" : ""
-            }`}
-            onClick={() => handleSectionClick("eligibilityCriteria")}
-            style={{
-              marginRight: "10px",
-              color: "#333333",
-            }}
-          >
-            Eligibility Criteria
-          </button>
-        </div>
-
-        <div className="details">
-          {activeSection === "jobDescription" && renderJobDescription()}
-          {activeSection === "hiringWorkflow" && renderHiringWorkflow()}
-          {activeSection === "eligibilityCriteria" &&
-            renderEligibilityCriteria()}
-        </div>
-
-        {isModalOpen && (
-          <div id="popup">
-            <div id="form">
-              <span id="close" onClick={handleModalClose}>
-                &times;
-              </span>
-              <h2>Apply for {jobDescription.profile}</h2>
-              <div className="form-group">
-                <label htmlFor="fullName">
-                  Why are you a perfect fit for this job?
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Why should we hire you?</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="phone">Mention your skills </label>
-                <input
-                  type="text"
-                  id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="resume">Resume</label>
-                <input type="file" id="resume" onChange={handleResumeUpload} />
-                {resumeName && <p>Selected resume: {resumeName}</p>}
-              </div>
-              <button className="applyButton" onClick={handleSubmitApplication}>
-                Submit Application
+        </div> */}
+            </div>
+            <Navbar
+              jobDescription={jobDescription}
+              hiringWorkflow={hiringWorkflow}
+              eligibilityCriteria={eligibilityCriteria}
+            />
+            <div>
+              {/* <div
+              className="navbar"
+              style={{
+                backgroundColor: "#ffffff",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                padding: "10px",
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                marginBottom: "-5px",
+                marginTop: "-8px",
+              }}
+            >
+              <button
+                className={`nav-button ${
+                  activeSection === "jobDescription" ? "active" : ""
+                }`}
+                onClick={() => handleSectionClick("jobDescription")}
+                style={{
+                  marginRight: "10px",
+                  color: "#333333",
+                }}
+              >
+                Job Description
+              </button>
+              <button
+                className={`nav-button ${
+                  activeSection === "hiringWorkflow" ? "active" : ""
+                }`}
+                onClick={() => handleSectionClick("hiringWorkflow")}
+                style={{
+                  marginRight: "10px",
+                  color: "#333333",
+                }}
+              >
+                Hiring Workflow
+              </button>
+              <button
+                className={`nav-button ${
+                  activeSection === "eligibilityCriteria" ? "active" : ""
+                }`}
+                onClick={() => handleSectionClick("eligibilityCriteria")}
+                style={{
+                  marginRight: "10px",
+                  color: "#333333",
+                }}
+              >
+                Eligibility Criteria
               </button>
             </div>
+
+            <div className="details py-4 px-5">
+              {activeSection === "jobDescription" && renderJobDescription()}
+              {activeSection === "hiringWorkflow" && renderHiringWorkflow()}
+              {activeSection === "eligibilityCriteria" &&
+                renderEligibilityCriteria()}
+            </div> */}
+            </div>
+
+            {isModalOpen && (
+              <div id="popup">
+                <div id="form">
+                  <span id="close" onClick={handleModalClose}>
+                    &times;
+                  </span>
+                  <h2>Apply for {jobDescription.profile}</h2>
+                  <div className="form-group">
+                    <label htmlFor="fullName">
+                      Why are you a perfect fit for this job?
+                    </label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Why should we hire you?</label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="phone">Mention your skills </label>
+                    <input
+                      type="text"
+                      id="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="resume">Resume</label>
+                    <input
+                      type="file"
+                      id="resume"
+                      onChange={handleResumeUpload}
+                    />
+                    {resumeName && <p>Selected resume: {resumeName}</p>}
+                  </div>
+                  <button
+                    className="applyButton"
+                    onClick={handleSubmitApplication}
+                  >
+                    Submit Application
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

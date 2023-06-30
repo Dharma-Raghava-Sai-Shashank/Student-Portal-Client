@@ -162,13 +162,13 @@ export const ShowJob = () => {
                           </Typography>
                           <Typography
                             variant="button"
-                            className="me-3"
+                            className="me-3 fw-400"
                             display="block"
                           >
                             Software Developer
                           </Typography>
                           <div className="mb-2">
-                            <Typography variant="button">
+                            <Typography variant="button" className="fw-400">
                               Bangalore, Noida
                             </Typography>
                           </div>

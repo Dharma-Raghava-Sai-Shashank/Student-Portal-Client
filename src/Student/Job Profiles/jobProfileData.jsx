@@ -85,7 +85,7 @@ export const jobProfileData = [
         isEligible: true,
         isProfileVerified: {
           isEligible: true,
-          message: "Profile Verified",
+          message: "Profile is Verified",
         },
         placementCyclEligibility: {
           isEligible: true,
@@ -97,11 +97,11 @@ export const jobProfileData = [
         },
         backlogEligibility: {
           isEligible: true,
-          message: "No backlogs",
+          message: "You have no backlog backlogs",
         },
         courseEligibility: {
           isEligible: false,
-          message: "Criteria not satisfied",
+          message: "Course Criteria is not satisfied",
         },
         academicEligibility: {
           isEligible: true,
