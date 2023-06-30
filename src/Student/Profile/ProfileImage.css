@@ -1,0 +1,14 @@
+.student-image {
+    text-align: center;
+}
+
+.profile_image {
+    width: 16%;
+    height: auto;
+    margin: 2% 0;
+    border: 2px solid black;
+    border-radius: 50%;
+}
+
+
+

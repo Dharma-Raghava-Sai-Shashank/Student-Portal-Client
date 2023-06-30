@@ -7,6 +7,7 @@ declare namespace Notice {
         placementCycleId?: number,
         createdAt?: string,
         updatedAt?: string,
-        deletedAt?: string
+        deletedAt?: string,
+        postedBy?:string,
     }
 }
