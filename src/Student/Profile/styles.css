@@ -1,0 +1,233 @@
+table {
+    margin: 2% 10% 2%;
+    display: block;
+}
+
+table tr {
+    display: block;
+    border-top: 1px;
+    border-style: solid;
+    border-color: black;
+    padding: 1% 0;
+}
+
+.basic-details {
+    margin: 8% 0;
+}
+
+table td.heading {
+    display: inline-block;
+    padding: 0;
+    width: 50%;
+    font-weight: bold;
+}
+
+table td.output {
+    display: inline-block;
+    padding: 0;
+    width: 50%;
+}
+
+.academic-information th{
+    display: block;
+    width: 100%;
+} 
+
+.academic-information tr{
+    display: block;
+    width: 100%;
+} 
+
+.academic-information td {
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+}
+
+.placement {
+    margin: 8% 10%;
+}
+
+.placementCycleBox {
+    border: 1px solid gray;
+    padding: 1%;
+    margin: 2% 0;
+}
+
+.placement span.time {
+    display: inline-block;
+    width: 30%;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.placement span.middle {
+    display: inline-block;
+    width: 50%;
+    /* font-weight: bold; */
+    font-size: 120%;
+    vertical-align: middle;
+}
+
+.placement span.right {
+    display: inline-block;
+    width: 20%;
+    background-color: lightgreen;
+    padding: 1%;
+    border-radius: 2%;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.placement span a {
+    font-size: 80%;
+    text-decoration: none;
+}
+
+.placementCycleBox:hover {
+    /* font-weight: bold; */
+}
+
+.placement span.right-enroll {
+    display: inline-block;
+    width: 20%;
+    padding: 1%;
+    border: 1px solid black;
+    border-radius: 2%;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: middle;
+    color: black;
+}
+
+textarea {
+    width: 100%;
+}
+
+.gradesheet {
+    width: 100%;
+    border: none;
+    padding: 1%;
+    color: white;
+    background-color: red;
+}
+
+.internal span.currentCGPA {
+    margin-left: 10%;
+}
+
+.internal span.activeBacklogs {
+    float: right;
+    margin-right: 10%;
+}
+
+.resume-box {
+    border: 1px solid gray;
+    padding: 2%;
+    border-radius: 25px;
+}
+
+.resume-box span.resume-image {
+    display: inline-block;
+    width: 10%;
+    vertical-align: middle;
+}
+
+.resume-box span.resume-text {
+    display: inline-block;
+    width: 80%;
+    vertical-align: middle;
+    padding-left: 2%;
+}
+
+.resume-box span.element {
+    display: inline-block;
+    width: 10%;
+    vertical-align: middle;
+}
+
+.resume-box span.resume-image img {
+    display: inline-block;
+    width: 100%;
+}
+
+.resume-box span.resume-text span.resume-title {
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.resume-box span.resume-text span.resume-secondline {
+    color: gray;
+    margin-left: 8%;
+}
+
+@media (max-width: 1000px) {
+    .placement span.time {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    .placement span.middle {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin: 2% 0;
+    }
+    .placement span.right {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    .placement a{
+        display: block;
+        text-decoration: none;
+    }
+    .placement span.right-enroll {
+        display: block;
+        width: 100%;
+    }
+    .internal span.currentCGPA {
+        display: block;
+        text-align: center;
+        margin-left: 0;
+    }
+    .internal span.activeBacklogs {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 1060px) {
+    .resume-box span.resume-image {
+        width: 100%;
+        text-align: center;
+    }
+    .resume-box span.resume-image img {
+        width: 10%;
+    }
+    .resume-box span.resume-text {
+        width: 100%;
+        text-align: center;
+    }
+    .resume-box span.resume-text span.resume-title {
+        display: block;
+    }
+    .resume-box span.resume-text span.resume-secondline {
+        margin-left: 0;
+        display: block;
+    }
+    .resume-box span.element {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+
+
+
+
