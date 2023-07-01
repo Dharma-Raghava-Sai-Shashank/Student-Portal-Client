@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { HeaderStudent } from '../Headers/HeaderStudent'
 import { StudentSidebar } from '../Sidebars/StudentSidebar'
 import { jobProfileData } from './jobProfileData'
+import { NFTableShow } from './NFTableShow'
 import {
   Table,
   TableBody,
@@ -12,7 +13,7 @@ import {
   TableRow,
   Button,
 } from '@mui/material'
-import './styles.css'
+import './styles.scss'
 import { width } from '@mui/system'
 
 export default function JobProfile() {
@@ -31,7 +32,7 @@ export default function JobProfile() {
   const handleApply = (profile: any) => {
     const { eligibilityCriteria } = profile
 
-    const isEligible = eligibilityCriteria.length > 0
+    const isEligible = true;
 
     if (isEligible) {
       const updatedProfile = {
@@ -57,34 +58,22 @@ export default function JobProfile() {
       return filter ? profile.status === filter : true
     }
   })
-
+  const [option, setOption] = useState<string>('Placement')
+  const [session, setSession] = useState<string>('Full Time Hiring 2023-24')
   return (
     <div className="d-flex">
       <StudentSidebar />
       <div className="w-100">
         <HeaderStudent />
-        <div className="container mt-4">
-          <div className="filter-container">
-            <h4>Job Profiles</h4>
-            <label htmlFor="filter" className="filter-label">
-              Filter:
-            </label>
-            <select
-              id="filter"
-              className="filter-select"
-              value={filter}
-              onChange={handleFilterChange}
-            >
-              <option value="">All</option>
-              <option value="eligible">Eligible</option>
-              <option value="ineligible">Ineligible</option>
-              <option value="applied">Applied</option>
-              <option value="closed-deadline">Closed Deadline</option>
-              <option value="open-deadline">Open Deadline</option>
-            </select>
-          </div>
+        <NFTableShow
+          option={option}
+          setOption={setOption}
+          session={session}
+          setSession={setSession}
+        />
+        {/* <div className="container mt-4">
           <TableContainer>
-            <Table style={{ width: '80%' }}>
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell>Company</TableCell>
@@ -128,7 +117,7 @@ export default function JobProfile() {
               </TableBody>
             </Table>
           </TableContainer>
-        </div>
+        </div> */}
       </div>
     </div>
   )

@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
+import { TextField } from '@mui/material';
 import Divider from "@mui/material/Divider";
 import "./JobProfileDetail.scss";
 import { HeaderStudent } from "../Headers/HeaderStudent";
@@ -16,7 +17,7 @@ import Navbar from "./Navbar";
 
 export default function JobProfileDetail() {
   const { id } = useParams();
-  const jobId = parseInt(id);
+  const jobId = id ? parseInt(id) : 0;
   const selectedProfile = jobProfileData.find(
     (profile) => profile.id === jobId
   );
@@ -66,19 +67,13 @@ export default function JobProfileDetail() {
     </div>
   );
 
-  const renderHiringWorkflow = () => (
-    <div className="column">
-      <HiringWorkflow hiringWorkflow={hiringWorkflow} />
-      {/* <h3>Hiring Workflow</h3>
-      {hiringWorkflow.map((stage) => (
-        <div key={stage.stageId}>
-          <p>Stage Type: {stage.stageType}</p>
-          <p>Stage Mode: {stage.stageMode}</p>
-          {/* Additional fields 
-        </div>
-      ))} */}
-    </div>
-  );
+  const renderHiringWorkflow = () => {
+    return (
+      <div className="column">
+        <HiringWorkflow hiringWorkflow={hiringWorkflow} />
+      </div>
+    );
+  };
 
   const renderEligibilityCriteria = () => (
     <div className="column">
@@ -216,174 +211,132 @@ export default function JobProfileDetail() {
               </div>
               <hr className="my-0" />
             </div>
-            <div>
-              {/* <div
-          className="mainHead"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "30px 0 30px 3rem",
-          }}
-        >
-          <img
-            src={jobDescription.logo}
-            height={90}
-            width={100}
-            style={{ marginRight: "10px" }}
-          />
-          <div>
-            <h3>
-              <strong>{jobDescription.companyName}</strong>
-            </h3>
-            <p>
-              {jobDescription.profile} | {jobDescription.placeOfPosting}
-            </p>
-            <button
-              style={{
-                borderRadius: "18px",
-                backgroundColor: "transparent",
-                borderWidth: "1px",
-                borderColor: "rgba(0, 0, 0, 0.453)",
-              }}
-            >
-              Full time 2022-23
-            </button>
-          </div>
-          <div style={{ marginLeft: "50%" }}>
-            <button
-              className="applyButton"
-              style={{
-                borderRadius: "18px",
-                backgroundColor: "transparent",
-                borderWidth: "1px",
-                borderColor: "rgba(0, 0, 0, 0.453)",
-              }}
-              onClick={handleModalOpen}
-            >
-              {isApplied ? "Applied" : "Apply"}
-            </button>
-          </div>
-        </div> */}
-            </div>
             <Navbar
               jobDescription={jobDescription}
               hiringWorkflow={hiringWorkflow}
               eligibilityCriteria={eligibilityCriteria}
             />
-            <div>
-              {/* <div
-              className="navbar"
-              style={{
-                backgroundColor: "#ffffff",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                padding: "10px",
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                marginBottom: "-5px",
-                marginTop: "-8px",
-              }}
-            >
-              <button
-                className={`nav-button ${
-                  activeSection === "jobDescription" ? "active" : ""
-                }`}
-                onClick={() => handleSectionClick("jobDescription")}
-                style={{
-                  marginRight: "10px",
-                  color: "#333333",
-                }}
-              >
-                Job Description
-              </button>
-              <button
-                className={`nav-button ${
-                  activeSection === "hiringWorkflow" ? "active" : ""
-                }`}
-                onClick={() => handleSectionClick("hiringWorkflow")}
-                style={{
-                  marginRight: "10px",
-                  color: "#333333",
-                }}
-              >
-                Hiring Workflow
-              </button>
-              <button
-                className={`nav-button ${
-                  activeSection === "eligibilityCriteria" ? "active" : ""
-                }`}
-                onClick={() => handleSectionClick("eligibilityCriteria")}
-                style={{
-                  marginRight: "10px",
-                  color: "#333333",
-                }}
-              >
-                Eligibility Criteria
-              </button>
-            </div>
-
-            <div className="details py-4 px-5">
-              {activeSection === "jobDescription" && renderJobDescription()}
-              {activeSection === "hiringWorkflow" && renderHiringWorkflow()}
-              {activeSection === "eligibilityCriteria" &&
-                renderEligibilityCriteria()}
-            </div> */}
-            </div>
-
             {isModalOpen && (
-              <div id="popup">
-                <div id="form">
-                  <span id="close" onClick={handleModalClose}>
-                    &times;
-                  </span>
-                  <h2>Apply for {jobDescription.profile}</h2>
-                  <div className="form-group">
-                    <label htmlFor="fullName">
-                      Why are you a perfect fit for this job?
-                    </label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">Why should we hire you?</label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Mention your skills </label>
-                    <input
-                      type="text"
-                      id="phone"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="resume">Resume</label>
-                    <input
-                      type="file"
-                      id="resume"
-                      onChange={handleResumeUpload}
-                    />
-                    {resumeName && <p>Selected resume: {resumeName}</p>}
-                  </div>
-                  <button
-                    className="applyButton"
-                    onClick={handleSubmitApplication}
-                  >
-                    Submit Application
-                  </button>
-                </div>
-              </div>
-            )}
+  <Box
+    id="popup"
+    sx={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      outline: '2px solid black', 
+      outlineOffset: '-2px',
+    }}
+  >
+    <Box
+      sx={{
+        outline: '2px solid black', 
+        outlineOffset: '-2px', 
+        borderRadius: '4px',
+        width: '600px', 
+        maxWidth: '90%',
+        maxHeight: '70%',
+        overflowY: 'auto', 
+        overflowX: 'hidden',
+        
+      }}
+    >
+    <Box
+      id="form"
+      sx={{
+        backgroundColor: 'white',
+        padding: '1.5rem',
+        borderRadius: '4px',
+        width: '600px', 
+        // maxWidth: '90%', // Set a maximum width to maintain responsiveness
+        maxHeight: '70%', 
+        overflowY: 'auto',
+        '&::-webkit-scrollbar': {
+          width: '0.2em',
+          background: 'transparent',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: '#888',
+          borderRadius: '0.2em',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+          backgroundColor: '#555',
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <Typography
+          id="close"
+          variant="body1"
+          sx={{ cursor: 'pointer' }}
+          onClick={handleModalClose}
+        >
+          &times;
+        </Typography>
+      </Box>
+      <Typography variant="h2" gutterBottom>
+        Apply for {jobDescription.profile}
+      </Typography>
+      <Box sx={{ marginBottom: '1rem' }}>
+        <Typography variant="body1">
+          Why are you a perfect fit for this job?
+        </Typography>
+        <TextField
+          type="text"
+          id="fullName"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          fullWidth
+        />
+      </Box>
+      <Box sx={{ marginBottom: '1rem' }}>
+        <Typography variant="body1">Why should we hire you?</Typography>
+        <TextField
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+        />
+      </Box>
+      <Box sx={{ marginBottom: '1rem' }}>
+        <Typography variant="body1">Mention your skills</Typography>
+        <TextField
+          type="text"
+          id="phone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          fullWidth
+        />
+      </Box>
+      <Box sx={{ marginBottom: '1rem' }}>
+        <Typography variant="body1">Resume</Typography>
+        <input
+          type="file"
+          id="resume"
+          onChange={handleResumeUpload}
+          style={{ marginBottom: '0.5rem' }}
+        />
+        {resumeName && <Typography variant="body2">Selected resume: {resumeName}</Typography>}
+      </Box>
+      <Button variant="outlined" onClick={handleSubmitApplication}>
+        Submit Application
+      </Button>
+    </Box>
+    </Box>
+  </Box>
+)}
+
           </div>
         </div>
       </div>
