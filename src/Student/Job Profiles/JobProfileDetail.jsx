@@ -86,69 +86,16 @@ export default function JobProfileDetail() {
       {eligibilityCriteria &&
         eligibilityCriteria.map((criteria) => (
           <div key={criteria?.spec?.specId}>
-            <p>Specialization: {criteria?.spec?.specName}</p>
-            <p>CGPA Value: {criteria?.cgpaValue}</p>
-            <p>
-              Is Eligible:{" "}
-              {criteria?.isProfileVerified?.isEligible &&
-              criteria?.placementCyclEligibility?.isEligible &&
-              criteria?.isNotPalced?.isEligible &&
-              criteria?.backlogEligibility?.isEligible &&
-              criteria?.courseEligibility?.isEligible &&
-              criteria?.academicEligibility?.isEligible &&
-              criteria?.edu_History_10_Eligibility?.isEligible &&
-              criteria?.edu_History_12_Eligibility?.isEligible
-                ? "Yes"
-                : "No"}
-            </p>
-            <p>
-              Profile Verified:{" "}
-              {criteria?.isProfileVerified?.isEligible
-                ? criteria?.isProfileVerified?.message
-                : "N/A"}
-            </p>
-            <p>
-              Placement Cycle Eligibility:{" "}
-              {criteria?.placementCyclEligibility?.isEligible
-                ? criteria?.placementCyclEligibility?.message
-                : "N/A"}
-            </p>
-            <p>
-              Not Placed:{" "}
-              {criteria?.isNotPalced?.isEligible
-                ? criteria?.isNotPalced?.message
-                : "N/A"}
-            </p>
-            <p>
-              Backlog Eligibility:{" "}
-              {criteria?.backlogEligibility?.isEligible
-                ? criteria?.backlogEligibility?.message
-                : "N/A"}
-            </p>
-            <p>
-              Course Eligibility:{" "}
-              {criteria?.courseEligibility?.isEligible
-                ? criteria?.courseEligibility?.message
-                : "N/A"}
-            </p>
-            <p>
-              Academic Eligibility:{" "}
-              {criteria?.academicEligibility?.message?.Required} (Required) -{" "}
-              {criteria?.academicEligibility?.message?.Actual} (Actual)
-            </p>
-            <p>
-              10th Grade Eligibility:{" "}
-              {criteria?.edu_History_10_Eligibility?.message?.Required}{" "}
-              (Required) -{" "}
-              {criteria?.edu_History_10_Eligibility?.message?.Actual} (Actual)
-            </p>
-            <p>
-              12th Grade Eligibility:{" "}
-              {criteria?.edu_History_12_Eligibility?.message?.Required}{" "}
-              (Required) -{" "}
-              {criteria?.edu_History_12_Eligibility?.message?.Actual} (Actual)
-            </p>
-            {/* Additional fields */}
+            {Object.entries(criteria).map(([key, value]) => {
+              const formattedKey = key
+                .replace(/_/g, ' ');
+                // .toUpperCase();
+              return (
+                <p key={key}>
+                  {formattedKey}: {value?.isEligible ? 'Yes' : 'No'}
+                </p>
+              );
+            })}
           </div>
         ))}
     </div>
