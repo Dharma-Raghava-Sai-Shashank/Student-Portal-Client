@@ -1,9 +1,9 @@
-table {
+.profileInformation {
     margin: 2% 10% 2%;
     display: block;
 }
 
-table tr {
+.profileInformation tr {
     display: block;
     border-top: 1px;
     border-style: solid;
@@ -15,14 +15,14 @@ table tr {
     margin: 8% 0;
 }
 
-table td.heading {
+.profileInformation td.heading {
     display: inline-block;
     padding: 0;
     width: 50%;
     font-weight: bold;
 }
 
-table td.output {
+.profileInformation td.output {
     display: inline-block;
     padding: 0;
     width: 50%;

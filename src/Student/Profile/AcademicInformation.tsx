@@ -30,7 +30,7 @@ class BasicInfo extends Component {
 
         return (
             <div>
-                <table className="academic-information">
+                <table className="academic-information profileInformation">
                     <h3>
                         Academic Details
                     </h3>

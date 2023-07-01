@@ -6,7 +6,7 @@ class BasicInfo extends Component {
     render(): React.ReactNode {
         return (
             <div className="basic-details">
-                    <table>
+                    <table className="profileInformation">
                         <th>
                             <h3>Basic Details</h3>
                         </th>
