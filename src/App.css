@@ -1,5 +1,6 @@
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
+  height: 5px; /* height of horizontal scrollbar ← You're missing this */
 }
 ::-webkit-scrollbar-track {
   background: rgb(205, 205, 205);

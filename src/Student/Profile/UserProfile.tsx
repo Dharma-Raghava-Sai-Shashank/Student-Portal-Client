@@ -2,6 +2,7 @@ import * as React from "react";
 import { HeaderStudent } from "../Headers/HeaderStudent";
 import { StudentSidebar } from "../Sidebars/StudentSidebar";
 import BasicInfo from "./BasicInfo";
+import { MyProfile } from "./MyProfile";
 
 export default function UserProfile() {
   return (
@@ -9,7 +10,10 @@ export default function UserProfile() {
       <StudentSidebar />
       <div className="w-100">
         <HeaderStudent />
-          <BasicInfo/>
+        <div>
+          <MyProfile />
+        </div>
+        {/* <BasicInfo/> */}
         {/* <Cycle /> */}
       </div>
     </div>

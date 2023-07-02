@@ -1,0 +1,44 @@
+.MyProfileMainDiv {
+  z-index: -10;
+  .greenBackground {
+    background: linear-gradient(
+      150deg,
+      #82f9bd9d 15%,
+      #81fdbfdc 70%,
+      #1adf7cd3 94%
+    );
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    height: 300px;
+    top: 50px;
+  }
+  .profileImage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    .profile_image {
+      margin-top: 150px;
+      height: 15rem;
+      width: 15rem;
+      border-radius: 50%;
+    }
+  }
+  .responsiveTimeline {
+    border-right: 1px dotted gray;
+  }
+  .responsiveTimelineButton {
+    // display: none;
+  }
+}
+@media screen and (max-width: 992px) {
+  .MyProfileMainDiv {
+    .responsiveTimeline {
+      display: none;
+    }
+  }
+  .responsiveTimelineButton {
+    display: block;
+  }
+}
