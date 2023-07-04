@@ -12,7 +12,7 @@ import { CycleDetails } from "./Admin/Department/CycleDetails";
 import { AcadYearProgram } from "./Admin/Programs/AcadYearProgram";
 import UserProfile from "./Student/Profile/UserProfile";
 import JobProfile from "./Student/Job Profiles/JobProfile";
-import JobProfileDetail from './Student/Job Profiles/JobProfileDetail';
+import JobProfileDetail from "./Student/Job Profiles/JobProfileDetail";
 import DashBoard from "./Student/Dashboard/Dashboard";
 import { Notices } from "./Admin/Notices/Notices";
 import { RespExtra } from "./Student/Dashboard/RespExtra";
@@ -29,6 +29,7 @@ import EventBus from "./common/EventBus";
 import AdminRoute from "./common/AdminRoute";
 import StudentRoute from "./common/StudentRoute";
 import { Programs } from "./Admin/Programs/Programs";
+import { HomeScreen } from "./HomeScreen/HomeScreen";
 
 const ProtectRoute: any = (Component: React.FC<{}>) => {
   return (
@@ -86,7 +87,8 @@ function App() {
         </Alert>
       </Snackbar>
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route path="/" element={<HomeScreen />} />
+
         <Route path="/admin/auth" element={<AdminAuth />} />
         <Route path="/reg" element={ProtectStudentRoute(Registration)} />
         <Route path="/admin" element={ProtectRoute(Admin)} />
@@ -114,6 +116,8 @@ function App() {
           path="/admin/companies/:companyId"
           element={ProtectRoute(CompanyDetails)}
         />
+        <Route path="/student/auth" element={<Auth />} />
+        <Route path="/company/auth" element={<Auth />} />
         <Route path="/student/profile" element={<UserProfile />} />
         <Route path="/student/jobprofile" element={<JobProfile />} />
         <Route path="/student/jobprofile/:id" element={<JobProfileDetail />} />
