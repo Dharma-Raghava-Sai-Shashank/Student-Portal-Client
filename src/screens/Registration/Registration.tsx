@@ -87,7 +87,7 @@ export default function Registration() {
   }
 
   return (
-    <div className="MainRegPage">
+    <div className="MainRegPage backgroundAnimation">
       <div className="d-flex justify-content-center">
         <div className="RegistrationDiv col-12 col-md-9 mx-3">
           <Box sx={{ width: "100%" }}>
