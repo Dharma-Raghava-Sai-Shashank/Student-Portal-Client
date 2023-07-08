@@ -24,8 +24,9 @@ import AddIcon from '@mui/icons-material/Add'
 import { ReactSortable } from 'react-sortablejs'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
-import { RadioGroup, Radio, FormGroup } from '@material-ui/core'
+import { RadioGroup, Radio, FormGroup, IconButton } from '@material-ui/core'
 import Select from '@mui/material/Select'
+import CloseIcon from '@mui/icons-material/Close'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './style.scss'
@@ -431,6 +432,12 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       ...updatedQuestions[index],
       answer: value,
     }
+    setQuestions(updatedQuestions)
+  }
+
+  const handleDeleteQuestion = (index: any) => {
+    const updatedQuestions = [...questions]
+    updatedQuestions.splice(index, 1)
     setQuestions(updatedQuestions)
   }
 
@@ -1584,23 +1591,52 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
 
                 {questions.map((question, index) => (
                   <div key={index} className="row my-4">
-                    <label
-                      htmlFor={`question-${index}`}
-                      className="newjobLabel ms-2"
-                    >
-                      Question {index + 1} : Write here "cursor blink animation soon"
-                    </label>
+                    <div className="d-flex align-items-center">
+                      <label
+                        htmlFor={`question-${index}`}
+                        className="newjobLabel  ms-2"
+                      >
+                        Question {index + 1} :
+                      </label>
+                      <div
+                        onClick={() => handleDeleteQuestion(index)}
+                        aria-label="Delete question"
+                        className="ms-auto"
+                      >
+                        <CloseIcon />
+                      </div>
+                    </div>
+                    <div className="mb-3 ms-2">
+                      <input
+                        id={`question-${index}`}
+                        // rows={row[3]}
+                        className="newjobInput"
+                        required
+                        value={question.question}
+                        onChange={(event) =>
+                          handleQuestionChange(index, event.target.value)
+                        }
+                      />
+                    </div>
                     {question.type === 'Short Answer' && (
                       <div className="mb-3 ms-2">
-                        <textarea
-                          id={`question-${index}`}
-                          rows={row[3]}
-                          className="newjobInput"
-                          value={question.question}
-                          onChange={(event) =>
-                            handleQuestionChange(index, event.target.value)
-                          }
-                        />
+                        <label
+                          htmlFor={`answer-${index}`}
+                          className="newjobLabel"
+                        >
+                          Answer:
+                        </label>
+                        <div className="mb-3">
+                          <textarea
+                            id={`answer-${index}`}
+                            rows={row[3]}
+                            className="newjobInput"
+                            value={question.answer}
+                            onChange={(event) =>
+                              handleAnswerChange(index, event.target.value)
+                            }
+                          />
+                        </div>
                       </div>
                     )}
                     {question.type === 'MCQs' && (
