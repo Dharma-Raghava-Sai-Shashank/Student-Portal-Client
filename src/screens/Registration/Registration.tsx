@@ -12,8 +12,10 @@ import Stack from "@mui/material/Stack";
 import { Boards } from "./Boards";
 import { Branch } from "./Branch";
 import "./index.scss";
+import {useNavigate} from "react-router-dom";
 
 const steps = ["Personal Details", "Educational Details", "Upload Resume"];
+const API_URL = "https://jsonplaceholder.typicode.com/posts";
 
 export default function Registration() {
   const maxSemester = 8;
@@ -24,6 +26,50 @@ export default function Registration() {
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});
+
+  const [information, setInformation] = React.useState({
+    name: "",
+    dateofbirth: "",
+    gender: "",
+    category: "",
+    contact: "",
+    email: "",
+    personalemail: "",
+    permanentaddress: "",
+    currentaddress: "",
+    fathername: "",
+    aadhar: "",
+    ewsgeneral: "",
+    pwd: "",
+    class10schoolname: "",
+    class10durationfrom: "",
+    class10durationto: "",
+    class10boards: "",
+    class10percentage: "",
+    class10cgpa: "",
+    class10score: "",
+    class10grade: "",
+    class10gradesheet: null as File | null,
+    class12schoolname: "",
+    class12durationfrom: "",
+    class12durationto: "",
+    class12boards: "",
+    class12percentage: "",
+    class12cgpa: "",
+    class12score: "",
+    class12grade: "",
+    class12gradesheet: null as File | null,
+    graduationyear: "",
+    degree: "",
+    currentsemester: "",
+    presenteducationdurationfrom: "",
+    presenteducationdurationto: "",
+    percentage: "",
+    gradesheet: null as File | null,
+    resume: null as File | null
+  })      
+  
+  const navigate = useNavigate();
 
   function handle12thMarks(e: React.FormEvent) {
     setMarksType12th((e.target as HTMLSelectElement).value);
@@ -65,10 +111,22 @@ export default function Registration() {
   };
 
   const handleComplete = () => {
-    const newCompleted = completed;
-    newCompleted[activeStep] = true;
-    setCompleted(newCompleted);
-    handleNext();
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(information)
+    })
+    .then((response)=>{
+      console.log(information)
+      console.log(response)
+      alert("Thank you for filling out the form. Redirecting you to your page.")
+      navigate("/student/dashboard")
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
   };
 
   const handleReset = () => {
@@ -123,16 +181,36 @@ export default function Registration() {
                               <input
                                 className="form-control shadow-none mb-2"
                                 type="text"
+                                value={information.name}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    name: e.target.value
+                                  })
+                                }
                               />
                               <label>Date of Birth</label>
                               <input
                                 className="form-control shadow-none mb-2 col-12 col-sm-6"
                                 placeholder="DD/MM/YYYY"
                                 type="date"
+                                value={information.dateofbirth}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    dateofbirth: e.target.value
+                                  })
+                                }
                               />
                               <div className="form-group">
                                 <label>Gender</label>
-                                <select className="form-control">
+                                <select className="form-control"
+                                  onChange={
+                                    (e) => setInformation({
+                                      ...information,
+                                      gender: e.target.value
+                                    })
+                                  }>
                                   <option selected disabled>
                                     Choose...
                                   </option>
@@ -143,7 +221,13 @@ export default function Registration() {
                               </div>
                               <div className="form-group">
                                 <label>Category</label>
-                                <select className="form-control">
+                                <select className="form-control"
+                                  onChange={
+                                    (e) => setInformation({
+                                      ...information,
+                                      category: e.target.value
+                                    })
+                                  }>
                                   <option selected disabled>
                                     Choose...
                                   </option>
@@ -158,26 +242,61 @@ export default function Registration() {
                                 className="form-control shadow-none mb-2"
                                 type="text"
                                 placeholder="+91 1234567890"
+                                value={information.contact}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    contact: e.target.value
+                                  })
+                                }
                               />
                               <label>Email</label>
                               <input
                                 className="form-control shadow-none mb-2"
                                 type="text"
+                                value={information.email}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    email: e.target.value
+                                  })
+                                }
                               />
                               <label>Personal Email</label>
                               <input
                                 className="form-control shadow-none mb-2"
                                 type="text"
+                                value={information.personalemail}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    personalemail: e.target.value
+                                  })
+                                }
                               />
                               <label>Permanent Address</label>
                               <textarea
                                 className="form-control shadow-none mb-2"
                                 style={{ height: "100px" }}
+                                value={information.permanentaddress}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    permanentaddress: e.target.value
+                                  })
+                                }
                               />
                               <label>Current Address</label>
                               <textarea
                                 className="form-control shadow-none mb-2"
                                 style={{ height: "100px" }}
+                                value={information.currentaddress}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    currentaddress: e.target.value
+                                  })
+                                }
                               />
 
                               <label
@@ -190,15 +309,35 @@ export default function Registration() {
                               <input
                                 className="form-control shadow-none mb-2"
                                 type="text"
+                                value={information.fathername}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    fathername: e.target.value
+                                  })
+                                }
                               />
                               <label>Aadhar No.</label>
                               <input
                                 className="form-control shadow-none mb-2"
                                 type="text"
+                                value={information.aadhar}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    aadhar: e.target.value
+                                  })
+                                }
                               />
                               <div className="form-group">
                                 <label>Do you belong to EWS-General </label>
-                                <select className="form-control">
+                                <select className="form-control"
+                                  onChange={
+                                    (e) => setInformation({
+                                      ...information,
+                                      ewsgeneral: e.target.value
+                                    })
+                                  }>
                                   <option selected disabled>
                                     Choose...
                                   </option>
@@ -206,7 +345,13 @@ export default function Registration() {
                                   <option>No</option>
                                 </select>
                                 <label>Do you belong to PwD</label>
-                                <select className="form-control">
+                                <select className="form-control"
+                                  onChange={
+                                    (e) => setInformation({
+                                      ...information,
+                                      pwd: e.target.value
+                                    })
+                                  }>
                                   <option selected disabled>
                                     Choose...
                                   </option>
@@ -233,11 +378,24 @@ export default function Registration() {
                                 <input
                                   className="form-control shadow-none mb-2"
                                   type="text"
+                                  value={information.class10schoolname}
+                                  onChange={
+                                    (e) => setInformation({
+                                      ...information,
+                                      class10schoolname: e.target.value
+                                    })
+                                  }
                                 />
 
                                 <div className="form-group">
                                   <label>Boards</label>
-                                  <select className="form-control">
+                                  <select className="form-control"
+                                    onChange={
+                                      (e) => setInformation({
+                                        ...information,
+                                        class10boards: e.target.value
+                                      })
+                                    }>
                                     <option selected disabled>
                                       Choose...
                                     </option>
@@ -256,6 +414,13 @@ export default function Registration() {
                                     <input
                                       type="date"
                                       className="form-control"
+                                      value={information.class10durationfrom}
+                                      onChange={
+                                        (e) => setInformation({
+                                          ...information,
+                                          class10durationfrom: e.target.value
+                                        })
+                                      }
                                     />
                                   </div>
                                   <div className="form-group col-md-2 "></div>
@@ -264,6 +429,13 @@ export default function Registration() {
                                     <input
                                       type="date"
                                       className="form-control"
+                                      value={information.class10durationto}
+                                      onChange={
+                                        (e) => setInformation({
+                                          ...information,
+                                          class10durationto: e.target.value
+                                        })
+                                      }
                                     />
                                   </div>
                                 </div>
@@ -279,6 +451,13 @@ export default function Registration() {
                                           type="number"
                                           min="0"
                                           max="100"
+                                          value={information.class10percentage}
+                                          onChange={
+                                            (e) => setInformation({
+                                              ...information,
+                                              class10percentage: e.target.value
+                                            })
+                                          }
                                         />
                                       ) : (
                                         <></>
@@ -291,14 +470,29 @@ export default function Registration() {
                                               type="number"
                                               max="10"
                                               placeholder="Score"
+                                              value={information.class10score}
+                                              onChange={
+                                                (e) => setInformation({
+                                                  ...information,
+                                                  class10score: e.target.value
+                                                })
+                                              }
                                             />
                                           </div>
                                           <div className="col-md-6">
                                             <input
                                               className="form-control shadow-none mb-2"
                                               type="number"
+                                              min = "0"
                                               max="10"
                                               placeholder="Total CGPA"
+                                              value={information.class10cgpa}
+                                              onChange={
+                                                (e) => setInformation({
+                                                  ...information,
+                                                  class10cgpa: e.target.value
+                                                })
+                                              }
                                             />
                                           </div>
                                         </div>
@@ -312,6 +506,13 @@ export default function Registration() {
                                             type="number"
                                             min="0"
                                             max="100"
+                                            value={information.class10grade}
+                                            onChange={
+                                              (e) => setInformation({
+                                                ...information,
+                                                class10grade: e.target.value
+                                              })
+                                            }
                                           />
                                           <small>
                                             Write the percentage equivalent
@@ -342,15 +543,23 @@ export default function Registration() {
                                   </div>
                                   <div className="col-12 col-md-6">
                                     <Button
-                                      variant="outlined"
-                                      component="label"
-                                    >
+                                      variant="outlined" component="label">
                                       Add Pdf File
                                       <input
-                                        hidden
-                                        accept="application/pdf"
-                                        multiple
                                         type="file"
+                                        onChange={
+                                          (e) => {
+                                            const file = e.target.files && e.target.files[0];
+                                            if(file) {
+                                              setInformation({
+                                                ...information,
+                                                class10gradesheet: file
+                                              })
+                                              const formData = new FormData();
+                                              formData.append('file', file);
+                                            }
+                                          }
+                                        }
                                       />
                                       <FileUploadIcon />
                                     </Button>
@@ -367,11 +576,24 @@ export default function Registration() {
                                 <input
                                   className="form-control shadow-none mb-2"
                                   type="text"
+                                  value={information.class12schoolname}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    class12schoolname : e.target.value
+                                  })
+                                }
                                 />
 
                                 <div className="form-group">
                                   <label>Boards</label>
-                                  <select className="form-control">
+                                  <select className="form-control"
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    class12boards : e.target.value
+                                  })
+                                }>
                                     <option selected disabled>
                                       Choose...
                                     </option>
@@ -390,6 +612,13 @@ export default function Registration() {
                                     <input
                                       type="date"
                                       className="form-control"
+                                      value={information.class12durationfrom}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    class12durationfrom : e.target.value
+                                  })
+                                }
                                     />
                                   </div>
                                   <div className="form-group col-md-2 "></div>
@@ -398,6 +627,13 @@ export default function Registration() {
                                     <input
                                       type="date"
                                       className="form-control"
+                                      value={information.class12durationto}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    class12durationto : e.target.value
+                                  })
+                                }
                                     />
                                   </div>
                                 </div>
@@ -413,6 +649,13 @@ export default function Registration() {
                                           type="number"
                                           min="0"
                                           max="100"
+                                          value={information.class12percentage}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    class12percentage : e.target.value
+                                  })
+                                }
                                         />
                                       ) : (
                                         <></>
@@ -425,6 +668,13 @@ export default function Registration() {
                                               type="number"
                                               max="10"
                                               placeholder="Score"
+                                              value={information.class12cgpa}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    class12score : e.target.value
+                                  })
+                                }
                                             />
                                           </div>
                                           <div className="col-md-6">
@@ -433,6 +683,13 @@ export default function Registration() {
                                               type="number"
                                               max="10"
                                               placeholder="Total CGPA"
+                                              value={information.class12cgpa}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    class12cgpa : e.target.value
+                                  })
+                                }
                                             />
                                           </div>
                                         </div>
@@ -446,6 +703,13 @@ export default function Registration() {
                                             type="number"
                                             min="0"
                                             max="100"
+                                            value={information.class12grade}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    class12grade : e.target.value
+                                  })
+                                }
                                           />
                                           <small>
                                             Write the percentage equivalent
@@ -480,11 +744,20 @@ export default function Registration() {
                                       component="label"
                                     >
                                       Add Pdf File
-                                      <input
-                                        hidden
-                                        accept="application/pdf"
-                                        multiple
-                                        type="file"
+                                      <input type="file"
+                                onChange={
+                                  (e) => {
+                                    const file = e.target.files && e.target.files[0];
+                                    if(file) {
+                                      setInformation({
+                                        ...information,
+                                        class12gradesheet: file
+                                      })
+                                      const formData = new FormData();
+                                      formData.append('file', file);
+                                    }
+                                  }
+                                }
                                       />
                                       <FileUploadIcon />
                                     </Button>
@@ -503,13 +776,26 @@ export default function Registration() {
                                     className="form-control shadow-none mb-2"
                                     type="number"
                                     placeholder="YYYY"
+                                    value={information.graduationyear}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    graduationyear : e.target.value
+                                  })
+                                }
                                   />
                                 </div>
                                 <div className="form-group">
                                   <label>Degree Name</label>
                                   <select
                                     className="form-control"
-                                    onChange={(e) => renderBranch(e)}
+                                    onChange={e=>{
+                                      renderBranch(e)
+                                      setInformation({
+                                        ...information,
+                                        degree : e.target.value
+                                      })
+                                    }}
                                   >
                                     <option selected disabled>
                                       Choose...
@@ -519,7 +805,13 @@ export default function Registration() {
                                 </div>
                                 <div className="form-group">
                                   <label>Current Semester</label>
-                                  <select className="form-control">
+                                  <select className="form-control" value={information.currentsemester}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    currentsemester : e.target.value
+                                  })
+                                }>
                                     <option selected disabled>
                                       Choose...
                                     </option>
@@ -540,6 +832,13 @@ export default function Registration() {
                                     <input
                                       type="date"
                                       className="form-control"
+                                      value={information.presenteducationdurationfrom}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    presenteducationdurationfrom : e.target.value
+                                  })
+                                }
                                     />
                                   </div>
                                   <div className="form-group col-md-2 "></div>
@@ -548,6 +847,13 @@ export default function Registration() {
                                     <input
                                       type="date"
                                       className="form-control"
+                                      value={information.presenteducationdurationto}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    presenteducationdurationto : e.target.value
+                                  })
+                                }
                                     />
                                   </div>
                                 </div>
@@ -556,6 +862,13 @@ export default function Registration() {
                                   <input
                                     className="form-control shadow-none mb-2"
                                     type="text"
+                                    value={information.percentage}
+                                onChange={
+                                  (e) => setInformation({
+                                    ...information,
+                                    percentage : e.target.value
+                                  })
+                                }
                                   />
                                 </div>
                                 <div className="row">
@@ -573,6 +886,19 @@ export default function Registration() {
                                         accept="application/pdf"
                                         multiple
                                         type="file"
+                                onChange={
+                                  (e) => {
+                                    const file = e.target.files && e.target.files[0];
+                                    if(file) {
+                                      setInformation({
+                                        ...information,
+                                        gradesheet: file
+                                      })
+                                      const formData = new FormData();
+                                      formData.append('file', file);
+                                    }
+                                  }
+                                }
                                       />
                                       <FileUploadIcon />
                                     </Button>
@@ -602,11 +928,23 @@ export default function Registration() {
                                     >
                                       Add Pdf File
                                       <input
-                                        hidden
-                                        accept="application/pdf"
                                         type="file"
+                                        onChange={
+                                          (e) => {
+                                            const file = e.target.files && e.target.files[0];
+                                            if(file) {
+                                              setInformation({
+                                                ...information,
+                                                resume: file
+                                              })
+                                              const formData = new FormData();
+                                              formData.append('file', file);
+                                            }
+                                          }
+                                        }
                                       />
                                       <FileUploadIcon className="ms-3" />
+                                      <button onClick={(e)=>console.log(information)}>Submit</button>
                                     </Button>
                                   </div>
                                 </div>
@@ -634,21 +972,14 @@ export default function Registration() {
 
                           <Box sx={{ flex: "1 1 auto" }} />
 
-                          {activeStep !== steps.length &&
-                            (completed[activeStep] ? (
-                              <Button className="greyButton SavedButton px-4 py-2 m-3">
-                                Saved
-                              </Button>
-                            ) : (
+                          {activeStep === steps.length-1 &&
                               <Button
                                 className="greenButton px-4 py-2 m-3"
                                 onClick={handleComplete}
                               >
-                                {completedSteps() === totalSteps() - 1
-                                  ? "Submit"
-                                  : "Save"}
+                                Submit
                               </Button>
-                            ))}
+                            }
                           {activeStep !== 2 ? (
                             <Button
                               className="greyButton px-4 m-3 py-1"
@@ -679,3 +1010,4 @@ export default function Registration() {
     </div>
   );
 }
+
