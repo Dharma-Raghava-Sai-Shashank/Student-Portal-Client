@@ -1,7 +1,6 @@
 import { APIRequest, baseURL } from ".";
 
-const studentURL = baseURL + '/category';
-const adminBaseURL = studentURL + '/admin';
+const endpoint = baseURL + '/category';
 
 export const fetchAllCategories = async () =>
-await APIRequest(adminBaseURL, "GET");
+    await APIRequest(endpoint, "GET");

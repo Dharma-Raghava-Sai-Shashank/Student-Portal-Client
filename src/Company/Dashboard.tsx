@@ -31,7 +31,7 @@ import Modal from "react-bootstrap/Modal";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { fetchPlacementCycles, savePlacementCycle } from "../Slices/placementcycle";
-import { ADMIN } from "../Admin/constants";
+import { ADMIN, COMPANY } from "../Admin/constants";
 import { NFTableShow } from "../Admin/Placement/NFTableShow";
 import { NewJob } from "../Company/NewJob";
 import { fetchAcadYears } from "../Slices/academicYear";
@@ -293,7 +293,7 @@ export const Dashboard = () => {
   const cycles = useAppSelector((state) => state.placementcycle);
 
   React.useEffect(() => {
-    dispatch(fetchPlacementCycles({ type: ADMIN }));
+    dispatch(fetchPlacementCycles({ type: COMPANY }));
     dispatch(fetchAcadYears());
   }, [dispatch]);
 
