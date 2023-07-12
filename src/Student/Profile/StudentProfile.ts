@@ -4,7 +4,7 @@ const student = {
     admission_number: "21JE0900",
     course: "Bachelor of Technology",
     department: "Applied Mathematics",
-    specialization:"Mathematics and Compution Engineering",
+    specialization:"Mathematics and Computing",
     date_of_birth: "06-04-2003",
     gender: "Male",
     graduating_year: "2026",

@@ -3,7 +3,8 @@ import { uid } from 'uid/single'
 import Divider from '@mui/material/Divider'
 import Chip from '@mui/material/Chip'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import Modal from 'react-bootstrap/Modal'
+import { Modal, Form } from 'react-bootstrap'
+// import { Modal } from '@mui/material';
 import Button from '@mui/material/Button'
 import { branches } from '../constants/branches'
 import Box from '@mui/material/Box'
@@ -143,9 +144,10 @@ interface StageData {
 }
 
 interface Question {
+  title: string
+  description: string
   type: string
-  question: string
-  answer: string
+  options: string[]
 }
 
 export const NewJob = ({ option, setOption, session, setSession }: props) => {
@@ -402,43 +404,47 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   }
 
   // const [questionsList, setQuestionsList] = useState<any>([])
-  const [answers, setAnswers] = useState<any>([])
-  const [questionType, setQuestionType] = useState('None')
-  const [questions, setQuestions] = useState<Question[]>([])
+  const [additionalQuestions, setAdditionalQuestions] = useState<Question[]>([])
+  const [questionTitle, setQuestionTitle] = useState('')
+  const [questionDescription, setQuestionDescription] = useState('')
+  const [questionType, setQuestionType] = useState('shortAnswer')
+  const [questionOptions, setQuestionOptions] = useState<string[]>([])
+  const [showModal, setShowModal] = useState(false)
 
-  const handleAddQuestion = () => {
-    if (questionType !== 'None') {
-      const newQuestion: Question = {
-        type: questionType,
-        question: '',
-        answer: '',
-      }
-      setQuestions([...questions, newQuestion])
-    }
+  const handleAddQuestions = () => {
+    setShowModal(true)
   }
 
-  const handleQuestionChange = (index: number, value: string) => {
-    const updatedQuestions = [...questions]
-    updatedQuestions[index] = {
-      ...updatedQuestions[index],
-      question: value,
-    }
-    setQuestions(updatedQuestions)
+  const handleCloseModal = () => {
+    setShowModal(false)
   }
 
-  const handleAnswerChange = (index: number, value: string) => {
-    const updatedQuestions = [...questions]
-    updatedQuestions[index] = {
-      ...updatedQuestions[index],
-      answer: value,
+  const handleSaveQuestion = () => {
+    const newQuestion: Question = {
+      title: questionTitle,
+      description: questionDescription,
+      type: questionType,
+      options: questionOptions,
     }
-    setQuestions(updatedQuestions)
+
+    setAdditionalQuestions([...additionalQuestions, newQuestion])
+
+    setQuestionTitle('')
+    setQuestionDescription('')
+    setQuestionType('shortAnswer')
+    setQuestionOptions([])
+
+    handleCloseModal()
   }
 
-  const handleDeleteQuestion = (index: any) => {
-    const updatedQuestions = [...questions]
-    updatedQuestions.splice(index, 1)
-    setQuestions(updatedQuestions)
+  const handleAddOption = () => {
+    setQuestionOptions([...questionOptions, ''])
+  }
+
+  const handleOptionChange = (index: any, value: any) => {
+    const updatedOptions = [...questionOptions]
+    updatedOptions[index] = value
+    setQuestionOptions(updatedOptions)
   }
 
   return (
@@ -1544,144 +1550,136 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
               </div>
 
               {/* NF Additional Question */}
-              <div className="newJobFlowchart">
+              <div>
                 <div className="divider mt-5">
                   <Divider>
-                    <Chip label="NF Additional Questions" />
+                    <Chip label="NF Additional Question" />
                   </Divider>
                 </div>
+                <div className="newAdditionalQuestion">
+                  <Button
+                    sx={{ color: '#00ae57', fontSize: '12px' }}
+                    onClick={handleAddQuestions}
+                  >
+                    <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} />
+                    ADD ADDITIONAL QUESTIONS
+                  </Button>
 
-                <div className="row my-4">
-                  <label htmlFor="Company Name" className="newjobLabel ms-2">
-                    NF Additional Questions
-                  </label>
-                  <FormControl sx={{ width: '80%' }}>
-                    <FormControl
-                      sx={{ m: 2.5, minWidth: 80 }}
-                      className="newjobInput"
-                    >
-                      <Select
-                        labelId="demo-simple-select-helper-label"
-                        label="Ask Question Type"
-                        value={questionType}
-                        onChange={(event) =>
-                          setQuestionType(event.target.value as string)
-                        }
-                      >
-                        <MenuItem value="None">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value="Short Answer">Short Answer</MenuItem>
-                        <MenuItem value="MCQs">Multiple Choice</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </FormControl>
-                  <div className="col-2">
-                    <div className="d-flex justify-content-center mt-4 pt-2">
-                      <Button
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                        onClick={handleAddQuestion}
-                      >
-                        ADD
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {questions.map((question, index) => (
-                  <div key={index} className="row my-4">
-                    <div className="d-flex align-items-center">
-                      <label
-                        htmlFor={`question-${index}`}
-                        className="newjobLabel  ms-2"
-                      >
-                        Question {index + 1} :
-                      </label>
-                      <div
-                        onClick={() => handleDeleteQuestion(index)}
-                        aria-label="Delete question"
-                        className="ms-auto"
-                      >
-                        <CloseIcon />
-                      </div>
-                    </div>
-                    <div className="mb-3 ms-2">
-                      <input
-                        id={`question-${index}`}
-                        // rows={row[3]}
-                        className="newjobInput"
-                        required
-                        value={question.question}
-                        onChange={(event) =>
-                          handleQuestionChange(index, event.target.value)
-                        }
-                      />
-                    </div>
-                    {question.type === 'Short Answer' && (
-                      <div className="mb-3 ms-2">
-                        <label
-                          htmlFor={`answer-${index}`}
-                          className="newjobLabel"
-                        >
-                          Answer:
-                        </label>
-                        <div className="mb-3">
-                          <textarea
-                            id={`answer-${index}`}
-                            rows={row[3]}
-                            className="newjobInput"
-                            value={question.answer}
-                            onChange={(event) =>
-                              handleAnswerChange(index, event.target.value)
+                  <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>NF Additional Questions</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <Form>
+                        <Form.Group>
+                          <Form.Label>Title:</Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={questionTitle}
+                            onChange={(e) => setQuestionTitle(e.target.value)}
+                          />
+                        </Form.Group>
+                        <Form.Group>
+                          <Form.Label>Description:</Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={questionDescription}
+                            onChange={(e) =>
+                              setQuestionDescription(e.target.value)
                             }
                           />
-                        </div>
-                      </div>
-                    )}
-                    {question.type === 'MCQs' && (
-                      <FormControl component="fieldset">
-                        <FormGroup className="ms-4">
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={question.answer === 'YES'}
-                                onChange={() =>
-                                  handleAnswerChange(index, 'YES')
+                        </Form.Group>
+                        <Form.Group>
+                          <Form.Label>Type:</Form.Label>
+                          <Form.Control
+                            as="select"
+                            value={questionType}
+                            onChange={(e) => setQuestionType(e.target.value)}
+                          >
+                            <option value="shortAnswer">Short Answer</option>
+                            <option value="options">Options</option>
+                          </Form.Control>
+                        </Form.Group>
+                        {questionType === 'options' && (
+                          <Form.Group>
+                            <Form.Label>Options:</Form.Label>
+                            {questionOptions.map((option, index) => (
+                              <Form.Control
+                                key={index}
+                                type="text"
+                                value={option}
+                                className="mb-1"
+                                onChange={(e) =>
+                                  handleOptionChange(index, e.target.value)
                                 }
                               />
-                            }
-                            label="YES"
-                          />
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={question.answer === 'NO'}
-                                onChange={() => handleAnswerChange(index, 'NO')}
-                              />
-                            }
-                            label="NO"
-                          />
-                        </FormGroup>
-                      </FormControl>
-                    )}
-                  </div>
-                ))}
+                            ))}
+                            <Button onClick={handleAddOption}>
+                              Add Option
+                            </Button>
+                          </Form.Group>
+                        )}
+                      </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button onClick={handleCloseModal}>Close</Button>
+                      <Button onClick={handleSaveQuestion}>Save Changes</Button>
+                    </Modal.Footer>
+                  </Modal>
 
-                <div>
-                  <ReactSortable
-                    list={[]}
-                    setList={() => {}}
-                    animation={250}
-                    ghostClass="blue-background-class"
-                  >
-                    {/* Render your sortable items here */}
-                  </ReactSortable>
-                  <div>
-                    <Typography variant="caption" display="block" align="right">
-                      *Update the questions accordingly
+                  {/* <Box
+                      sx={{
+                        padding: '1rem',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                        backgroundColor: '#fafafa',
+                        marginTop: '1rem',
+                      }}
+                    > */}
+                  <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
+                    <Typography variant="body1">
+                      <strong>Title:</strong> Sample Title
                     </Typography>
-                  </div>
+                    <Typography variant="body1">
+                      <strong>Description:</strong> Sample Description
+                    </Typography>
+                    <Typography variant="body1">
+                      <strong>Type:</strong> Options
+                    </Typography>
+                    <div style={{ marginLeft: '1rem', marginTop: '0.25rem' }}>
+                      <Typography variant="body1">
+                        <strong>Options:</strong>
+                      </Typography>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Checkbox checked />
+                        <Typography
+                          variant="body1"
+                          sx={{ marginLeft: '0.5rem' }}
+                        >
+                          Option 1: Option A
+                        </Typography>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Checkbox checked />
+                        <Typography
+                          variant="body1"
+                          sx={{ marginLeft: '0.5rem' }}
+                        >
+                          Option 2: Option B
+                        </Typography>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Checkbox checked />
+                        <Typography
+                          variant="body1"
+                          sx={{ marginLeft: '0.5rem' }}
+                        >
+                          Option 3: Option C
+                        </Typography>
+                      </div>
+                    </div>
+                  </Paper>
+                  {/* </Box> */}
                 </div>
               </div>
 
