@@ -3,6 +3,7 @@ import Auth from "./screens/Auth/Auth";
 import Registration from "./screens/Registration/Registration";
 import { Admin } from "./Admin/Admin";
 import { Placement } from "./Admin/Placement/Placement";
+import {Users} from "./Admin/Users/Users";
 import { PlacementCycle } from "./Admin/Department/Department";
 import { Companies } from "./Admin/Companies/Companies";
 import { CompanyDetails } from "./Admin/Companies/CompanyDetails";
@@ -105,6 +106,10 @@ function App() {
         <Route
           path="/admin/placementcycle"
           element={ProtectRoute(PlacementCycle)}
+        />
+        <Route
+          path="/admin/users"
+          element={ProtectRoute(Users)}
         />
         <Route path="/admin/notices" element={ProtectRoute(Notices)} />
         <Route
