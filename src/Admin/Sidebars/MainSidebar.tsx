@@ -151,14 +151,13 @@ export const MainSidebar = () => {
                           </div>
                         </button>
                       </Link>
-                      <button
-                        className="MainSidebarOptionButton ps-4"
-                        onClick={() => {}}
-                      >
-                        <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
-                          <div className="fs-14 mx-3">Users</div>
-                        </div>
-                      </button>
+                      <Link to="/admin/users">
+                        <button className="MainSidebarOptionButton ps-4">
+                          <div className="MainSidebarOptionButtonDiv d-flex justify-content-between ms-4">
+                            <div className="fs-14 mx-3">Users</div>
+                          </div>
+                        </button>
+                      </Link>
                     </div>
                   )}
                 </div>
