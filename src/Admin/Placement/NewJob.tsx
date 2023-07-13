@@ -1,111 +1,116 @@
-import React, { useState } from 'react'
-import { uid } from 'uid/single'
-import Divider from '@mui/material/Divider'
-import Chip from '@mui/material/Chip'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import { Modal, Form } from 'react-bootstrap'
+import React, { useState } from "react";
+import { uid } from "uid/single";
+import Divider from "@mui/material/Divider";
+import Chip from "@mui/material/Chip";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { Modal, Form } from "react-bootstrap";
 // import { Modal } from '@mui/material';
-import Button from '@mui/material/Button'
-import { branches } from '../constants/branches'
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Typography from '@mui/material/Typography'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Paper from '@mui/material/Paper'
-import Checkbox from '@mui/material/Checkbox'
-import Switch from '@mui/material/Switch'
-import Popover from '@mui/material/Popover'
-import AddIcon from '@mui/icons-material/Add'
-import { ReactSortable } from 'react-sortablejs'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import { RadioGroup, Radio, FormGroup, IconButton } from '@material-ui/core'
-import Select from '@mui/material/Select'
-import CloseIcon from '@mui/icons-material/Close'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-import './style.scss'
-import { fetchAllCategories } from '../../api/companycategory.service'
-import { fetchAllCourses } from '../../api/course.service'
-import { fetchAllScpts } from '../../api/scpt.service'
-import { fetchAllStages } from '../../api/selectionStage.service'
-import { fetchSpecializationForCourses } from '../../api/specialization.service'
-import { uploadFile } from '../../api/document.service'
-import { createHR } from '../../api/hr.service'
-import { createJob } from '../../api/job.service'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { getAllCourses } from '../../Slices/course'
+import Button from "@mui/material/Button";
+import { branches } from "../constants/branches";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import Switch from "@mui/material/Switch";
+import Popover from "@mui/material/Popover";
+import AddIcon from "@mui/icons-material/Add";
+import { ReactSortable } from "react-sortablejs";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import { RadioGroup, Radio, FormGroup, IconButton } from "@material-ui/core";
+import Select from "@mui/material/Select";
+import CloseIcon from "@mui/icons-material/Close";
+import InputLabel from "@mui/material/InputLabel";
+import ReactQuill from "react-quill";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import "react-quill/dist/quill.snow.css";
+import "./style.scss";
 
+import { fetchAllCategories } from "../../api/companycategory.service";
+import { fetchAllCourses } from "../../api/course.service";
+import { fetchAllScpts } from "../../api/scpt.service";
+import { fetchAllStages } from "../../api/selectionStage.service";
+import { fetchSpecializationForCourses } from "../../api/specialization.service";
+import { uploadFile } from "../../api/document.service";
+import { createHR } from "../../api/hr.service";
+import { createJob } from "../../api/job.service";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getAllCourses } from "../../Slices/course";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 interface Schedule {
-  id: string
-  stage: any
-  stageType: string
-  stageMode: string
+  id: string;
+  stage: any;
+  stageType: string;
+  stageMode: string;
 }
 
 interface props {
-  option: string
-  setOption: React.Dispatch<React.SetStateAction<string>>
-  session: string
-  setSession: React.Dispatch<React.SetStateAction<string>>
+  option: string;
+  setOption: React.Dispatch<React.SetStateAction<string>>;
+  session: string;
+  setSession: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface HeadCell {
-  id: string
-  label: string
+  id: string;
+  label: string;
 }
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'department',
-    label: 'Department',
+    id: "department",
+    label: "Department",
   },
   {
-    id: 'discipline',
-    label: 'Discipline',
+    id: "discipline",
+    label: "Discipline",
   },
   {
-    id: 'specialization',
-    label: 'Specialization',
+    id: "specialization",
+    label: "Specialization",
   },
-]
+];
 
-const currencies = ['+91', '+87', '+71']
+const currencies = ["+91", "+87", "+71"];
 
 const modules = {
   toolbar: [
     [{ header: [false] }],
-    ['bold', 'italic', 'underline'],
+    ["bold", "italic", "underline"],
     [
-      { list: 'ordered' },
-      { list: 'bullet' },
-      { indent: '-1' },
-      { indent: '+1' },
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
     ],
   ],
-}
+};
 
 const initialJobData = {
-  type: '',
-  profile: '',
-  placeOfPosting: '',
-  jobDescription: '',
-  modeOfInternship: '',
-  ctc: '',
-  ctcBreakup: '',
-  bondDetails: '',
-  hasPPO: '',
-  ismOffersMax: '',
-  ismOffersMin: '',
+  type: "",
+  profile: "",
+  placeOfPosting: "",
+  jobDescription: "",
+  modeOfInternship: "",
+  ctc: "",
+  ctcBreakup: "",
+  bondDetails: "",
+  hasPPO: "",
+  ismOffersMax: "",
+  ismOffersMin: "",
   company: {
-    companyName: '',
-    companyWebsite: '',
+    companyName: "",
+    companyWebsite: "",
     category: {},
     sector: {},
   },
@@ -116,113 +121,113 @@ const initialJobData = {
   placementCycle: {},
   HRs: [],
   spocs: [],
-  additionalDetails: '',
-}
+  additionalDetails: "",
+};
 
 const initialHRData = {
-  name: '',
+  name: "",
   emails: [],
   phones: [
     {
-      phonePref: '+91',
-      phone: '',
+      phonePref: "+91",
+      phone: "",
     },
   ],
-  linkedin: '',
-}
+  linkedin: "",
+};
 
 const initialStageData = {
   stage: 0,
-  stageType: '',
-  stageMode: '',
-}
+  stageType: "",
+  stageMode: "",
+};
 
 interface StageData {
-  stage: number
-  stageType: string
-  stageMode: string
+  stage: number;
+  stageType: string;
+  stageMode: string;
 }
 
 interface Question {
-  title: string
-  description: string
-  type: string
-  options: string[]
+  title: string;
+  description: string;
+  type: string;
+  options: string[];
 }
 
 export const NewJob = ({ option, setOption, session, setSession }: props) => {
-  const [openCategory, setOpenCategory] = useState<boolean>(false)
-  const [openCategoryOption, setOpenCategoryOption] = useState<number>(0)
-  const [openSchedule, setOpenSchedule] = useState<string>('None')
-  const [ScheduleOption, setScheduleOption] = useState<string>('')
-  const row = [0, 1, 2, 3, 4, 5, 6]
-  const [show, setShow] = useState(false)
-  const [selected, setSelected] = React.useState<any>([])
-  const [ScheduleList, setScheduleList] = useState<Schedule[]>([])
-  const [stageData, setStageData] = useState<StageData>(initialStageData)
-  const [uploadedDocs, setUploadedDocs] = useState<any>([])
-  const [secondaryHR, setSecondaryHR] = useState(false)
-  const [primaryspoc, setPrimaryspoc] = React.useState('')
-  const [secondaryspoc, setsecondaryspoc] = React.useState('')
-  const [jobData, setJobData] = React.useState(initialJobData)
-  const [categories, setCategories] = React.useState<any>([])
-  const courses = useAppSelector((state) => state.course)
+  const [openCategory, setOpenCategory] = useState<boolean>(false);
+  const [openCategoryOption, setOpenCategoryOption] = useState<number>(0);
+  const [openSchedule, setOpenSchedule] = useState<string>("None");
+  const [ScheduleOption, setScheduleOption] = useState<string>("");
+  const row = [0, 1, 2, 3, 4, 5, 6];
+  const [show, setShow] = useState(false);
+  const [selected, setSelected] = React.useState<any>([]);
+  const [ScheduleList, setScheduleList] = useState<Schedule[]>([]);
+  const [stageData, setStageData] = useState<StageData>(initialStageData);
+  const [uploadedDocs, setUploadedDocs] = useState<any>([]);
+  const [secondaryHR, setSecondaryHR] = useState(false);
+  const [primaryspoc, setPrimaryspoc] = React.useState("");
+  const [secondaryspoc, setsecondaryspoc] = React.useState("");
+  const [jobData, setJobData] = React.useState(initialJobData);
+  const [categories, setCategories] = React.useState<any>([]);
+  const courses = useAppSelector((state) => state.course);
   // const [courses, setCourses] = React.useState<any>([]);
-  const [specializations, setSpecializations] = React.useState<any>([])
-  const [currCourse, setCurrCourse] = React.useState<number>(0)
-  const [scpts, setScpts] = React.useState<any>([])
-  const [primaryHr, setPrimaryHr] = React.useState<any>(initialHRData)
-  const [secondaryHr, setSecondaryHr] = React.useState<any>(initialHRData)
-  const [selectionStages, setSelectionStages] = React.useState<any>([])
-  const [isUploading, setIsUploading] = React.useState<boolean>(false)
+  const [specializations, setSpecializations] = React.useState<any>([]);
+  const [currCourse, setCurrCourse] = React.useState<number>(0);
+  const [scpts, setScpts] = React.useState<any>([]);
+  const [primaryHr, setPrimaryHr] = React.useState<any>(initialHRData);
+  const [secondaryHr, setSecondaryHr] = React.useState<any>(initialHRData);
+  const [selectionStages, setSelectionStages] = React.useState<any>([]);
+  const [isUploading, setIsUploading] = React.useState<boolean>(false);
 
-  const formData = new FormData()
+  const formData = new FormData();
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  const handleCloseCourse = () => setShow(false)
-  const handleShowCourse = () => setShow(true)
+  const handleCloseCourse = () => setShow(false);
+  const handleShowCourse = () => setShow(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const { categories } = await fetchAllCategories()
+      const { categories } = await fetchAllCategories();
       // const { courses } = await fetchAllCourses();
-      dispatch(getAllCourses())
-      const { scpts } = await fetchAllScpts()
-      const { stages } = await fetchAllStages()
+      dispatch(getAllCourses());
+      const { scpts } = await fetchAllScpts();
+      const { stages } = await fetchAllStages();
 
-      setCategories(categories)
+      setCategories(categories);
       // setCourses(courses);
-      setCurrCourse(courses?.[0]?.courseId as number)
-      setScpts(scpts)
-      setSelectionStages(stages)
-    }
-    fetchData()
-    setIsUploading(false)
+      setCurrCourse(courses?.[0]?.courseId as number);
+      setScpts(scpts);
+      setSelectionStages(stages);
+    };
+    fetchData();
+    setIsUploading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   React.useEffect(() => {
     const fetchSpecialization = async () => {
       const { specializations } = await fetchSpecializationForCourses(
         [currCourse],
-        '2022-2023',
-      )
+        "2022-2023"
+      );
 
-      setSpecializations(specializations)
-    }
-    if (currCourse && currCourse !== 0) fetchSpecialization()
-  }, [currCourse])
+      setSpecializations(specializations);
+    };
+    if (currCourse && currCourse !== 0) fetchSpecialization();
+  }, [currCourse]);
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+    setAnchorEl(event.currentTarget);
+  };
 
   const handlePopoverClose = () => {
-    setAnchorEl(null)
-  }
+    setAnchorEl(null);
+  };
 
   const handleAddStage = () => {
     setScheduleList((prevData) => [
@@ -230,106 +235,106 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       {
         id: uid(4),
         stage: selectionStages.find(
-          (stage: any) => stage.stageId === stageData.stage,
+          (stage: any) => stage.stageId === stageData.stage
         ),
         stageType: stageData.stageType,
         stageMode: stageData.stageMode,
       },
-    ])
-    setStageData(initialStageData)
-    setScheduleOption('')
-  }
+    ]);
+    setStageData(initialStageData);
+    setScheduleOption("");
+  };
 
-  const open = Boolean(anchorEl)
+  const open = Boolean(anchorEl);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newList = Array.from(new Set([...selected, ...specializations]))
-      setSelected(newList as any)
-      return
+      const newList = Array.from(new Set([...selected, ...specializations]));
+      setSelected(newList as any);
+      return;
     } else
       setSelected(
         selected.filter(
           (spec: any) =>
-            !specializations.find((item: any) => spec.specId === item.specId),
-        ),
-      )
-  }
+            !specializations.find((item: any) => spec.specId === item.specId)
+        )
+      );
+  };
 
   const handleClick = (
     event: React.ChangeEvent<HTMLInputElement>,
-    spec: any,
+    spec: any
   ) => {
     if (event.target?.checked) {
-      setSelected([...selected, spec])
+      setSelected([...selected, spec]);
     } else
-      setSelected(selected.filter((item: any) => item.specId !== spec.specId))
-  }
+      setSelected(selected.filter((item: any) => item.specId !== spec.specId));
+  };
 
   const isSelected = (id: number) =>
-    selected.find((spec: any) => spec.specId === id)
+    selected.find((spec: any) => spec.specId === id);
   const isAllSelected = () => {
     for (let i in specializations)
       if (
         !selected.find(
-          (spec: any) => spec.specId === specializations[i]?.specId,
+          (spec: any) => spec.specId === specializations[i]?.specId
         )
       )
-        return false
-    return true
-  }
-  const [sameCgpaChecked, setSameCgpaChecked] = React.useState(true)
+        return false;
+    return true;
+  };
+  const [sameCgpaChecked, setSameCgpaChecked] = React.useState(true);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSameCgpaChecked(event.target.checked)
-  }
+    setSameCgpaChecked(event.target.checked);
+  };
 
-  const [fileList, setFileList] = useState<FileList | null>(null)
+  const [fileList, setFileList] = useState<FileList | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileList(e.target.files)
-  }
+    setFileList(e.target.files);
+  };
 
   const uploadFiles = async (files: any) => {
     for (let i in files) {
-      formData.set('file', files[i])
-      files[i] = await uploadFile(formData)
+      formData.set("file", files[i]);
+      files[i] = await uploadFile(formData);
     }
-    return files
-  }
+    return files;
+  };
 
   const handleUploadClick = async (e: any) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!fileList) {
-      return
+      return;
     }
-    setIsUploading((prev) => !prev)
-    setUploadedDocs([])
-    const docs = await uploadFiles(Array.from(fileList))
+    setIsUploading((prev) => !prev);
+    setUploadedDocs([]);
+    const docs = await uploadFiles(Array.from(fileList));
     setUploadedDocs(
-      docs.map((doc: any) => ({ docType: 'JNF', document: doc.document })),
-    )
-    setIsUploading((prev) => !prev)
-  }
+      docs.map((doc: any) => ({ docType: "JNF", document: doc.document }))
+    );
+    setIsUploading((prev) => !prev);
+  };
   // 👇 files is not an array, but it's iterable, spread to get an array of files
-  const files = fileList ? [...fileList] : []
+  const files = fileList ? [...fileList] : [];
 
   const assembleJobData = async () => {
-    const spocs: any = []
+    const spocs: any = [];
     spocs.push({
       scpt: scpts.find((scpt: any) => scpt.scptId === primaryspoc),
       isPrimary: 1,
-    })
+    });
     spocs.push({
       scpt: scpts.find((scpt: any) => scpt.scptId === secondaryspoc),
       isPrimary: 0,
-    })
+    });
 
-    const HRs: any = []
-    const primary = await createHR(primaryHr)
-    const secondary = await createHR(secondaryHr)
-    HRs.push({ isPrimary: 1, hr: primary?.HR })
-    HRs.push({ isPrimary: 0, hr: secondary?.HR })
+    const HRs: any = [];
+    const primary = await createHR(primaryHr);
+    const secondary = await createHR(secondaryHr);
+    HRs.push({ isPrimary: 1, hr: primary?.HR });
+    HRs.push({ isPrimary: 0, hr: secondary?.HR });
 
     setJobData((prevData: any) => ({
       ...prevData,
@@ -343,18 +348,18 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
           minLPA: 10,
           maxLPA: 30,
           cgpaValue: 7.5,
-        }
+        };
       }) as any,
-    }))
+    }));
 
-    const nfEligibility: any = []
+    const nfEligibility: any = [];
     for (let i in selected) {
       nfEligibility.push({
         spec: selected[i],
         minLPA: 10,
         maxLPA: 30,
         cgpaValue: 7.5,
-      })
+      });
     }
 
     return {
@@ -365,14 +370,14 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       nf_stages: [...ScheduleList],
       nfEligibility,
       placementCycle: initialJobData.placementCycle,
-    }
-  }
+    };
+  };
 
   const handleAddNewJob = async (e: any) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    await createJob(await assembleJobData())
-  }
+    await createJob(await assembleJobData());
+  };
 
   const handleCompanyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setJobData({
@@ -381,43 +386,45 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
         ...jobData.company,
         [e.target.name]: e.target.value,
       },
-    })
-  }
+    });
+  };
 
   const handleJobChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+      | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setJobData({ ...jobData, [e.target.name]: e.target.value })
-  }
+    setJobData({ ...jobData, [e.target.name]: e.target.value });
+  };
 
   const handlePrimarySpocChange = (e: any) => {
-    const selectedValue = e.target.value
-    setPrimaryspoc(selectedValue)
-    setsecondaryspoc(selectedValue)
-  }
+    const selectedValue = e.target.value;
+    setPrimaryspoc(selectedValue);
+    setsecondaryspoc(selectedValue);
+  };
 
   const handleSecondarySpocChange = (e: any) => {
-    const selectedValue = e.target.value
-    setsecondaryspoc(selectedValue)
-  }
+    const selectedValue = e.target.value;
+    setsecondaryspoc(selectedValue);
+  };
 
   // const [questionsList, setQuestionsList] = useState<any>([])
-  const [additionalQuestions, setAdditionalQuestions] = useState<Question[]>([])
-  const [questionTitle, setQuestionTitle] = useState('')
-  const [questionDescription, setQuestionDescription] = useState('')
-  const [questionType, setQuestionType] = useState('shortAnswer')
-  const [questionOptions, setQuestionOptions] = useState<string[]>([])
-  const [showModal, setShowModal] = useState(false)
+  const [additionalQuestions, setAdditionalQuestions] = useState<Question[]>(
+    []
+  );
+  const [questionTitle, setQuestionTitle] = useState("");
+  const [questionDescription, setQuestionDescription] = useState("");
+  const [questionType, setQuestionType] = useState("shortAnswer");
+  const [questionOptions, setQuestionOptions] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
   const handleAddQuestions = () => {
-    setShowModal(true)
-  }
+    setShowModal(true);
+  };
 
   const handleCloseModal = () => {
-    setShowModal(false)
-  }
+    setShowModal(false);
+  };
 
   const handleSaveQuestion = () => {
     const newQuestion: Question = {
@@ -425,27 +432,27 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       description: questionDescription,
       type: questionType,
       options: questionOptions,
-    }
+    };
 
-    setAdditionalQuestions([...additionalQuestions, newQuestion])
+    setAdditionalQuestions([...additionalQuestions, newQuestion]);
 
-    setQuestionTitle('')
-    setQuestionDescription('')
-    setQuestionType('shortAnswer')
-    setQuestionOptions([])
+    setQuestionTitle("");
+    setQuestionDescription("");
+    setQuestionType("shortAnswer");
+    setQuestionOptions([]);
 
-    handleCloseModal()
-  }
+    handleCloseModal();
+  };
 
   const handleAddOption = () => {
-    setQuestionOptions([...questionOptions, ''])
-  }
+    setQuestionOptions([...questionOptions, ""]);
+  };
 
   const handleOptionChange = (index: any, value: any) => {
-    const updatedOptions = [...questionOptions]
-    updatedOptions[index] = value
-    setQuestionOptions(updatedOptions)
-  }
+    const updatedOptions = [...questionOptions];
+    updatedOptions[index] = value;
+    setQuestionOptions(updatedOptions);
+  };
 
   return (
     <div className="d-flex justify-content-center">
@@ -454,9 +461,9 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
           <span className="fs-14">Placement </span>
           <span
             className=" fs-14 cursor-pointer"
-            onClick={() => setOption('Show all NF')}
+            onClick={() => setOption("Show all NF")}
           >
-            | {session} |{' '}
+            | {session} |{" "}
           </span>
           <span className="green1c fs-14  fw-500 "> New Job </span>
         </div>
@@ -510,17 +517,17 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       type="button"
                       className="dropdown-toggle button-select"
                       onClick={() => {
-                        setOpenCategory((prev) => !prev)
+                        setOpenCategory((prev) => !prev);
                         // setOpenCategoryOption(() => "");
                       }}
                     >
                       {openCategoryOption === 0
-                        ? 'Select an Option'
+                        ? "Select an Option"
                         : openCategoryOption}
                     </button>
 
                     <ul
-                      className={`dropdown-menu ${openCategory ? ' show' : ''}`}
+                      className={`dropdown-menu ${openCategory ? " show" : ""}`}
                     >
                       {categories.map((item: any) => (
                         <li className="dropdown-item" key={item?.categoryId}>
@@ -529,12 +536,12 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             value={item.categoryName}
                             className="dropdown-option"
                             onClick={() => {
-                              setOpenCategory(() => false)
-                              setOpenCategoryOption(() => item.categoryId)
+                              setOpenCategory(() => false);
+                              setOpenCategoryOption(() => item.categoryId);
                               setJobData({
                                 ...jobData,
                                 company: { ...jobData.company, category: item },
-                              })
+                              });
                             }}
                           >
                             {item.categoryName}
@@ -653,7 +660,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                 </div>
                 <div className="newJobCourses">
                   <Button
-                    sx={{ color: '#00ae57', fontSize: '12px' }}
+                    sx={{ color: "#00ae57", fontSize: "12px" }}
                     onClick={handleShowCourse}
                   >
                     <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} />
@@ -683,21 +690,21 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                     }
                                   >
                                     <div className="courseName">
-                                      {' '}
+                                      {" "}
                                       {course.courseName}
                                     </div>
                                     {/* <div className="courseYear"> 4-years</div> */}
                                   </button>
                                 </div>
-                              )
+                              );
                             })}
                           </div>
                           <div className="col-9 branchNameBox">
-                            <Box sx={{ width: '100%' }}>
-                              <Paper sx={{ width: '100%', mb: 2 }}>
+                            <Box sx={{ width: "100%" }}>
+                              <Paper sx={{ width: "100%", mb: 2 }}>
                                 {selected.length > 0 && (
                                   <Typography
-                                    sx={{ flex: '1 1 100%' }}
+                                    sx={{ flex: "1 1 100%" }}
                                     color="inherit"
                                     variant="subtitle1"
                                     component="div"
@@ -711,7 +718,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                       checked={sameCgpaChecked}
                                       onChange={handleChange}
                                       inputProps={{
-                                        'aria-label': 'controlled',
+                                        "aria-label": "controlled",
                                       }}
                                     />
                                     Same CGPA Cutoff for all branches
@@ -723,7 +730,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                           htmlFor="Company Name"
                                           className="newjobLabel mx-3"
                                         >
-                                          CGPA{' '}
+                                          CGPA{" "}
                                         </label>
                                         <input
                                           type="number"
@@ -786,7 +793,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                               checked={isAllSelected()}
                                               onChange={handleSelectAllClick}
                                               inputProps={{
-                                                'aria-label': 'select all',
+                                                "aria-label": "select all",
                                               }}
                                               onMouseEnter={handlePopoverOpen}
                                               onMouseLeave={handlePopoverClose}
@@ -794,17 +801,17 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                             <Popover
                                               id="mouse-over-popover"
                                               sx={{
-                                                pointerEvents: 'none',
+                                                pointerEvents: "none",
                                               }}
                                               open={open}
                                               anchorEl={anchorEl}
                                               anchorOrigin={{
-                                                vertical: 'bottom',
-                                                horizontal: 'left',
+                                                vertical: "bottom",
+                                                horizontal: "left",
                                               }}
                                               transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'left',
+                                                vertical: "top",
+                                                horizontal: "left",
                                               }}
                                               onClose={handlePopoverClose}
                                               disableRestoreFocus
@@ -823,11 +830,11 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                       {specializations.map(
                                         (row: any, index: number) => {
                                           const isItemSelected = isSelected(
-                                            row.specId,
+                                            row.specId
                                           )
                                             ? true
-                                            : false
-                                          const labelId = row.specId
+                                            : false;
+                                          const labelId = row.specId;
 
                                           return (
                                             <TableRow
@@ -870,7 +877,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                                   color="primary"
                                                   checked={isItemSelected}
                                                   inputProps={{
-                                                    'aria-labelledby': labelId,
+                                                    "aria-labelledby": labelId,
                                                   }}
                                                   onChange={(event) =>
                                                     handleClick(event, row)
@@ -878,8 +885,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                                 />
                                               </TableCell>
                                             </TableRow>
-                                          )
-                                        },
+                                          );
+                                        }
                                       )}
                                     </TableBody>
                                   </Table>
@@ -908,8 +915,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                           </div>
                         </div>
                         <div className="col-10 showSelectectedCourseBranch mt-3">
-                          <Box sx={{ width: '100%' }}>
-                            <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
+                          <Box sx={{ width: "100%" }}>
+                            <Paper sx={{ width: "100%", mb: 2, p: 3 }}>
                               <div className="row  showSelectectedCourseHeading">
                                 <div className="col-5">Department</div>
                                 <div className="col-5">Branch</div>
@@ -940,8 +947,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                           </div>
                         </div>
                         <div className="col-10 showSelectectedCourseBranch mt-3">
-                          <Box sx={{ width: '100%' }}>
-                            <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
+                          <Box sx={{ width: "100%" }}>
+                            <Paper sx={{ width: "100%", mb: 2, p: 3 }}>
                               <div className="row  showSelectectedCourseHeading">
                                 <div className="col-5">Department</div>
                                 <div className="col-5">Branch</div>
@@ -978,34 +985,34 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     <div className="row my-4">
                       {[
                         {
-                          label: 'Stage',
-                          name: 'stage',
+                          label: "Stage",
+                          name: "stage",
                           value: stageData?.stage,
                           dropdownData: selectionStages.map((stage: any) => {
                             return {
                               name: stage.stageName,
                               value: stage.stageId,
-                            }
+                            };
                           }),
                         },
                         {
-                          label: 'Stage Type',
-                          name: 'stageType',
+                          label: "Stage Type",
+                          name: "stageType",
                           value: stageData?.stageType,
                           dropdownData: [
-                            { name: 'Technical', value: 'Tech' },
-                            { name: 'Aptitude', value: 'Apti' },
-                            { name: 'Other', value: 'Other' },
+                            { name: "Technical", value: "Tech" },
+                            { name: "Aptitude", value: "Apti" },
+                            { name: "Other", value: "Other" },
                           ],
                         },
                         {
-                          label: 'Stage Mode',
-                          name: 'stageMode',
+                          label: "Stage Mode",
+                          name: "stageMode",
                           value: stageData?.stageMode,
-                          dropdownData: ['Virtual', 'Physical'].map(
+                          dropdownData: ["Virtual", "Physical"].map(
                             (mode: string) => {
-                              return { name: mode, value: mode }
-                            },
+                              return { name: mode, value: mode };
+                            }
                           ),
                         },
                       ].map((item: any) => {
@@ -1014,7 +1021,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             <div className="d-flex justify-content-center w-100">
                               <div
                                 className="mb-3 dropdownBody"
-                                style={{ height: '40px', width: '200px' }}
+                                style={{ height: "40px", width: "200px" }}
                               >
                                 <label htmlFor="mode" className="newjobLabel">
                                   {item.label}
@@ -1023,27 +1030,27 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                   <button
                                     type="button"
                                     style={{
-                                      height: '40px',
-                                      width: '200px',
-                                      lineHeight: '40px',
+                                      height: "40px",
+                                      width: "200px",
+                                      lineHeight: "40px",
                                     }}
                                     className="dropdown-toggle button-select"
                                     onClick={() => {
-                                      setOpenSchedule(item.label)
+                                      setOpenSchedule(item.label);
                                       // setOpenCategoryOption(() => "");
                                     }}
                                   >
-                                    {item.value === '' || item.value === 0
-                                      ? 'Select an option'
+                                    {item.value === "" || item.value === 0
+                                      ? "Select an option"
                                       : item.dropdownData?.find(
                                           (data: any) =>
-                                            data.value === item.value,
+                                            data.value === item.value
                                         )?.name}
                                   </button>
 
                                   <ul
                                     className={`dropdown-menu ${
-                                      openSchedule === item.label ? ' show' : ''
+                                      openSchedule === item.label ? " show" : ""
                                     }`}
                                   >
                                     {item.dropdownData.map((data: any) => (
@@ -1056,11 +1063,11 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                           value={data.value}
                                           className="dropdown-option"
                                           onClick={() => {
-                                            setOpenSchedule('None')
+                                            setOpenSchedule("None");
                                             setStageData({
                                               ...stageData,
                                               [item.name]: data.value,
-                                            })
+                                            });
                                           }}
                                         >
                                           {data.name}
@@ -1072,7 +1079,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                               </div>
                             </div>
                           </div>
-                        )
+                        );
                       })}
                       <div className="col-3">
                         <div className="d-flex justify-content-center mt-4 pt-2">
@@ -1082,7 +1089,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             onClick={() => handleAddStage()}
                           >
                             ADD
-                          </Button>{' '}
+                          </Button>{" "}
                         </div>
                       </div>
                     </div>
@@ -1108,8 +1115,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                   // lineHeight="10px"
                                   align="center"
                                   style={{
-                                    fontWeight: '600',
-                                    fontSize: '0.9rem',
+                                    fontWeight: "600",
+                                    fontSize: "0.9rem",
                                   }}
                                 >
                                   Stage {stage + 1}: {item.stage?.stageName}
@@ -1212,11 +1219,11 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     </label>
                     <div
                       style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        paddingTop: '10px',
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingTop: "10px",
                       }}
                     >
                       <TextField
@@ -1224,7 +1231,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         select
                         label="Country Code"
                         defaultValue="+91"
-                        style={{ width: '18%' }}
+                        style={{ width: "18%" }}
                         name="phonePref"
                         value={primaryHr.phones?.[0]?.phonePref}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -1248,7 +1255,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       <TextField
                         id="outlined-multiline-flexible"
                         label="Phone Number"
-                        style={{ width: '80%' }}
+                        style={{ width: "80%" }}
                         value={primaryHr.phones?.[0]?.phone}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setPrimaryHr({
@@ -1336,11 +1343,11 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       </label>
                       <div
                         style={{
-                          width: '100%',
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          paddingTop: '10px',
+                          width: "100%",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingTop: "10px",
                         }}
                       >
                         <TextField
@@ -1348,7 +1355,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                           select
                           label="Country Code"
                           defaultValue="+91"
-                          style={{ width: '18%' }}
+                          style={{ width: "18%" }}
                           name="phonePref"
                           value={secondaryHr.phones?.[0]?.phonePref}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -1372,7 +1379,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         <TextField
                           id="outlined-multiline-flexible"
                           label="Phone Number"
-                          style={{ width: '80%' }}
+                          style={{ width: "80%" }}
                           value={secondaryHr.phones?.[0]?.phone}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setSecondaryHr({
@@ -1443,14 +1450,14 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     Primary SPOC
                   </label>
                   <div>
-                    <FormControl sx={{ width: '100%' }}>
+                    <FormControl sx={{ width: "100%" }}>
                       <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <Select
                           labelId="demo-simple-select-helper-label"
                           id="demo-simple-select-helper"
                           value={primaryspoc}
                           onChange={(e) => {
-                            setPrimaryspoc(() => e.target.value)
+                            setPrimaryspoc(() => e.target.value);
                           }}
                           label="Select Primary SPOC"
                         >
@@ -1472,14 +1479,14 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     Secondary SPOC
                   </label>
                   <div>
-                    <FormControl sx={{ width: '100%' }}>
+                    <FormControl sx={{ width: "100%" }}>
                       <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <Select
                           labelId="demo-simple-select-helper-label"
                           id="demo-simple-select-helper"
                           value={secondaryspoc}
                           onChange={(e) => {
-                            setsecondaryspoc(() => e.target.value)
+                            setsecondaryspoc(() => e.target.value);
                           }}
                           label="Select Primary SPOC"
                         >
@@ -1494,7 +1501,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         </Select>
                       </FormControl>
                     </FormControl>
-                    {primaryspoc === secondaryspoc && primaryspoc !== '' && (
+                    {primaryspoc === secondaryspoc && primaryspoc !== "" && (
                       <div
                         id="emailHelp"
                         className="ms-2 form-text text-danger"
@@ -1553,15 +1560,17 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
               <div>
                 <div className="divider mt-5">
                   <Divider>
-                    <Chip label="NF Additional Question" />
+                    <Chip label="Additional Question" />
                   </Divider>
                 </div>
                 <div className="newAdditionalQuestion">
                   <Button
-                    sx={{ color: '#00ae57', fontSize: '12px' }}
+                    sx={{ color: "#00ae57", fontSize: "12px" }}
                     onClick={handleAddQuestions}
+                    // color="success"
+                    startIcon={<EditOutlinedIcon fontSize="small" />}
                   >
-                    <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} />
+                    {/* <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} /> */}
                     ADD ADDITIONAL QUESTIONS
                   </Button>
 
@@ -1571,16 +1580,24 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     </Modal.Header>
                     <Modal.Body>
                       <Form>
-                        <Form.Group>
-                          <Form.Label>Title:</Form.Label>
+                        <Form.Group className="mb-2">
+                          <Form.Label>
+                            <Typography className="fw-500" variant="button">
+                              Question Title:
+                            </Typography>
+                          </Form.Label>
                           <Form.Control
                             type="text"
                             value={questionTitle}
                             onChange={(e) => setQuestionTitle(e.target.value)}
                           />
                         </Form.Group>
-                        <Form.Group>
-                          <Form.Label>Description:</Form.Label>
+                        <Form.Group className="mb-2">
+                          <Form.Label>
+                            <Typography className="fw-500" variant="button">
+                              Description:
+                            </Typography>
+                          </Form.Label>
                           <Form.Control
                             type="text"
                             value={questionDescription}
@@ -1589,20 +1606,45 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             }
                           />
                         </Form.Group>
-                        <Form.Group>
-                          <Form.Label>Type:</Form.Label>
-                          <Form.Control
+                        <Form.Group className="mb-2">
+                          <Form.Label>
+                            <Typography className="fw-500" variant="button">
+                              Question Type:
+                            </Typography>
+                          </Form.Label>
+                          <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">
+                              Type
+                            </InputLabel>
+                            <Select
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              value={questionType}
+                              label="Age"
+                              onChange={(e) => setQuestionType(e.target.value)}
+                            >
+                              <MenuItem value="shortAnswer">
+                                Short Answer
+                              </MenuItem>
+                              <MenuItem value="options">Options</MenuItem>
+                            </Select>
+                          </FormControl>
+                          {/* <Form.Control
                             as="select"
                             value={questionType}
                             onChange={(e) => setQuestionType(e.target.value)}
                           >
                             <option value="shortAnswer">Short Answer</option>
                             <option value="options">Options</option>
-                          </Form.Control>
+                          </Form.Control> */}
                         </Form.Group>
-                        {questionType === 'options' && (
+                        {questionType === "options" && (
                           <Form.Group>
-                            <Form.Label>Options:</Form.Label>
+                            <Form.Label>
+                              <Typography className="fw-500" variant="button">
+                                Options:
+                              </Typography>
+                            </Form.Label>
                             {questionOptions.map((option, index) => (
                               <Form.Control
                                 key={index}
@@ -1626,17 +1668,85 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       <Button onClick={handleSaveQuestion}>Save Changes</Button>
                     </Modal.Footer>
                   </Modal>
-
-                  {/* <Box
-                      sx={{
-                        padding: '1rem',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
-                        backgroundColor: '#fafafa',
-                        marginTop: '1rem',
-                      }}
-                    > */}
-                  <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
+                </div>
+              </div>
+              <div className="row">
+                {additionalQuestions.length >= 0 && (
+                  <div className="col-sm-12 col-md-8 col-lg-6 my-3">
+                    {additionalQuestions.map((question: Question) => (
+                      <Card sx={{ minWidth: 275, boxShadow: "none" }}>
+                        <div className="row my-1">
+                          <div className="col-10">
+                            <CardContent className="py-0">
+                              <Typography
+                                sx={{ fontSize: 14 }}
+                                color="text.secondary"
+                              >
+                                Question type:
+                                {question?.type === "shortAnswer"
+                                  ? " Short Answer"
+                                  : " Option based"}{" "}
+                              </Typography>
+                              <Typography
+                                variant="body1"
+                                className="fw-400"
+                                component="div"
+                                sx={{ fontSize: 18 }}
+                              >
+                                Title: {question.title}
+                              </Typography>
+                              <Typography color="text.secondary" gutterBottom>
+                                Description: {" " + question.description}
+                              </Typography>
+                              <Typography variant="body2">
+                                {question?.type === "options" && (
+                                  <div>
+                                    {question.options.map((option: string) => (
+                                      <Typography display="block">
+                                        {" "}
+                                        • {option}
+                                      </Typography>
+                                    ))}
+                                  </div>
+                                )}
+                              </Typography>
+                            </CardContent>
+                          </div>
+                          <div className="col-2 px-0">
+                            <CardActions className="d-block">
+                              <div>
+                                <Button
+                                  variant="text"
+                                  startIcon={
+                                    <EditOutlinedIcon fontSize="small" />
+                                  }
+                                  color="success"
+                                  sx={{ fontSize: 12 }}
+                                >
+                                  Edit
+                                </Button>
+                              </div>
+                              <div className="mx-0">
+                                <Button
+                                  variant="text"
+                                  startIcon={
+                                    <DeleteOutlineOutlinedIcon fontSize="small" />
+                                  }
+                                  color="error"
+                                  sx={{ fontSize: 12 }}
+                                >
+                                  Delete
+                                </Button>
+                              </div>
+                            </CardActions>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+                <div className="col-sm-12 col-md-4 col-lg-6 px-2">
+                  <Paper sx={{ width: "100%", mb: 2, p: 2 }}>
                     <Typography variant="body1">
                       <strong>Title:</strong> Sample Title
                     </Typography>
@@ -1646,40 +1756,39 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     <Typography variant="body1">
                       <strong>Type:</strong> Options
                     </Typography>
-                    <div style={{ marginLeft: '1rem', marginTop: '0.25rem' }}>
+                    <div style={{ marginLeft: "1rem", marginTop: "0.25rem" }}>
                       <Typography variant="body1">
                         <strong>Options:</strong>
                       </Typography>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <Checkbox checked />
                         <Typography
                           variant="body1"
-                          sx={{ marginLeft: '0.5rem' }}
+                          sx={{ marginLeft: "0.5rem" }}
                         >
                           Option 1: Option A
                         </Typography>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <Checkbox checked />
                         <Typography
                           variant="body1"
-                          sx={{ marginLeft: '0.5rem' }}
+                          sx={{ marginLeft: "0.5rem" }}
                         >
                           Option 2: Option B
                         </Typography>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
                         <Checkbox checked />
                         <Typography
                           variant="body1"
-                          sx={{ marginLeft: '0.5rem' }}
+                          sx={{ marginLeft: "0.5rem" }}
                         >
                           Option 3: Option C
                         </Typography>
                       </div>
                     </div>
                   </Paper>
-                  {/* </Box> */}
                 </div>
               </div>
 
@@ -1702,7 +1811,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         setJobData({ ...jobData, additionalDetails: value })
                       }
                       modules={modules}
-                      style={{ height: '300px', marginBottom: '150px' }}
+                      style={{ height: "300px", marginBottom: "150px" }}
                     />
                   </div>
                 </div>
@@ -1721,5 +1830,5 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
