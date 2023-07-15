@@ -36,17 +36,12 @@ function Auth() {
       .unwrap()
       .then(() => {
         setLoading(false);
-        navigate("/reg");
-        window.location.reload();
+        navigate("/student/dashboard");
       })
       .catch(() => {
         setLoading(false);
       });
   };
-
-  if (isLoggedIn && role==='student') {
-    return <Navigate to="/reg" />;
-  }
 
   return (
     <div className="MainPage">

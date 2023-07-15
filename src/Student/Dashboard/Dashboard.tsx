@@ -6,6 +6,7 @@ import { Extras } from "./Extras";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import React from "react";
 import { getNoticeForCycles } from "../../Slices/notice";
+import {Navigate, useNavigate} from "react-router-dom";
 
 export const htmlTypography = (html: JSX.Element) => {
   return (
@@ -15,7 +16,10 @@ export const htmlTypography = (html: JSX.Element) => {
   );
 };
 
+const is_registered = true;
+
 export default function DashBoard() {
+  let navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const notices = useAppSelector((state) => state.notice);
@@ -23,6 +27,10 @@ export default function DashBoard() {
   React.useEffect(() => {
     dispatch(getNoticeForCycles([4]));
   }, [dispatch]);
+
+  if(!is_registered) {
+    navigate("/reg");
+  }
 
   return (
     <div className="d-flex">
