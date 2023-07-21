@@ -1,0 +1,156 @@
+@keyframes slideleft {
+  from {
+    background-position: 0%;
+  }
+  to {
+    background-position: 90000%;
+  }
+}
+
+@-webkit-keyframes slideleft {
+  from {
+    background-position: 0%;
+  }
+  to {
+    background-position: 90000%;
+  }
+}
+
+.SignInCompanyPage {
+  .animationBackground {
+    background-image: url("../Images/maincoloured-college.jpg");
+    background-repeat: repeat-x;
+    animation: slideleft 20000s infinite linear;
+    -webkit-animation: slideleft 20000s infinite linear;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+    min-height: 100vh;
+
+    .bg-layer {
+      background: rgba(0, 0, 0, 0.7);
+      min-height: 100vh;
+    }
+  }
+  @media (max-width: 768px) {
+    .animationBackground {
+      display: none;
+    }
+  }
+  .AuthSignIn {
+    position: relative;
+    min-height: 100vh;
+    .SignInBox {
+      width: 100%;
+      height: 406px;
+      ::placeholder {
+        color: white;
+      }
+
+      .SignIn {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 64px;
+        line-height: 80px;
+        text-align: center;
+        color: #224957;
+      }
+      .SignInForgot {
+        font-size: 40px;
+      }
+      .SignInSubText {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        text-align: center;
+        color: #224957;
+      }
+      .InputSignIn {
+        width: 350px;
+        height: 45px;
+        background-color: #419297 !important;
+        border-radius: 10px;
+        color: white !important;
+        border: none;
+      }
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      textarea:-webkit-autofill,
+      textarea:-webkit-autofill:hover,
+      textarea:-webkit-autofill:focus,
+      select:-webkit-autofill,
+      select:-webkit-autofill:hover,
+      select:-webkit-autofill:focus {
+        -webkit-text-fill-color: white;
+        transition: background-color 5000s ease-in-out 0s;
+      }
+      .RememberMe {
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 17px;
+        text-align: center;
+        color: #093545;
+      }
+
+      .regular-checkbox {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 17px;
+        background-color: #224957;
+        border-radius: 5px;
+        border: 1px solid #224957;
+        padding: 10px;
+        display: inline-block;
+        position: relative;
+      }
+      .regular-checkbox:hover {
+        cursor: pointer;
+      }
+
+      .regular-checkbox:checked {
+        background-color: #224957;
+        border-radius: 5px;
+        border: 1px solid #224957;
+        color: white;
+      }
+      .regular-checkbox:checked:after {
+        content: "\2714";
+        font-size: 17px;
+        position: absolute;
+        border-radius: 5px;
+        top: -2px;
+        left: 3px;
+        color: white;
+      }
+      .ForgotPassword {
+        border: none;
+        text-decoration: none;
+        background-color: inherit;
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 17px;
+        text-align: center;
+        color: #000000;
+      }
+      .bold {
+        font-weight: 600;
+      }
+      .LoginButton {
+        width: 350px;
+        height: 45px;
+        background: #1bff8c;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        border: none;
+      }
+    }
+  }
+}

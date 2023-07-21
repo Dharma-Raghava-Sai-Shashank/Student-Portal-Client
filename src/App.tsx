@@ -30,6 +30,11 @@ import AdminRoute from "./common/AdminRoute";
 import StudentRoute from "./common/StudentRoute";
 import { Programs } from "./Admin/Programs/Programs";
 import { HomeScreen } from "./HomeScreen/HomeScreen";
+import { SignIn } from "./Company/SignIn";
+import { Dashboard } from "./Company/Dashboard";
+import { CompanyProfile } from "./Company/CompanyProfile";
+import ContactUs from "./Company/ContactUs";
+import { CompanyRegistration } from "./Company/Registration";
 
 const ProtectRoute: any = (Component: React.FC<{}>) => {
   return (
@@ -90,7 +95,7 @@ function App() {
         <Route path="/" element={<HomeScreen />} />
 
         <Route path="/admin/auth" element={<AdminAuth />} />
-        <Route path="/reg" element={<Registration />}/>
+        <Route path="/reg" element={<Registration />} />
         <Route path="/admin" element={ProtectRoute(Admin)} />
         <Route path="/admin/placement" element={<Placement />} />
         <Route path="/admin/programs" element={ProtectRoute(AcadYearProgram)} />
@@ -123,6 +128,12 @@ function App() {
         <Route path="/student/jobprofile/:id" element={<JobProfileDetail />} />
         <Route path="/student/dashboard" element={<DashBoard />} />
         <Route path="/student/extras" element={<RespExtra />} />
+
+        <Route path="/company/signin" element={<SignIn />} />
+        <Route path="/company/dashboard" element={<Dashboard />} />
+        <Route path="/company/profile" element={<CompanyProfile />} />
+        <Route path="/company/contactus" element={<ContactUs />} />
+        <Route path="/company/registration" element={<CompanyRegistration />} />
       </Routes>
       <AuthVerify logOut={logOut} />
     </>
