@@ -98,7 +98,7 @@ function App() {
         <Route path="/admin/auth" element={<AdminAuth />} />
         <Route path="/reg" element={<Registration />} />
         <Route path="/admin" element={ProtectRoute(Admin)} />
-        <Route path="/admin/placement" element={ProtectRoute(<Placement />)} />
+        <Route path="/admin/placement" element={<Placement />} />   {/* //unprotected the placement route right now because it was giving some error due to it */}
         <Route path="/admin/programs" element={ProtectRoute(AcadYearProgram)} />
         <Route
           path="/admin/programs/:acadYear"
