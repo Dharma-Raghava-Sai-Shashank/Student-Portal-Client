@@ -1,6 +1,7 @@
 .CompanyHeader {
+  // z-index: 1400;
   header {
-    position: fixed;
+    position: absolute;
     top: 0;
     width: 100%;
     display: flex;
@@ -29,7 +30,7 @@
     border-left: 0px;
     transition: all 0.5s;
     -webkit-transition: all 0.5s;
-    position: fixed;
+    position: absolute;
     border-radius: 0px 50% 50% 0px;
     top: -35px;
     overflow: hidden;
@@ -42,6 +43,7 @@
     display: -webkit-flex;
     align-items: center;
     -webkit-align-items: center;
+    z-index: 5;
   }
   .nav:after {
     content: "";
@@ -52,6 +54,7 @@
     width: 200%;
     height: 100%;
     border-radius: 0px 50% 50% 0px;
+    z-index: 5;
   }
   .nav-content {
     margin-left: 40px;

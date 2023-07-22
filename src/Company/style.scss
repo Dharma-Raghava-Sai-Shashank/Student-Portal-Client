@@ -154,3 +154,43 @@
     }
   }
 }
+.CompanyProfile {
+  //   min-height: 100vh;
+
+  .bluebox1,
+  .bluebox2 {
+    width: 20vw;
+    height: 20vh;
+    background-color: #406496;
+    z-index: -1;
+  }
+  .bluebox1 {
+    position: absolute;
+    left: 0;
+    top: 80px;
+  }
+  .bluebox2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  .roundDiv {
+    border-radius: 15px;
+    background-color: white;
+  }
+  .buttonProfilePic {
+    background-color: #1f385b;
+    color: white;
+    padding: 0.4rem 2rem !important;
+    margin: 10px 30px !important;
+    // z-index: 0 !important;
+  }
+  .profileRow {
+    margin: auto 5rem;
+  }
+  @media (max-width: 768px) {
+    .profileRow {
+      margin: auto 1rem;
+    }
+  }
+}
