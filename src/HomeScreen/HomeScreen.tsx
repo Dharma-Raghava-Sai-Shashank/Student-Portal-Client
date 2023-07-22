@@ -12,7 +12,7 @@ export const HomeScreen = () => {
               <div className="mx-4 row">
                 <div className="col-sm-12 col-md-12 col-lg-4 my-4">
                   <div className="d-flex justify-content-center">
-                    <Link to="/company/auth">
+                    <Link to="/company/signin">
                       <Button
                         variant="contained"
                         className="green2b text-white authButton w-100"
