@@ -67,38 +67,38 @@ export const CompanyProfile = () => {
             <div className="roundDiv p-3 m-2">
               <div className="mt-2 mb-4">
                 <div className="d-flex justify-content-between">
-                  <Typography className="fw-500 blue2" variant="button">
+                  <Typography className="fw-500 blue4" variant="button">
                     Other Information
                   </Typography>
-                  <Button
+                  {/* <Button
                     variant="text"
                     startIcon={<EditOutlined sx={{ fontSize: "10px" }} />}
                     sx={{ color: "#1f385b" }}
-                    className="fs-12 blue2 py-0"
+                    className="fs-12 blue4 py-0"
                   >
                     Edit
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
               <div>
                 <div className="d-flex justify-content-between my-2">
-                  <Phone className="blue2" />
+                  <Phone className="blue4" />
                   <Typography className=" text-left">+91 8970740032</Typography>
                 </div>
                 <div className="d-flex justify-content-between my-2">
-                  <Mail className="blue2" />
+                  <Mail className="blue4" />
                   <Typography className=" text-left">
                     krittika@google.com
                   </Typography>
                 </div>
                 <div className="d-flex justify-content-between my-2">
-                  <LinkedIn className="blue2" />
+                  <LinkedIn className="blue4" />
                   <Typography className=" text-left">
                     krittika-barnwal
                   </Typography>
                 </div>
                 <div className="d-flex justify-content-between my-2">
-                  <Language className="blue2" />
+                  <Language className="blue4" />
                   <Typography className="text-left">
                     krittika-barnwal
                   </Typography>
@@ -110,17 +110,17 @@ export const CompanyProfile = () => {
             <div className="roundDiv p-3 my-2">
               <div className="mt-2 mb-4">
                 <div className="d-flex justify-content-between">
-                  <Typography className="fw-500 blue2" variant="button">
+                  <Typography className="fw-500 blue4" variant="button">
                     About the company
                   </Typography>
-                  <Button
+                  {/* <Button
                     variant="text"
                     startIcon={<EditOutlined sx={{ fontSize: "10px" }} />}
                     sx={{ color: "#1f385b" }}
-                    className="fs-12 blue2 py-0"
+                    className="fs-12 blue4 py-0"
                   >
                     Edit
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
               {generateDetails("Name", "Google")}
@@ -136,17 +136,17 @@ export const CompanyProfile = () => {
                 <div className="roundDiv p-3 mx-0 mb-2 ">
                   <div className="mt-2 mb-4">
                     <div className="d-flex justify-content-between">
-                      <Typography className="fw-500 blue2" variant="button">
+                      <Typography className="fw-500 blue4" variant="button">
                         Primary HR
                       </Typography>
-                      <Button
+                      {/* <Button
                         variant="text"
                         startIcon={<EditOutlined sx={{ fontSize: "10px" }} />}
                         sx={{ color: "#1f385b" }}
-                        className="fs-12 blue2 py-0"
+                        className="fs-12 blue4 py-0"
                       >
                         Edit
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                   {generateDetails("Name", "Niket Gupta")}
@@ -159,21 +159,21 @@ export const CompanyProfile = () => {
                 <div className="roundDiv p-3 mx-0 mb-2">
                   <div className="mt-2 mb-4">
                     <div className="d-flex justify-content-between">
-                      <Typography className="fw-500 blue2" variant="button">
+                      <Typography className="fw-500 blue4" variant="button">
                         Secondary HR
                       </Typography>
-                      <Button
+                      {/* <Button
                         variant="text"
                         startIcon={<EditOutlined sx={{ fontSize: "10px" }} />}
                         sx={{ color: "#1f385b" }}
-                        className="fs-12 blue2 py-0"
+                        className="fs-12 blue4 py-0"
                       >
                         Edit
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                   {generateDetails("Name", "Aditya Mishra")}
-                  {generateDetails("Phone", "+91 893489284")}
+                  {generateDetails("Phone", "+91 8934891284")}
                   {generateDetails("Email Id", "aditya@gmail.com")}
                   {generateDetails("LinkedIn", "aditya-mishra")}
                 </div>

@@ -1,12 +1,12 @@
 .CompanyHeader {
   // z-index: 1400;
   header {
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100%;
     display: flex;
     display: -webkit-flex;
-    z-index: 0;
+    z-index: 1;
     // justify-content: space-between;
     align-items: center;
     padding: 10px 30px;
@@ -26,11 +26,11 @@
 
   /*navbar styling starts*/
   .nav {
-    border: 20px solid #d8d8d8;
+    border: 10px solid #d2e2f3;
     border-left: 0px;
     transition: all 0.5s;
     -webkit-transition: all 0.5s;
-    position: absolute;
+    position: fixed;
     border-radius: 0px 50% 50% 0px;
     top: -35px;
     overflow: hidden;
@@ -103,7 +103,7 @@
     left: 0;
     width: 0%;
     height: 100%;
-    background: #419297;
+    background: #1f385b;
     z-index: -1;
     transform: skewX(15deg);
     -webkit-transform: skewX(15deg);
@@ -116,58 +116,7 @@
     font-size: 12px;
     line-height: 22px;
   }
-  /*header styling ends*/
-  /*banner styling starts*/
-  .container {
-    width: 1170px;
-    margin: 0px auto;
-    padding: 0px 15px;
-  }
-  .banner-image {
-    display: none;
-  }
-  .banner {
-    background: url("https://ucarecdn.com/594cb7dd-28f3-449f-9aa3-0e6dcb21e631/banner.png")
-      no-repeat center center / 100%;
-    width: 100%;
-    height: 100%;
-  }
-  .banner-inner {
-    height: calc(100vh + 97px);
-    display: flex;
-    align-items: center;
-    -webkit-align-items: center;
-  }
-  .banner-content h1 {
-    color: #3d4244;
-    font-weight: 300;
-    font-size: 47px;
-    line-height: 70px;
-    margin-bottom: 40px;
-  }
-  .banner-content h1 b {
-    font-weight: 700;
-  }
-  .banner-content span {
-    color: #fccb02;
-    font-weight: 700;
-  }
-  .theme-btn {
-    background-color: #fccb02;
-    padding: 16px 50px;
-    text-decoration: none;
-    color: #3d4244;
-    display: inline-block;
-    font-weight: 600;
-    border: 1px solid transparent;
-    transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    border-radius: 5px;
-  }
-  .theme-btn:hover {
-    background-color: transparent;
-    border: 1px solid #fccb02;
-  }
+
   /*jquery styling */
   .nav-left {
     left: 0;

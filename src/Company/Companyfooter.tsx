@@ -14,7 +14,7 @@ import { Divider } from "@material-ui/core";
 
 export const Companyfooter = () => {
   return (
-    <footer className="grey2b">
+    <footer className="text-white" style={{ backgroundColor: "#1f385b" }}>
       <Container maxWidth="lg">
         <Box py={4}>
           <div className="row">
@@ -74,27 +74,27 @@ export const Companyfooter = () => {
               {/* <Link to="/company/dashboard">Our Team</Link> */}
             </div>
             <Divider />
-            <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-end text-white">
               <div>
                 <Typography display="block">
                   <Tooltip title="Website">
                     <IconButton>
-                      <Language />
+                      <Language sx={{ color: "white" }} />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Facebook page">
                     <IconButton>
-                      <Facebook />
+                      <Facebook sx={{ color: "white" }} />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Instagram Page">
                     <IconButton>
-                      <Instagram />
+                      <Instagram sx={{ color: "white" }} />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="LinkedIn Page">
                     <IconButton>
-                      <LinkedIn />
+                      <LinkedIn sx={{ color: "white" }} />
                     </IconButton>
                   </Tooltip>
                 </Typography>

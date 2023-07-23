@@ -100,7 +100,7 @@ export const Dashboard = () => {
     console.info("You clicked a breadcrumb.");
   }
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -114,7 +114,7 @@ export const Dashboard = () => {
   };
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
-      backgroundColor: "#d1e2d245",
+      backgroundColor: "#dddddd71",
     },
     // hide last border
     "&:last-child td, &:last-child th": {
@@ -124,7 +124,7 @@ export const Dashboard = () => {
   return (
     <div>
       <CompanyHeader />
-      <div className="p-5 grey2b mh-100" style={{ marginTop: "5rem" }}>
+      <div className="p-5 blue1b mh-100" style={{ marginTop: "5rem" }}>
         <div role="presentation" onClick={handleClick}>
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="/">
@@ -137,33 +137,37 @@ export const Dashboard = () => {
           <div className=" p-5 bg-white">
             <div className="d-flex justify-content-center my-3">
               <Button
-                variant="outlined"
-                color="success"
-                className="bg-white"
-                sx={{ fontSize: "1.1rem", px: 5, py: 2, my: 5, zIndex: "0" }}
-                startIcon={<AddIcon />}
+                variant="contained"
+                sx={{ backgroundColor: "#1f385b", px: 2, py: 1 }}
               >
-                Fill a new form
+                Fill a new Application
               </Button>
             </div>
             <div className="d-flex justify-content-center my-5 mx-3 px-3">
-              <Paper sx={{ width: "100%" }}>
-                <TableContainer sx={{ maxHeight: 600 }}>
+              <Paper
+                sx={{
+                  width: "100%",
+                  boxShadow: "none",
+                  border: "0.1px dotted gray",
+                }}
+              >
+                <TableContainer>
                   <Table aria-label="sticky table">
                     <TableHead>
                       <TableRow>
-                        <TableCell colSpan={6}>
-                          <FormControl sx={{ m: 1 }} variant="outlined">
-                            <OutlinedInput
-                              id="outlined-adornment-weight"
-                              endAdornment={
-                                <InputAdornment position="end">
-                                  <SearchIcon />
-                                </InputAdornment>
-                              }
-                              fullWidth
-                            />
-                          </FormControl>
+                        <TableCell colSpan={2} className="p-0 mx-2 mb-2">
+                          <TextField
+                            id="standard-basic"
+                            label="Search an Application"
+                            variant="standard"
+                            fullWidth
+                          />
+                        </TableCell>
+                        <TableCell colSpan={1} className="p-1">
+                          <Button variant="text">Sort</Button>
+                        </TableCell>
+                        <TableCell colSpan={1} className="p-1">
+                          <Button variant="text">Filter</Button>
                         </TableCell>
                       </TableRow>
                       <TableRow>
