@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./header.scss";
 import { Close, MotionPhotosAuto } from "@mui/icons-material";
-import CollegePic from "../Images/Heritage.png";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 interface Props {
   window?: () => Window;
 }
@@ -46,17 +45,17 @@ export default function CompanyHeader(props: Props) {
           </div>
           <ul>
             <li>
-              <a href="#"> Home </a>
+              <a href="/company/dashboard"> Home </a>
             </li>
             <li>
-              <a href="#"> Profile</a>
+              <a href="/company/profile"> Profile</a>
             </li>
             <li>
               <a href="#"> Brochure </a>
             </li>
 
             <li>
-              <a href="#"> contact us </a>
+              <a href="/company/contactus"> Contact Us </a>
             </li>
           </ul>
           <ul className="terms-links">
