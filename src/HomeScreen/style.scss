@@ -25,8 +25,8 @@
     backdrop-filter: blur(1.5px);
 
     .HomeButtonDivRow {
-      position: absolute;
-      top: 50vh;
+      // position: absolute;
+      // top: 50vh;
       //   padding: 3rem 5rem;
       .authButton {
         padding: 1rem 3rem;
@@ -37,6 +37,6 @@
 }
 @media screen and (max-width: 992px) {
   .HomeButtonDivRow {
-    top: 20vh !important;
+    // top: 20vh !important;
   }
 }

@@ -14,6 +14,7 @@ import { Branch } from "./Branch";
 import "./index.scss";
 import {useNavigate} from "react-router-dom";
 
+
 const steps = ["Personal Details", "Educational Details", "Upload Resume"];
 const API_URL = "https://jsonplaceholder.typicode.com/posts";
 

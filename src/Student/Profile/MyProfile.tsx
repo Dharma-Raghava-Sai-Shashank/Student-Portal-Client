@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./MyProfile.scss";
 import student from "./StudentProfile";
-import { Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import Fab from "@mui/material/Fab";
 import ListIcon from "@mui/icons-material/List";
@@ -52,6 +52,7 @@ const listItems = [
   "Education History",
   "Additional Info",
   "Uploaded Resumes",
+  "Placement Enrollments",
 ];
 
 interface ApiResponse {
@@ -188,7 +189,7 @@ export const MyProfile = () => {
           color="primary"
           aria-label="add"
           variant="extended"
-          sx={{ px: 2 }}
+          sx={{ px: 2}}
           onClick={handleDrawerOpen}
         >
           <ListIcon />
@@ -422,7 +423,7 @@ export const MyProfile = () => {
 
                     {generateDetails(
                       "Personal Email Id",
-                      "suyahshadilya@gmail.com"
+                      "suyash@gmail.com"
                     )}
                     {generateDetails(
                       "Current Address",
@@ -454,7 +455,7 @@ export const MyProfile = () => {
 
                     {generateDetails(
                       "Personal Email Id",
-                      "suyahshadilya@gmail.com"
+                      "suyash@gmail.com"
                     )}
                     {generateDetails(
                       "Current Address",
@@ -468,6 +469,58 @@ export const MyProfile = () => {
                 {generateDetails("", )} */}
                   </div>
                 </div>
+                <div id="id5" className="m-3 p-3">
+      {/* Generate Heading function */}
+      {generateHeading("Placement Enrollments")}
+      <Paper sx={{ width: '100%', mt: 2, p: 3 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <Typography variant="body1">May 2023 - May 2024</Typography>
+          </div>
+          <div
+            style={{
+              borderLeft: '1px solid green',
+              height: '80px',
+              margin: '0 16px',
+              opacity: '0.4',
+            }}
+          />
+          <div>
+            <Typography variant="body1">Internship Placement for 2023-24 (2025 Passout)</Typography>
+            <Button>View Details</Button>
+          </div>
+          <div style={{ marginLeft: 'auto' }}>
+            <Button variant="contained" sx={{ bgcolor: '#00ae57', color: '#fff', borderRadius: '18px' }}>
+              Enrolled <span style={{ marginLeft: '0.5rem' }}>&#10003;</span>
+            </Button>
+          </div>
+        </div>
+      </Paper>
+      <Paper sx={{ width: '100%', mt: 2, p: 3 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <Typography variant="body1">Aug 2020 - Aug 2040</Typography>
+          </div>
+          <div
+            style={{
+              borderLeft: '1px solid green',
+              height: '80px',
+              margin: '0 16px',
+              opacity: '0.4',
+            }}
+          />
+          <div>
+            <Typography variant="body1">Superset Placements</Typography>
+            <Button>View Details</Button>
+          </div>
+          <div style={{ marginLeft: 'auto'}}>
+            <Button variant="contained" sx={{  color: '#fff', borderRadius: '18px', mr: 1 }}>
+              Proceed
+            </Button>
+          </div>
+        </div>
+      </Paper>
+    </div>
               </div>
             </div>
           </div>
