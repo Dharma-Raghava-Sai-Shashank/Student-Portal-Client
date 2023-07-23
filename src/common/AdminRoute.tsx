@@ -14,7 +14,17 @@ const AdminRoute = ({
   if (!auth.isLoggedIn && auth.role!==ADMIN) {
     return <Navigate to="/admin/auth" replace />;
   }
+  else if (auth.isLoggedIn && auth.role!==ADMIN) {
+    return <Navigate to="/admin/auth" replace />;
+  }
   return Component;
 };
 
 export default AdminRoute;
+
+
+
+
+
+
+
