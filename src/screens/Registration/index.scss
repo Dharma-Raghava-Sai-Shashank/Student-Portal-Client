@@ -2,110 +2,286 @@
   background-color: #e2e2e2;
   min-height: 100vh;
   font-family: "Lexend Deca", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
 
-  input {
-    border: 1px solid #bfbfbf;
-    border-radius: 2px;
-  }
-  input:focus {
-    border-color: black;
-  }
-  .RegistrationDiv {
-    background: #f4f4f4;
-    z-index: 1;
-    box-shadow: 6px -1px 25px 8px rgba(0, 0, 0, 0.2);
-    margin: 0 0 10% 0;
-    .RegistrationInputBox {
-      background: #ffffff;
-      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
-      .previousEducation {
-        font-style: normal;
-        font-weight: 700;
-        font-size: 24px;
-        line-height: 28px;
+.MainRegPage input {
+  border: 1px solid #bfbfbf;
+  border-radius: 2px;
+  transition: border-color 0.3s ease;
+}
 
-        color: #7c7c7c;
-      }
-      .RegistrationInputFields {
-        label {
-          font-style: normal;
-          font-weight: 700;
-          font-size: 1rem;
-          line-height: 1rem;
-          margin: 10px 0;
-          color: #521f1f;
-        }
-        .subLabel {
-          font-size: 0.95rem;
-          color: #626262;
-        }
-        .previousEducationHeading {
-          font-size: 1.3rem;
-          line-height: 1.4rem;
-        }
-      }
-      .greenButton {
-        background: #4dc175;
-        border: 1px solid #4dc175;
-        border-radius: 2px;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 0.9rem;
-        line-height: 0.95rem;
-        text-transform: capitalize;
-        text-align: center;
-        color: #ffffff;
-      }
-      .greyButton {
-        border: 1px solid #5a5a5a;
-        border-radius: 2px;
-        text-transform: capitalize;
-        text-align: center;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 0.9rem;
-        line-height: 0.95rem;
-        text-align: center;
-        color: #3c3c3c;
-      }
-      .SavedButton {
-        background-color: rgba(0, 174, 87, 0.6);
-        border: 1px solid #4dc175;
-        color: white;
-      }
-    }
+.MainRegPage input:focus {
+  border-color: black;
+}
+
+.RegistrationDiv {
+  background: #f4f4f4;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  margin: 0 0 10% 0;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+  animation: fade-in 0.3s ease;
+}
+
+.RegistrationInputBox {
+  background: #ffffff;
+  padding: 20px;
+}
+
+.RegistrationInputFields label {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #521f1f;
+}
+
+.RegistrationInputFields .subLabel {
+  font-size: 0.95rem;
+  color: #626262;
+}
+
+.RegistrationInputFields .previousEducationHeading {
+  font-size: 1.3rem;
+  line-height: 1.4rem;
+}
+
+.RegistrationInputFields .greenButton,
+.RegistrationInputFields .greyButton,
+.RegistrationInputFields .SavedButton {
+  border-radius: 2px;
+  font-weight: 400;
+  font-size: 0.9rem;
+  line-height: 1rem;
+  text-transform: capitalize;
+  padding: 8px 16px;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.RegistrationInputFields .greenButton {
+  background: #4dc175;
+  border: 1px solid #4dc175;
+  color: #ffffff;
+}
+
+.RegistrationInputFields .greyButton {
+  border: 1px solid #5a5a5a;
+  color: #3c3c3c;
+}
+
+.RegistrationInputFields .SavedButton {
+  background-color: rgba(0, 174, 87, 0.6);
+  border: 1px solid #4dc175;
+  color: white;
+}
+
+.RegistrationInputFields .greenButton:hover,
+.RegistrationInputFields .greyButton:hover,
+.RegistrationInputFields .SavedButton:hover {
+  opacity: 0.8;
+}
+
+.footerWave {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  animation: fade-in 0.3s ease;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
   }
-  .footerWave {
-    position: fixed;
-    bottom: 0%;
-    width: 100vw;
+  100% {
+    opacity: 1;
   }
 }
 
 .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root {
   color: rgba(0, 174, 87, 0.6) !important;
 }
+
 .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
   color: #00ae57 !important;
 }
+
 .css-ascpo7-MuiStepLabel-root {
   flex-direction: column !important;
   margin: 0.8rem !important;
 }
+
 .css-qivjh0-MuiStepLabel-label {
   font-size: 1rem !important;
-  //   line-height: 1.8 !important;
   margin: 0.6rem !important;
 }
+
 .css-z7uhs0-MuiStepConnector-line {
   border-color: #00ae57 !important;
   border-top-width: 2px !important;
 }
+
 .css-qivjh0-MuiStepLabel-label.Mui-active {
   color: rgba(0, 0, 0, 0.9) !important;
   font-weight: 600 !important;
 }
+
 .css-mjpk2e-MuiButtonBase-root-MuiStepButton-root {
-  //   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+
+
+/* Background animation */
+@keyframes animateBackground {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.backgroundAnimation {
+  animation: animateBackground 10s linear infinite;
+  background: linear-gradient(to right, #fdd835, #ff9800, #ff5722, #e91e63, #9c27b0, #3f51b5, #2196f3, #00bcd4);
+  background-size: 200% 100%;
+}
+
+.MainRegPage .RegistrationDiv {
+  background: #f8f8f8;
+  z-index: 1;
+  box-shadow: 6px -1px 25px 8px rgba(0, 0, 0, 0.2);
+  margin: 0 0 10% 0;
+}
+
+/* Animation for currently selected box */
+@keyframes boxSelected {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.boxSelected-animation {
+  animation: boxSelected 0.5s alternate ease-in-out;
+}
+
+/* Typography */
+.MainRegPage,
+.MainRegPage input,
+.MainRegPage textarea,
+.MainRegPage select,
+.MainRegPage label {
+  color: #333333;
+}
+
+.MainRegPage h1,
+.MainRegPage h2,
+.MainRegPage h3,
+.MainRegPage h4,
+.MainRegPage h5,
+.MainRegPage h6 {
+  font-weight: 600;
+}
+
+.MainRegPage p {
+  line-height: 1.5;
+}
+
+.MainRegPage input,
+.MainRegPage textarea,
+.MainRegPage select {
+  font-size: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #bfbfbf;
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.MainRegPage input:focus,
+.MainRegPage textarea:focus,
+.MainRegPage select:focus {
+  border-color: #00ae57;
+}
+
+.MainRegPage label {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.MainRegPage button {
+  font-size: 0.9rem;
+  font-weight: 400;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.MainRegPage .greenButton {
+  background-color: #4dc175;
+  color: #ffffff;
+}
+
+.MainRegPage .greyButton {
+  background-color: transparent;
+  border: 1px solid #5a5a5a;
+  color: #3c3c3c;
+}
+
+.MainRegPage .SavedButton {
+  background-color: rgba(0, 174, 87, 0.6);
+  border: 1px solid #4dc175;
+  color: #ffffff;
+}
+
+.MainRegPage {
+  background-color: #f0f5f1;
+  color: #333333;
+}
+
+.RegistrationDiv {
+  background: #ffffff;
+}
+
+input,
+textarea,
+select {
+  background-color: #f9f9f9;
+  border: 1px solid #d4d4d4;
+  color: #333333;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #00ae57;
+}
+
+.greenButton {
+  background: #00ae57;
+  border: 1px solid #00ae57;
+  color: #ffffff;
+}
+
+.greyButton {
+  border: 1px solid #999999;
+  color: #666666;
+}
+
+
+
+
+

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./MyProfile.scss";
 import student from "./StudentProfile";
-import { Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import Fab from "@mui/material/Fab";
 import ListIcon from "@mui/icons-material/List";
@@ -18,6 +18,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { APIRequest } from "../../api/index"
 
 const generateHeading = (heading: string) => {
   return (
@@ -51,11 +52,94 @@ const listItems = [
   "Education History",
   "Additional Info",
   "Uploaded Resumes",
+  "Placement Enrollments",
 ];
+
+interface ApiResponse {
+  success: boolean;
+  student_profile: {
+    admno: string;
+    first_name: string;
+    middle_name: string;
+    last_name: string;
+    phonePref: string;
+    phone: string;
+    dob: string;
+    gender: string;
+    instiMailId: string;
+    personalMailId: string;
+    isPWD: number;
+    category: string;
+    isEWS: number;
+    permissions: number;
+    uidType: string;
+    uidValue: string;
+    isRegistered: number;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+    graduatingYear: {
+      year: string;
+    };
+    cvs: {
+      cvId: number;
+      cvLink: string;
+    }[];
+    placementcycles: {
+      placementCycleId: number;
+      admno: string;
+    }[];
+    specializations: {
+      study_id: number;
+      isParent: number;
+      marksheetLink: string;
+      cgpaValue: number;
+      cgpaScale: number;
+      totalBacklogs: number;
+      activeBacklogs: number;
+    }[];
+    edu_historys: {
+      eduHistoryId: number;
+      marksheetLink: string;
+      cgpaValue: number;
+      cgpaScale: number;
+      gradeEquivalent: string;
+      percentEquivalent: number;
+      conversionProof: string;
+      startYearMonth: string;
+      endYearMonth: string;
+      institution: string;
+      university: string;
+      lastEditDate: string;
+      lastVerifiedDate: string;
+      isFrozen: number;
+      degreeId: number;
+      degreeName: string;
+    }[];
+    semwise_gpas: any[];
+  };
+}
 
 export const MyProfile = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [studentProfile, setStudentProfile] = useState<ApiResponse | null>(null);
 
+  React.useEffect(()=> {
+    (async () => {
+      try {
+        const response = await APIRequest("https://student-portal-server-2sbh.onrender.com/api/student/profile", 'GET');
+        if (response.success) {
+          const a = response;
+          setStudentProfile(a);
+        } else {
+          console.error('API request failed:', response.message);
+        }
+      } catch (error) {
+        console.error('Error occurred during API request:', error);
+      }
+    })();
+  },[])
+  
   const handleDrawerOpen = () => {
     setDrawerOpen(() => true);
   };
@@ -92,6 +176,9 @@ export const MyProfile = () => {
       </div>
     );
   };
+  if (!studentProfile?.student_profile.admno) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className="MyProfileMainDiv grey2b w-100">
       <div
@@ -102,7 +189,7 @@ export const MyProfile = () => {
           color="primary"
           aria-label="add"
           variant="extended"
-          sx={{ px: 2 }}
+          sx={{ px: 2}}
           onClick={handleDrawerOpen}
         >
           <ListIcon />
@@ -125,7 +212,7 @@ export const MyProfile = () => {
                   className="capitalize"
                   sx={{ letterSpacing: "2px" }}
                 >
-                  {student.name}
+                  {studentProfile.student_profile.first_name}
                 </Typography>
               </div>
               <div>
@@ -136,7 +223,7 @@ export const MyProfile = () => {
                   fontSize={"1rem"}
                   display="block"
                 >
-                  Admission Number: {student.admission_number}
+                  Admission Number: {studentProfile.student_profile.admno}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -179,22 +266,22 @@ export const MyProfile = () => {
                 <div id="id0" className="m-3 p-3">
                   {generateHeading("Personal Details")}
                   <div>
-                    {generateDetails("Date of Birth", student.date_of_birth)}
+                    {generateDetails("Date of Birth", studentProfile.student_profile.dob)}
                     {generateDetails(
                       "Graduating Year",
-                      student.graduating_year
+                      studentProfile.student_profile.graduatingYear.year
                     )}
-                    {generateDetails("Gender", student.gender)}
-                    {generateDetails("Category", "General")}
-                    {generateDetails("Contact Number", "+91 7379392201")}
+                    {generateDetails("Gender", studentProfile.student_profile.gender)}
+                    {generateDetails("Category", studentProfile.student_profile.category)}
+                    {generateDetails("Contact Number", studentProfile.student_profile.phone)}
                     {generateDetails(
                       "College Email Id",
-                      "suyash@mnc.iitism.ac.in"
+                      studentProfile.student_profile.instiMailId
                     )}
 
                     {generateDetails(
                       "Personal Email Id",
-                      "suyahshadilya@gmail.com"
+                      studentProfile.student_profile.personalMailId
                     )}
                     {generateDetails(
                       "Current Address",
@@ -211,12 +298,12 @@ export const MyProfile = () => {
                 <div id="id1" className="m-3 p-3">
                   {generateHeading("Current Education")}
                   <div>
-                    {generateDetails("Date of Birth", student.date_of_birth)}
+                    {generateDetails("Date of Birth", studentProfile.student_profile.dob)}
                     {generateDetails(
                       "Graduating Year",
-                      student.graduating_year
+                      studentProfile.student_profile.graduatingYear.year
                     )}
-                    {generateDetails("Gender", student.gender)}
+                    {generateDetails("Gender", studentProfile.student_profile.gender)}
                     <div className="my-3">
                       <div className="mt-4">
                         <Typography variant="button" className="capitalize">
@@ -284,17 +371,17 @@ export const MyProfile = () => {
                         Class 12th:
                       </Typography>
                     </div>
-                    {generateDetails("Date of Birth", student.date_of_birth)}
+                    {generateDetails("Date of Birth", studentProfile.student_profile.dob)}
                     {generateDetails(
                       "Graduating Year",
-                      student.graduating_year
+                      studentProfile.student_profile.graduatingYear.year
                     )}
-                    {generateDetails("Gender", student.gender)}
-                    {generateDetails("Category", "General")}
-                    {generateDetails("Contact Number", "+91 7379392201")}
+                    {generateDetails("Gender", studentProfile.student_profile.gender)}
+                    {generateDetails("Category", studentProfile.student_profile.category)}
+                    {generateDetails("Contact Number", studentProfile.student_profile.phonePref + " " + studentProfile.student_profile.phone)}
                     {generateDetails(
                       "College Email Id",
-                      "suyash@mnc.iitism.ac.in"
+                      studentProfile.student_profile.instiMailId
                     )}
                     <div className="mt-4">
                       <Typography variant="button" className="capitalize">
@@ -304,7 +391,7 @@ export const MyProfile = () => {
 
                     {generateDetails(
                       "Personal Email Id",
-                      "suyahshadilya@gmail.com"
+                      studentProfile.student_profile.personalMailId
                     )}
                     {generateDetails(
                       "Current Address",
@@ -336,7 +423,7 @@ export const MyProfile = () => {
 
                     {generateDetails(
                       "Personal Email Id",
-                      "suyahshadilya@gmail.com"
+                      "suyash@gmail.com"
                     )}
                     {generateDetails(
                       "Current Address",
@@ -368,7 +455,7 @@ export const MyProfile = () => {
 
                     {generateDetails(
                       "Personal Email Id",
-                      "suyahshadilya@gmail.com"
+                      "suyash@gmail.com"
                     )}
                     {generateDetails(
                       "Current Address",
@@ -382,6 +469,58 @@ export const MyProfile = () => {
                 {generateDetails("", )} */}
                   </div>
                 </div>
+                <div id="id5" className="m-3 p-3">
+      {/* Generate Heading function */}
+      {generateHeading("Placement Enrollments")}
+      <Paper sx={{ width: '100%', mt: 2, p: 3 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <Typography variant="body1">May 2023 - May 2024</Typography>
+          </div>
+          <div
+            style={{
+              borderLeft: '1px solid green',
+              height: '80px',
+              margin: '0 16px',
+              opacity: '0.4',
+            }}
+          />
+          <div>
+            <Typography variant="body1">Internship Placement for 2023-24 (2025 Passout)</Typography>
+            <Button>View Details</Button>
+          </div>
+          <div style={{ marginLeft: 'auto' }}>
+            <Button variant="contained" sx={{ bgcolor: '#00ae57', color: '#fff', borderRadius: '18px' }}>
+              Enrolled <span style={{ marginLeft: '0.5rem' }}>&#10003;</span>
+            </Button>
+          </div>
+        </div>
+      </Paper>
+      <Paper sx={{ width: '100%', mt: 2, p: 3 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <Typography variant="body1">Aug 2020 - Aug 2040</Typography>
+          </div>
+          <div
+            style={{
+              borderLeft: '1px solid green',
+              height: '80px',
+              margin: '0 16px',
+              opacity: '0.4',
+            }}
+          />
+          <div>
+            <Typography variant="body1">Superset Placements</Typography>
+            <Button>View Details</Button>
+          </div>
+          <div style={{ marginLeft: 'auto'}}>
+            <Button variant="contained" sx={{  color: '#fff', borderRadius: '18px', mr: 1 }}>
+              Proceed
+            </Button>
+          </div>
+        </div>
+      </Paper>
+    </div>
               </div>
             </div>
           </div>
