@@ -9,6 +9,12 @@
         "iterator": "cpp",
         "xhash": "cpp",
         "xmemory": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp",
+        "ostream": "cpp",
+        "span": "cpp"
     }
 }
