@@ -23,13 +23,23 @@
   font-size: 120%;
   text-align: center;
   margin-bottom: 0;
+  margin-top: 0;
 }
 
 .css-3bmhjh-MuiPaper-root-MuiPopover-paper button{
-  margin: 0;
-  padding: 5%;
-  border: 0px;
+  border: 0;
+  margin-top: 0;
   background-color: white;
-  vertical-align: middle;
+  padding: 6%;
+  margin: 0;
 }
+
+.MuiPaper-root p {
+  margin-bottom: 0px;
+}
+
+.mx-3 {
+  margin-top: -1%;
+}
+
 
