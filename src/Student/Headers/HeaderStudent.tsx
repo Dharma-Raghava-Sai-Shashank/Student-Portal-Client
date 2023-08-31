@@ -69,7 +69,7 @@ export const HeaderStudent = () => {
                 horizontal: 'left',
               }}
             >
-              <p><LogoutIcon fontSize="large"/><button onClick={handleLogout}>Logout</button></p>
+              <button onClick={handleLogout}><p><LogoutIcon fontSize="large"/>Logout</p></button>
             </Popover>
           </div>
         </div>

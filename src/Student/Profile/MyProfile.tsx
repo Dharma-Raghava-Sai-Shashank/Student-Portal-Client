@@ -18,7 +18,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { APIRequest } from "../../api/index"
+import { APIRequest } from "../../api/index";
+import LinearProgress from '@mui/material/LinearProgress';
 
 const generateHeading = (heading: string) => {
   return (
@@ -130,9 +131,10 @@ export const MyProfile = () => {
   React.useEffect(()=> {
     (async () => {
       try {
-        const response = await APIRequest("https://student-portal-server-2sbh.onrender.com/api/student/profile", 'GET');
+        const response = await APIRequest("http://localhost:3001/api/student/profile", 'GET');
         if (response.success) {
           const a = response;
+
           setStudentProfile(a);
         } else {
           console.error('API request failed:', response.message);
@@ -180,7 +182,14 @@ export const MyProfile = () => {
     );
   };
   if (!studentProfile?.student_profile.admno) {
-    return <p>Loading...</p>;
+    return (<>
+              <center>
+                <br></br><br></br>
+                <h2>Loading your profile page</h2>
+                <br></br><br></br>
+                <LinearProgress/>
+              </center>
+            </>);
   }
   return (
     <div className="MyProfileMainDiv grey2b w-100">

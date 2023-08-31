@@ -34,6 +34,7 @@ import moment from 'moment'
 import { fetchAllPlacementCycles } from '../../api/placementCycle.service'
 import { useNavigate } from 'react-router-dom'
 import { jobProfileData } from './jobProfileData'
+import { APIRequest } from "../../api/index";
 
 import {
   deleteJob,
@@ -80,54 +81,6 @@ function createData(job: any): Data {
   }
 }
 
-// const jobs = [
-//   createData("Google", "SDE", "Accepting application"),
-//   createData("Microsoft", "SWE", "In Progress"),
-//   createData("Trilogy", "SDE", "New"),
-//   createData("Samsung", "Reseacher", "Closed"),
-//   createData("Nvidea", "Engineer", "In Progress"),
-//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-//   createData("Standard Chartered", "Data Analyst", "New"),
-//   createData("Goldman Sacs", "Business Analyst", "Draft"),
-//   createData("Walmart", "SDE", "Closed"),
-//   createData("Google", "SDE", "Accepting application"),
-//   createData("Microsoft", "SWE", "In Progress"),
-//   createData("Trilogy", "SDE", "Closed"),
-//   createData("Samsung", "Reseacher", "Closed"),
-//   createData("Nvidea", "Engineer", "In Progress"),
-//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-//   createData("Standard Chartered", "Data Analyst", "Draft"),
-//   createData("Goldman Sacs", "Business Analyst", "Draft"),
-//   createData("Walmart", "SDE", "New"),
-//   createData("Google", "SDE", "Accepting application"),
-//   createData("Microsoft", "SWE", "In Progress"),
-//   createData("Trilogy", "SDE", "Closed"),
-//   createData("Samsung", "Reseacher", "Closed"),
-//   createData("Nvidea", "Engineer", "In Progress"),
-//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-//   createData("Standard Chartered", "Data Analyst", "Draft"),
-//   createData("Goldman Sacs", "Business Analyst", "Draft"),
-//   createData("Walmart", "SDE", "Closed"),
-//   createData("Google", "SDE", "Accepting application"),
-//   createData("Microsoft", "SWE", "In Progress"),
-//   createData("Trilogy", "SDE", "Closed"),
-//   createData("Samsung", "Reseacher", "Closed"),
-//   createData("Nvidea", "Engineer", "In Progress"),
-//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-//   createData("Standard Chartered", "Data Analyst", "Draft"),
-//   createData("Goldman Sacs", "Business Analyst", "Draft"),
-//   createData("Walmart", "SDE", "Closed"),
-//   createData("Google", "SDE", "Accepting application"),
-//   createData("Microsoft", "SWE", "In Progress"),
-//   createData("Trilogy", "SDE", "Closed"),
-//   createData("Samsung", "Reseacher", "Closed"),
-//   createData("Nvidea", "Engineer", "In Progress"),
-//   createData("Sprinklr", "Implementation Consulatant", "Accepting application"),
-//   createData("Standard Chartered", "Data Analyst", "Draft"),
-//   createData("Goldman Sacs", "Business Analyst", "Draft"),
-//   createData("Walmart", "SDE", "Closed"),
-// ];
-
 interface props {
   option: string
   setOption: React.Dispatch<React.SetStateAction<string>>
@@ -141,6 +94,18 @@ export const NFTableShow = ({
   session,
   setSession,
 }: props) => {
+
+  React.useEffect(()=> {
+    (async () => {
+      try {
+        const response = await APIRequest("http://localhost:3001/api/jobs/student/1", 'GET');
+        if(response) console.log(response)
+      } catch (error) {
+        console.error('Error occurred during API request:', error);
+      }
+    })();
+  },[])
+
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(25)
   const [jobs, setJobs] = React.useState<Data[]>([])
