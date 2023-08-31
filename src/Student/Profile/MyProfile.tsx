@@ -19,6 +19,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { APIRequest } from "../../api/index"
+import { baseURL } from "../../api/index"
 
 const generateHeading = (heading: string) => {
   return (
@@ -130,7 +131,8 @@ export const MyProfile = () => {
   React.useEffect(()=> {
     (async () => {
       try {
-        const response = await APIRequest("https://student-portal-server-2sbh.onrender.com/api/student/profile", 'GET');
+        // const response = await APIRequest("https://student-portal-server-2sbh.onrender.com/api/student/profile", 'GET');
+        const response = await APIRequest(`${baseURL}/student/profile`, 'GET')
         if (response.success) {
           const a = response;
           setStudentProfile(a);

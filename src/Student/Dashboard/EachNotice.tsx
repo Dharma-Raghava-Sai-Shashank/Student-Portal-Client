@@ -29,7 +29,7 @@ export default function EachNotice({ notice }: props) {
       <Card sx={NoticeCardStyle}>
         <CardHeader
           sx={{ px: 3 }}
-          avatar={<Avatar sx={{ mt: 1, backgroundColor: "#1976d2" }}>R</Avatar>}
+          avatar={<Avatar sx={{ mt: 1, backgroundColor: "#1976d2" }}></Avatar>}
           title={
             <Typography
               className="title-responsive fw-500"
