@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { uid } from 'uid/single'
 import Divider from '@mui/material/Divider'
 import Chip from '@mui/material/Chip'
@@ -6,7 +6,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import { Modal, Form } from 'react-bootstrap'
 // import { Modal } from '@mui/material';
 import Button from '@mui/material/Button'
-import { branches } from '../constants/branches'
+import { branches } from '../Admin/constants/branches'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Table from '@mui/material/Table'
@@ -35,18 +35,17 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import 'react-quill/dist/quill.snow.css'
 import './style.scss'
-
-import { fetchAllCategories } from '../../api/companycategory.service'
-import { fetchAllSectors } from '../../api/companysector.service'
-import { fetchAllCourses } from '../../api/course.service'
-import { fetchAllScpts } from '../../api/scpt.service'
-import { fetchAllStages } from '../../api/selectionStage.service'
-import { fetchSpecializationForCourses } from '../../api/specialization.service'
-import { uploadFile } from '../../api/document.service'
-import { createHR } from '../../api/hr.service'
-import { createJob } from '../../api/job.service'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { getAllCourses } from '../../Slices/course'
+import {useState,useEffect} from "react"
+import { fetchAllCategories } from '../api/companycategory.service'
+import { fetchAllCourses } from '../api/course.service'
+import { fetchAllScpts } from '../api/scpt.service'
+import { fetchAllStages } from '../api/selectionStage.service'
+import { fetchSpecializationForCourses } from '../api/specialization.service'
+import { uploadFile } from '../api/document.service'
+import { createHR } from '../api/hr.service'
+import { createJob } from '../api/job.service'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { getAllCourses } from '../Slices/course'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 interface Schedule {
   id: string
@@ -61,15 +60,6 @@ interface props {
   session: string
   setSession: React.Dispatch<React.SetStateAction<string>>
 }
-
-// interface Sector {
-//   sectorId: number
-//   sectorName: string
-// }
-
-// interface Props {
-//   sectors?: Sector[] | null;
-// }
 
 interface HeadCell {
   id: string
@@ -107,7 +97,7 @@ const modules = {
 }
 
 const initialJobData = {
-  type: 'JNF',
+  type: '',
   profile: '',
   placeOfPosting: '',
   jobDescription: '',
@@ -124,7 +114,7 @@ const initialJobData = {
     category: {},
     sector: {},
   },
-  nfEligibility: [],
+  nfEligibilty: [],
   nf_stages: [],
   nfHistoryCriteria: [],
   nf_docs: [],
@@ -164,11 +154,10 @@ interface Question {
   type: string
   options: string[]
 }
+
 export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [openCategory, setOpenCategory] = useState<boolean>(false)
-  const [openCategoryOption, setOpenCategoryOption] = useState<string>('')
-  const [openSector, setOpenSector] = useState<boolean>(false)
-  const [openSectorOption, setOpenSectorOption] = useState<string>('')
+  const [openCategoryOption, setOpenCategoryOption] = useState<number>(0)
   const [openSchedule, setOpenSchedule] = useState<string>('None')
   const [ScheduleOption, setScheduleOption] = useState<string>('')
   const row = [0, 1, 2, 3, 4, 5, 6]
@@ -182,7 +171,6 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [secondaryspoc, setsecondaryspoc] = React.useState('')
   const [jobData, setJobData] = React.useState(initialJobData)
   const [categories, setCategories] = React.useState<any>([])
-  const [sectors, setSectors] = React.useState<any>([])
   const courses = useAppSelector((state) => state.course)
   // const [courses, setCourses] = React.useState<any>([]);
   const [specializations, setSpecializations] = React.useState<any>([])
@@ -192,7 +180,6 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [secondaryHr, setSecondaryHr] = React.useState<any>(initialHRData)
   const [selectionStages, setSelectionStages] = React.useState<any>([])
   const [isUploading, setIsUploading] = React.useState<boolean>(false)
-  const [NFType, setNFType] = React.useState<string>('None')
 
   const formData = new FormData()
 
@@ -201,23 +188,15 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const handleCloseCourse = () => setShow(false)
   const handleShowCourse = () => setShow(true)
 
-  // const handleSectorSelect = (item: Sector) => {
-  //   setOpenSector(false)
-  //   setOpenSectorOption(item.sectorName)
-  //   You can add more logic here if needed
-  // }
-
   React.useEffect(() => {
     const fetchData = async () => {
       const { categories } = await fetchAllCategories()
-      const { sectors } = await fetchAllSectors()
       // const { courses } = await fetchAllCourses();
       dispatch(getAllCourses())
       const { scpts } = await fetchAllScpts()
       const { stages } = await fetchAllStages()
 
       setCategories(categories)
-      setSectors(sectors)
       // setCourses(courses);
       setCurrCourse(courses?.[0]?.courseId as number)
       setScpts(scpts)
@@ -363,14 +342,14 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       spocs,
       HRs,
       nf_stages: ScheduleList as any,
-      // nfEligibility: selected?.map((spec: any) => {
-      //   return {
-      //     spec,
-      //     minLPA: 10,
-      //     maxLPA: 30,
-      //     cgpaValue: 7.5,
-      //   }
-      // }) as any,
+      nfEligibility: selected?.map((spec: any) => {
+        return {
+          spec,
+          minLPA: 10,
+          maxLPA: 30,
+          cgpaValue: 7.5,
+        }
+      }) as any,
     }))
 
     const nfEligibility: any = []
@@ -394,14 +373,6 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     }
   }
 
-  const handleAddNewJob = async (e: any) => {
-    e.preventDefault()
-
-    // const res = await assembleJobData() //comment krna hai baad me isko yaad se baad me abhi testing chal rha!
-    // console.log(res)
-
-    await createJob(await assembleJobData())
-  }
 
   const handleCompanyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setJobData({
@@ -502,6 +473,22 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     setQuestionOptions(updatedOptions)
   }
 
+  const [comp,setComp]=useState('');
+  const[jobD,setJobD]=useState('');
+
+  const handleAddNewJob=(e: React.ChangeEvent<any>)=>{
+    e.preventDefault();
+    // console.log(`${jobD} at ${comp}`);
+    const data ={comp,jobD}
+    fetch('https://localhost:3000/company/dashboard',{
+      method:'POST',
+      headers:{"Content:type":"application/json"},
+      body:JSON.stringify(data)
+    }).then(()=>{
+      console.log('New data entry');
+    })
+  }
+
   return (
     <div className="d-flex justify-content-center">
       <div className=" w-100 px-5 py-5 grey2b">
@@ -521,38 +508,6 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
           </div>
           <div className="py-3 px-2 mx-4 mw-100">
             <form onSubmit={handleAddNewJob}>
-              {/* NF Details */}
-              <div>
-                <Divider>
-                  <Chip label="NF Details" />
-                </Divider>
-
-                <div className="mb-3 dropdownBody">
-                  <label htmlFor="Website" className="newjobLabel">
-                    INF/JNF
-                  </label>
-                  <div className="dropdown ">
-                    <Select
-                      labelId="demo-simple-select-label"
-                      className="dropdown-toggle button-select"
-                      id="demo-simple-select"
-                      value={jobData.type}
-                      label="Select Notification Form"
-                      onChange={(e: any) =>
-                        setJobData((pre) => {
-                          return { ...pre, type: e.target.value }
-                        })
-                      }
-                    >
-                      <MenuItem value={'JNF'}>Job Notification Form </MenuItem>
-                      <MenuItem value={'INF'}>
-                        Internship Notification Form
-                      </MenuItem>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-
               {/* Company Details */}
               <div>
                 <Divider>
@@ -567,8 +522,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     className="newjobInput"
                     id="Company Name"
                     name="companyName"
-                    value={jobData.company.companyName}
-                    onChange={handleCompanyChange}
+                    value={comp}
+                    onChange={(e)=>setComp(e.target.value)}
                   />
                   {/* <div id="emailHelp" className="form-text">
                   We'll never share your email with anyone else.
@@ -590,9 +545,9 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                 </div>
                 <div className="mb-3 dropdownBody">
                   <label htmlFor="Website" className="newjobLabel">
-                    Category
+                    Category/ Sector
                   </label>
-                  <div className="dropdown" style={{ zIndex: 999 }}>
+                  <div className="dropdown">
                     <button
                       type="button"
                       className="dropdown-toggle button-select"
@@ -601,7 +556,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         // setOpenCategoryOption(() => "");
                       }}
                     >
-                      {openCategoryOption === ''
+                      {openCategoryOption === 0
                         ? 'Select an Option'
                         : openCategoryOption}
                     </button>
@@ -617,7 +572,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             className="dropdown-option"
                             onClick={() => {
                               setOpenCategory(() => false)
-                              setOpenCategoryOption(() => item.categoryName)
+                              setOpenCategoryOption(() => item.categoryId)
                               setJobData({
                                 ...jobData,
                                 company: { ...jobData.company, category: item },
@@ -631,47 +586,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     </ul>
                   </div>
                 </div>
-                <div className="mb-3 dropdownBody">
-                  <label htmlFor="Website" className="newjobLabel">
-                    Sector
-                  </label>
-                  <div className="dropdown">
-                    <button
-                      type="button"
-                      className="dropdown-toggle button-select"
-                      onClick={() => setOpenSector((prev) => !prev)}
-                    >
-                      {openSectorOption === ''
-                        ? 'Select an Option'
-                        : openSectorOption}
-                    </button>
-                    <ul
-                      className={`dropdown-menu ${openSector ? ' show' : ''}`}
-                    >
-                      {sectors?.map((item: any) => (
-                        <li className="dropdown-item" key={item.sectorId}>
-                          <button
-                            type="button"
-                            value={item.sectorName}
-                            className="dropdown-option"
-                            onClick={() => {
-                              setOpenSector(() => false)
-                              setOpenSectorOption(() => item.sectorName)
-                              setJobData({
-                                ...jobData,
-                                company: { ...jobData.company, sector: item },
-                              })
-                            }}
-                          >
-                            {item.sectorName}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
               </div>
-
               {/* Job Details */}
               <div>
                 <div className="divider mt-5">
@@ -689,8 +604,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     className="newjobInput"
                     id="Designation"
                     name="profile"
-                    value={jobData.profile}
-                    onChange={handleJobChange}
+                    value={jobD}
+                    onChange={(e)=>setJobD(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
@@ -728,51 +643,34 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     <Chip label="SALARY DETAILS" />
                   </Divider>
                 </div>
-                {jobData.type === 'INF' ? (
-                  <div className="mb-3">
-                    <label htmlFor="CTC" className="newjobLabel">
-                      Stipend (per Month)
-                    </label>
-                    <input
-                      type="text"
-                      className="newjobInput"
-                      id="CTC"
-                      name="ctc"
-                      value={jobData.ctc}
-                      onChange={handleJobChange}
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <div className="mb-3">
-                      <label htmlFor="CTC" className="newjobLabel">
-                        CTC (in lpa)
-                      </label>
-                      <input
-                        type="text"
-                        className="newjobInput"
-                        id="CTC"
-                        name="ctc"
-                        value={jobData.ctc}
-                        onChange={handleJobChange}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="CTCbreakup" className="newjobLabel">
-                        CTC breakup
-                      </label>
-                      <textarea
-                        rows={row[4]}
-                        className="newjobInput"
-                        id="CTCbreakup"
-                        name="ctcBreakup"
-                        value={jobData.ctcBreakup}
-                        onChange={handleJobChange}
-                      />
-                    </div>
-                  </div>
-                )}
 
+                <div className="mb-3">
+                  <label htmlFor="CTC" className="newjobLabel">
+                    CTC (in lpa)
+                  </label>
+                  <input
+                    type="text"
+                    className="newjobInput"
+                    id="CTC"
+                    name="ctc"
+                    value={jobData.ctc}
+                    onChange={handleJobChange}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="CTCbreakup" className="newjobLabel">
+                    CTC breakup
+                  </label>
+                  <textarea
+                    // type="text"
+                    rows={row[4]}
+                    className="newjobInput"
+                    id="CTCbreakup"
+                    name="ctcBreakup"
+                    value={jobData.ctcBreakup}
+                    onChange={handleJobChange}
+                  />
+                </div>
                 <div className="mb-3">
                   <label htmlFor="BondDetails" className="newjobLabel">
                     Bond Details
@@ -1808,7 +1706,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                 </div>
               </div>
               {/* <div className="row"> */}
-              {/* {additionalQuestions.length >= 0 && (
+                {/* {additionalQuestions.length >= 0 && (
                   <div className="col-sm-12 col-md-8 col-lg-6 my-3">
                     {additionalQuestions?.map((question: Question) => (
                       <Card sx={{ minWidth: 275, boxShadow: "none" }}>
@@ -1855,84 +1753,88 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     ))}
                   </div>
                 )} */}
-              <div className="my-5">
-                {additionalQuestions?.map((question, index) => (
-                  <Paper key={index} sx={{ width: '100%', mb: 2, p: 2 }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Typography variant="body1" sx={{ ml: 2 }}>
-                        <strong>Title:</strong> {question.title}
-                      </Typography>
-                      <div>
-                        <Button
-                          variant="text"
-                          startIcon={<EditOutlinedIcon fontSize="small" />}
-                          color="success"
-                          sx={{ fontSize: 12 }}
-                          onClick={() => handleEditQuestion(index)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="text"
-                          startIcon={
-                            <DeleteOutlineOutlinedIcon fontSize="small" />
-                          }
-                          color="error"
-                          sx={{ fontSize: 12, marginLeft: '0.5rem' }}
-                          onClick={() => handleDeleteQuestion(index)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                    <CardContent className="py-0">
-                      <Typography variant="body1">
-                        <strong>Description:</strong> {question.description}
-                      </Typography>
-                      <Typography variant="body1">
-                        <strong>Type:</strong> {question.type}
-                      </Typography>
-                      {question.type === 'options' && (
-                        <div
-                          style={{ marginLeft: '1rem', marginTop: '0.25rem' }}
-                        >
-                          <Typography variant="body1">
-                            <strong>Options:</strong>
-                          </Typography>
-                          {question.options?.map((option, optionIndex) => (
-                            <div
-                              key={optionIndex}
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                              }}
-                            >
-                              <Checkbox checked />
-                              <Typography
-                                variant="body1"
-                                sx={{ marginLeft: '0.5rem' }}
-                              >
-                                {option}
-                              </Typography>
-                            </div>
-                          ))}
+                <div className="my-5">
+                  {additionalQuestions?.map((question, index) => (
+                    <Paper key={index} sx={{ width: '100%', mb: 2, p: 2 }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Typography variant="body1" sx={{ ml: 2 }}>
+                          <strong>Title:</strong> {question.title}
+                        </Typography>
+                        <div>
+                          <Button
+                            variant="text"
+                            startIcon={<EditOutlinedIcon fontSize="small" />}
+                            color="success"
+                            sx={{ fontSize: 12 }}
+                            onClick={() => handleEditQuestion(index)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="text"
+                            startIcon={
+                              <DeleteOutlineOutlinedIcon fontSize="small" />
+                            }
+                            color="error"
+                            sx={{ fontSize: 12, marginLeft: '0.5rem' }}
+                            onClick={() => handleDeleteQuestion(index)}
+                          >
+                            Delete
+                          </Button>
                         </div>
-                      )}
-                    </CardContent>
-                  </Paper>
-                ))}
-              </div>
-              <div>
-                <Typography variant="caption" display="block" align="right">
-                  *Add additionals NF question here
-                </Typography>
-              </div>
+                      </div>
+                      <CardContent className="py-0">
+                        <Typography variant="body1">
+                          <strong>Description:</strong> {question.description}
+                        </Typography>
+                        <Typography variant="body1">
+                          <strong>Type:</strong> {question.type}
+                        </Typography>
+                        {question.type === 'options' && (
+                          <div
+                            style={{ marginLeft: '1rem', marginTop: '0.25rem' }}
+                          >
+                        <Typography variant="body1">
+                          <strong>Options:</strong>
+                        </Typography>
+                            {question.options?.map((option, optionIndex) => (
+                              <div
+                                key={optionIndex}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <Checkbox checked />
+                                <Typography
+                                  variant="body1"
+                                  sx={{ marginLeft: '0.5rem' }}
+                                >
+                                  {option}
+                                </Typography>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Paper>
+                  ))}
+                </div>
+                <div>
+                  <Typography
+                    variant="caption"
+                    display="block"
+                    align="right"
+                  >
+                    *Add additionals NF question here
+                  </Typography>
+                </div>
               {/* </div> */}
 
               {/* Add Additional Details */}
