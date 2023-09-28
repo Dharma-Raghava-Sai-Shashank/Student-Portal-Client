@@ -99,6 +99,13 @@ export const Dashboard = () => {
     event.preventDefault();
     console.info("You clicked a breadcrumb.");
   }
+  const [showNewJob, setShowNewJob] = useState(false);
+
+  const handleShow = () => {
+    setShowNewJob(true);
+  };
+
+  const [show, setShow] = useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
 

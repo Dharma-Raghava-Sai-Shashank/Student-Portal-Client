@@ -33,7 +33,7 @@ import TableRow from '@mui/material/TableRow'
 import moment from 'moment'
 import { fetchAllPlacementCycles } from '../../api/placementCycle.service'
 import { useNavigate } from 'react-router-dom'
-import { jobProfileData } from './jobProfileData'
+// import { jobProfileData } from './jobProfileData'
 import { APIRequest } from "../../api/index";
 import { baseURL } from '../../api/index';
 
@@ -77,8 +77,8 @@ function createData(job: any): Data {
       job.status === 'Draft'
         ? 'Draft'
         : moment(Date.now()) < moment(job.deadline)
-        ? 'Accepting Application'
-        : 'Applications Closed',
+          ? 'Accepting Application'
+          : 'Applications Closed',
   }
 }
 
@@ -96,16 +96,20 @@ export const NFTableShow = ({
   setSession,
 }: props) => {
 
-  React.useEffect(()=> {
+  const [jobProfileData, setJobProfileData] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
     (async () => {
       try {
-        const response = await APIRequest(baseURL+"/jobs/student/1", 'GET');
-        if(response) console.log(response)
+        const response = await APIRequest("http://localhost:3001/api/jobs/student/all", 'GET');
+        if (response.success) {
+          setJobProfileData(response.jobs)
+        }
       } catch (error) {
         console.error('Error occurred during API request:', error);
       }
     })();
-  },[])
+  }, [])
 
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(25)
@@ -233,11 +237,10 @@ export const NFTableShow = ({
                       setSession(() => cycle.placementCycleName)
                     }}
                     style={{
-                      backgroundColor: `${
-                        placementCycleId === cycle.placementCycleId
-                          ? '#e6e6ff'
-                          : '#fff'
-                      }`,
+                      backgroundColor: `${placementCycleId === cycle.placementCycleId
+                        ? '#e6e6ff'
+                        : '#fff'
+                        }`,
                     }}
                     onClickCapture={() =>
                       handlePlacementCycleSelection(
@@ -278,7 +281,7 @@ export const NFTableShow = ({
   const [filter, setFilter] = useState('')
   const [selectedProfile, setSelectedProfile] = useState(null)
   const navigate = useNavigate()
-  
+
   const handleProfileClick = (profile: any) => {
     setSelectedProfile(profile)
   }
@@ -286,202 +289,210 @@ export const NFTableShow = ({
   const handleFilterChange = (event: any) => {
     setFilter(event.target.value)
   }
-  
+
   // Implement handleApply function
-  const handleApply = (profile: any) => {
-    const eligibilityCriteria = profile?.eligibilityCriteria || [];
+  const handleApply = (profileId: any) => {
+    localStorage.setItem("jobId",profileId)
 
-    const isEligible = eligibilityCriteria.length > 0;
+    navigate("/student/jobprofile/job")
+    // const eligibilityCriteria = profile?.eligibilityCriteria || [];
+    // const isEligible = eligibilityCriteria.length > 0;
+    // if (isEligible) {
+    //   const updatedProfile = {
+    //     ...profile,
+    //     status: 'applied',
+    //   };
 
-    if (isEligible) {
-      const updatedProfile = {
-        ...profile,
-        status: 'applied',
-      };
+    //   // const updatedProfiles = jobProfileData.map((p) =>
+    //   //   p.id === updatedProfile.id ? updatedProfile : p
+    //   // );
 
-      const updatedProfiles = jobProfileData.map((p) =>
-        p.id === updatedProfile.id ? updatedProfile : p
-      );
-
-      // Update the jobProfileData array with updatedProfiles if needed
-      setSelectedProfile(updatedProfile)
-      // Navigate to the desired page
-      navigate(`/student/jobprofile/${updatedProfile.id}`);
-    } else {
-      console.log('Student is not eligible for this job');
-    }
+    //   // Update the jobProfileData array with updatedProfiles if needed
+    //   setSelectedProfile(updatedProfile)
+    //   // Navigate to the desired page
+    //   navigate(`/student/jobprofile/${updatedProfile.id}`);
+    // } else {
+    //   console.log('Student is not eligible for this job');
+    // }
   };
-  return (
-    <div className="d-flex justify-content-center">
-      <div className="w-100 px-5 py-5 grey2b">
-        <div>
-          <span className="fs-14">Placement </span>
-          <span
-            className={`fs-14 cursor-pointer ${
-              showJobId !== '' ? '' : ' green1c fw-500'
-            }`}
-            onClick={() => {
-              setOption(() => 'Placement');
-              setShowJobId(() => '');
-            }}
+  if (jobProfileData != undefined) {
+    const TableInformation = []
+    for (let i = 0; i < jobProfileData.length; i++) {
+      const profile = jobProfileData[i]
+      if (profile != undefined) {
+        TableInformation.push(
+          <TableRow
+            onClick={() => handleProfileClick(profile)}
+            className="profile-row"
           >
-            | {session} |
-          </span>
-          {showJobId !== '' && (
-            <span className={`fs-14 green1c fw-500`}> {showJobId} </span>
-          )}
-        </div>
-        <div className="bg-white my-2 shadow-lg ">
-          <div>
-            <div className="d-flex justify-content-between border-bottom">
-              <div className="fs-18 px-3 py-2 fw-500 my-2">{session}</div>
-              <div className=" px-3 py-2 d-flex">
-                <div className="my-1">
-                  <Button sx={{ color: '#00ae57', fontSize: '12px' }}>
-                    <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} />
-                    Edit Placement
-                  </Button>
-                </div>
-                <React.Fragment>
-                  <Button onClick={toggleDrawer('right', true)}>
-                    <MenuIcon className="grey1c" />
-                  </Button>
-                  <Drawer
-                    anchor={'right'}
-                    open={state['right']}
-                    onClose={toggleDrawer('right', false)}
-                  >
-                    {list('right')}
-                  </Drawer>
-                </React.Fragment>
-              </div>
-            </div>
-            <div className="py-1 px-2 d-flex justify-content-between">
-              <div>
+            <TableCell>{profile.companyName}</TableCell>
+            <TableCell>{profile.profile}</TableCell>
+            {profile.type=='JNF' && <TableCell>Full Time</TableCell>}
+            {profile.type=='INF' && <TableCell>Internship</TableCell>}
+            <TableCell>
+              {profile.is_eligible && (
                 <Button
-                  id="basic-button"
-                  aria-controls={open ? 'basic-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}
-                  onClick={handleClick}
-                  sx={{ color: '#373739' }}
-                >
-                  Status : {currentstatus}
-                </Button>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
+                  variant="outlined"
+                  className="applyButton"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleApply(profile.nfId);
                   }}
                 >
-                  {status.map((item) => (
-                    <MenuItem
-                      key={item}
-                      onClick={() => {
-                        handleClose();
-                        setCurrentStatus(item);
-                      }}
-                    >
-                      {item}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </div>
-              <div className="d-flex">
-                <div className="mx-2">
-                  <Button
-                    sx={{ color: '#00ae57' }}
-                    className="fw-600 capitalize"
-                  >
-                    <FilterAltOutlinedIcon fontSize="small" sx={{ mx: 1 }} />{' '}
-                    Check Eligibility
-                  </Button>
-                </div>
-                <div>
-                  <InputBase
-                    sx={{ ml: 1 }}
-                    placeholder="Search Company"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
-                  <IconButton
-                    type="button"
-                    sx={{ p: '4px' }}
-                    aria-label="search"
-                  >
-                    <SearchIcon />
-                  </IconButton>
-                </div>
-              </div>
-            </div>
+                  Apply
+                </Button>
+              )}
+              {!profile.is_eligible && (
+                <span className="text-danger">Ineligible</span>
+              )}
+              {profile.is_applied === 'applied' && (
+                <span className="text-success">Applied</span>
+              )}
+            </TableCell>
+          </TableRow>
+        )
+      }
+    }
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="w-100 px-5 py-5 grey2b">
+          <div>
+            <span className="fs-14">Placement </span>
+            <span
+              className={`fs-14 cursor-pointer ${showJobId !== '' ? '' : ' green1c fw-500'
+                }`}
+              onClick={() => {
+                setOption(() => 'Placement');
+                setShowJobId(() => '');
+              }}
+            >
+              | {session} |
+            </span>
+            {showJobId !== '' && (
+              <span className={`fs-14 green1c fw-500`}> {showJobId} </span>
+            )}
+          </div>
+          <div className="bg-white my-2 shadow-lg ">
             <div>
-              <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <div className="container mt-4">
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Company</TableCell>
-                          <TableCell>Profile/Designation</TableCell>
-                          <TableCell>Type</TableCell>
-                          <TableCell>Status</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {jobProfileData.map((profile) => (
-                          <TableRow
-                            key={profile.id}
-                            onClick={() => handleProfileClick(profile)}
-                            className="profile-row"
-                          >
-                            <TableCell>{profile.company}</TableCell>
-                            <TableCell>{profile.name}</TableCell>
-                            <TableCell>{profile.type}</TableCell>
-                            <TableCell>
-                              {profile.status === 'eligible' && (
-                                <Button
-                                  variant="outlined"
-                                  className="applyButton"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleApply(profile);
-                                  }}
-                                >
-                                  Apply
-                                </Button>
-                              )}
-                              {profile.status === 'ineligible' && (
-                                <span className="text-danger">Ineligible</span>
-                              )}
-                              {profile.status === 'applied' && (
-                                <span className="text-success">Applied</span>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+              <div className="d-flex justify-content-between border-bottom">
+                <div className="fs-18 px-3 py-2 fw-500 my-2">{session}</div>
+                <div className=" px-3 py-2 d-flex">
+                  <div className="my-1">
+                    <Button sx={{ color: '#00ae57', fontSize: '12px' }}>
+                      <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} />
+                      Edit Placement
+                    </Button>
+                  </div>
+                  <React.Fragment>
+                    <Button onClick={toggleDrawer('right', true)}>
+                      <MenuIcon className="grey1c" />
+                    </Button>
+                    <Drawer
+                      anchor={'right'}
+                      open={state['right']}
+                      onClose={toggleDrawer('right', false)}
+                    >
+                      {list('right')}
+                    </Drawer>
+                  </React.Fragment>
                 </div>
-  
-                <TablePagination
-                  rowsPerPageOptions={[10, 25, 100]}
-                  component="div"
-                  count={jobs?.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </Paper>
+              </div>
+              <div className="py-1 px-2 d-flex justify-content-between">
+                <div>
+                  <Button
+                    id="basic-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                    sx={{ color: '#373739' }}
+                  >
+                    Status : {currentstatus}
+                  </Button>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}
+                  >
+                    {status.map((item) => (
+                      <MenuItem
+                        key={item}
+                        onClick={() => {
+                          handleClose();
+                          setCurrentStatus(item);
+                        }}
+                      >
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </div>
+                <div className="d-flex">
+                  <div className="mx-2">
+                    <Button
+                      sx={{ color: '#00ae57' }}
+                      className="fw-600 capitalize"
+                    >
+                      <FilterAltOutlinedIcon fontSize="small" sx={{ mx: 1 }} />{' '}
+                      Check Eligibility
+                    </Button>
+                  </div>
+                  <div>
+                    <InputBase
+                      sx={{ ml: 1 }}
+                      placeholder="Search Company"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <IconButton
+                      type="button"
+                      sx={{ p: '4px' }}
+                      aria-label="search"
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                  <div className="container mt-4">
+                    <TableContainer>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Company</TableCell>
+                            <TableCell>Profile/Designation</TableCell>
+                            <TableCell>Type</TableCell>
+                            <TableCell>Status</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {TableInformation}                        
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+
+                  <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={jobs?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </Paper>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-  
+    );
+  }
 }
