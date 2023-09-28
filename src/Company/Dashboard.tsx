@@ -102,7 +102,7 @@ export const Dashboard = () => {
   const [showNewJob, setShowNewJob] = useState(false);
 
   const handleShow = () => {
-    setShowNewJob(true);
+    setShowNewJob(!showNewJob);
   };
 
   const [show, setShow] = useState(false);
