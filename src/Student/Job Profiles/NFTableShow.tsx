@@ -35,6 +35,7 @@ import { fetchAllPlacementCycles } from '../../api/placementCycle.service'
 import { useNavigate } from 'react-router-dom'
 import { jobProfileData } from './jobProfileData'
 import { APIRequest } from "../../api/index";
+import { baseURL } from '../../api/index';
 
 import {
   deleteJob,
@@ -98,7 +99,7 @@ export const NFTableShow = ({
   React.useEffect(()=> {
     (async () => {
       try {
-        const response = await APIRequest("http://localhost:3001/api/jobs/student/1", 'GET');
+        const response = await APIRequest(baseURL+"/jobs/student/1", 'GET');
         if(response) console.log(response)
       } catch (error) {
         console.error('Error occurred during API request:', error);
