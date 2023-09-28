@@ -18,7 +18,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { APIRequest } from "../../api/index"
+import { APIRequest } from "../../api/index";
+import LinearProgress from '@mui/material/LinearProgress';
+import { baseURL } from "../../api/index"
 
 const generateHeading = (heading: string) => {
   return (
@@ -124,12 +126,17 @@ export const MyProfile = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [studentProfile, setStudentProfile] = useState<ApiResponse | null>(null);
 
+  let class10info = {};
+  let class12info = {};
+
   React.useEffect(()=> {
     (async () => {
       try {
-        const response = await APIRequest("https://student-portal-server-2sbh.onrender.com/api/student/profile", 'GET');
+        // const response = await APIRequest("https://student-portal-server-2sbh.onrender.com/api/student/profile", 'GET');
+        const response = await APIRequest(`${baseURL}/student/profile`, 'GET')
         if (response.success) {
           const a = response;
+
           setStudentProfile(a);
         } else {
           console.error('API request failed:', response.message);
@@ -139,7 +146,7 @@ export const MyProfile = () => {
       }
     })();
   },[])
-  
+
   const handleDrawerOpen = () => {
     setDrawerOpen(() => true);
   };
@@ -177,7 +184,14 @@ export const MyProfile = () => {
     );
   };
   if (!studentProfile?.student_profile.admno) {
-    return <p>Loading...</p>;
+    return (<>
+              <center>
+                <br></br><br></br>
+                <h2>Loading your profile page</h2>
+                <br></br><br></br>
+                <LinearProgress/>
+              </center>
+            </>);
   }
   return (
     <div className="MyProfileMainDiv grey2b w-100">
@@ -212,7 +226,7 @@ export const MyProfile = () => {
                   className="capitalize"
                   sx={{ letterSpacing: "2px" }}
                 >
-                  {studentProfile.student_profile.first_name}
+                  {studentProfile.student_profile.first_name} {studentProfile.student_profile.middle_name} {studentProfile.student_profile.last_name}
                 </Typography>
               </div>
               <div>
@@ -291,8 +305,6 @@ export const MyProfile = () => {
                       "Permanent Address",
                       "D-155, Amber Hostel, IITISM Dhanbad - Jharkhand, 826004"
                     )}
-                    {/* {generateDetails("", )}
-                {generateDetails("", )} */}
                   </div>
                 </div>
                 <div id="id1" className="m-3 p-3">
@@ -371,38 +383,31 @@ export const MyProfile = () => {
                         Class 12th:
                       </Typography>
                     </div>
-                    {generateDetails("Date of Birth", studentProfile.student_profile.dob)}
+                    {generateDetails("Start Period", studentProfile.student_profile.edu_historys[1].startYearMonth)}
                     {generateDetails(
-                      "Graduating Year",
-                      studentProfile.student_profile.graduatingYear.year
+                      "End Period", studentProfile.student_profile.edu_historys[1].endYearMonth
                     )}
-                    {generateDetails("Gender", studentProfile.student_profile.gender)}
-                    {generateDetails("Category", studentProfile.student_profile.category)}
-                    {generateDetails("Contact Number", studentProfile.student_profile.phonePref + " " + studentProfile.student_profile.phone)}
-                    {generateDetails(
-                      "College Email Id",
-                      studentProfile.student_profile.instiMailId
-                    )}
+                    {generateDetails("Institution", studentProfile.student_profile.edu_historys[1].institution)}
+                    {generateDetails("University", studentProfile.student_profile.edu_historys[1].university)}
+                    {generateDetails("CGPA Value", String(studentProfile.student_profile.edu_historys[1].cgpaValue))}
+                    {generateDetails("CGPA Scale", String(studentProfile.student_profile.edu_historys[1].cgpaScale))}
+                    {generateDetails("Grade Equivalent", String(studentProfile.student_profile.edu_historys[1].gradeEquivalent))}
+                    {generateDetails("Percent Equivalent", String(studentProfile.student_profile.edu_historys[1].university))}
                     <div className="mt-4">
                       <Typography variant="button" className="capitalize">
                         Class 10th:
                       </Typography>
                     </div>
-
+                    {generateDetails("Start Period", studentProfile.student_profile.edu_historys[0].startYearMonth)}
                     {generateDetails(
-                      "Personal Email Id",
-                      studentProfile.student_profile.personalMailId
+                      "End Period", studentProfile.student_profile.edu_historys[0].endYearMonth
                     )}
-                    {generateDetails(
-                      "Current Address",
-                      "D-155, Amber Hostel, IITISM Dhanbad - Jharkhand, 826004"
-                    )}
-                    {generateDetails(
-                      "Permanent Address",
-                      "D-155, Amber Hostel, IITISM Dhanbad - Jharkhand, 826004"
-                    )}
-                    {/* {generateDetails("", )}
-                {generateDetails("", )} */}
+                    {generateDetails("Institution", studentProfile.student_profile.edu_historys[0].institution)}
+                    {generateDetails("University", studentProfile.student_profile.edu_historys[0].university)}
+                    {generateDetails("CGPA Value", String(studentProfile.student_profile.edu_historys[0].cgpaValue))}
+                    {generateDetails("CGPA Scale", String(studentProfile.student_profile.edu_historys[0].cgpaScale))}
+                    {generateDetails("Grade Equivalent", String(studentProfile.student_profile.edu_historys[0].gradeEquivalent))}
+                    {generateDetails("Percent Equivalent", String(studentProfile.student_profile.edu_historys[0].university))}
                   </div>
                 </div>
                 <div id="id3" className="m-3 p-3">
