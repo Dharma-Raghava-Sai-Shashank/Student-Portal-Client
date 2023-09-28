@@ -261,6 +261,7 @@ export const Cycle = () => {
               <hr style={{ height: "1.3px", margin: 0 }} />
             </div>
             <div className="pb-4">
+            {/* console.log(cycles.ongoing);  */}
               {cycles.ongoing.map((cycle: PlacementCycle.RootObject) => (
                 <div className=" mx-3 px-5">
                   <Link
