@@ -27,6 +27,30 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Modal from "react-bootstrap/Modal";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { fetchPlacementCycles, savePlacementCycle } from "../Slices/placementcycle";
+import { ADMIN } from "../Admin/constants";
+import { NFTableShow } from "../Admin/Placement/NFTableShow";
+import { NewJob } from "../Company/NewJob";
+import { fetchAcadYears } from "../Slices/academicYear";
+import {
+  Grid,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+
+const initialData: PlacementCycle.RootObject = {
+  placementCycleName: "",
+  type: "",
+  acadYear: undefined,
+  startDate: "",
+  endDate: "",
+  graduatingYear: "",
+};
+
 
 const data = [
   {
@@ -99,8 +123,60 @@ export const Dashboard = () => {
     event.preventDefault();
     console.info("You clicked a breadcrumb.");
   }
+  const [showNewJob, setShowNewJob] = useState(false);
+
+  const handleShow = () => {
+    setShowNewJob(true);
+  };
+
+  const [show, setShow] = useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const dispatch = useAppDispatch();
+  const types = ["placement", "internship"];
+  const initialData: PlacementCycle.RootObject = {
+    placementCycleName: "",
+    type: "",
+    acadYear: undefined,
+    startDate: "",
+    endDate: "",
+    graduatingYear: "",
+  };
+  
+  const GraduatingYears = ["2023"];
+  
+  const handleClose = () => setShow(false);
+  // const handleShow = () => setShow(true);
+
+  const [placementCycle, setPlacementCycle] =
+    useState<PlacementCycle.RootObject>(initialData);
+
+    const acadYears: AcademicYear.RootObject[] = useAppSelector((state) =>
+    state.academicyear.currAcadYear
+      ? [state.academicyear.currAcadYear, ...state.academicyear.prevAcadYears]
+      : state.academicyear.prevAcadYears
+  );
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPlacementCycle((prev: PlacementCycle.RootObject) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const cycles = useAppSelector((state) => state.placementcycle);
+
+  React.useEffect(() => {
+    dispatch(fetchPlacementCycles({ type: ADMIN }));
+    dispatch(fetchAcadYears());
+  }, [dispatch]);
+
+  const handleSaveCycle = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    dispatch(savePlacementCycle(placementCycle));
+    setShow(false);
+  }
+
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -121,6 +197,16 @@ export const Dashboard = () => {
       border: 0,
     },
   }));
+
+
+
+  const [option, setOption] = useState<string>("Placement");
+  const [session, setSession] = useState<string>("Full Time Hiring 2023-24");
+
+  fetch('http://localhost:3000/company/dashboard').then(res=>{
+    res.json()
+  })
+
   return (
     <div>
       <CompanyHeader />
@@ -139,10 +225,19 @@ export const Dashboard = () => {
               <Button
                 variant="contained"
                 sx={{ backgroundColor: "#1f385b", px: 2, py: 1 }}
+                onClick={handleShow}
               >
                 Fill a new Application
               </Button>
             </div>
+            {showNewJob &&(
+                  <NewJob
+                  option={option}
+                  setOption={setOption}
+                  session={session}
+                  setSession={setSession}
+                />
+            )}
             <div className="d-flex justify-content-center my-5 mx-3 px-3">
               <Paper
                 sx={{
