@@ -3,7 +3,7 @@ export const jobProfileData = [
     success: true,
     id: 1,
     company: "Google",
-    name: "SWE",
+    name: "HI",
     type: "Internship",
     status: "eligible",
     jobDescription: {
