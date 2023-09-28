@@ -132,7 +132,7 @@ export default function Navbar({
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
-  const generateDetails = (detailType: string, detail: string | undefined) => {
+  const generateDetails = (detailType: any, detail: any | undefined) => {
     return (
       <div className="row mt-3 border-bottom">
         <div className="col-3 ">
@@ -221,7 +221,7 @@ export default function Navbar({
                   {generateDetails('Company Name', jobDescription.companyName)}
                   {generateDetails('Placement Cycle', 'Full time 2022-23')}
                   {generateDetails('Website', 'careers.google.com')}
-                  {generateDetails('Category', 'E-Commerece')}
+                  {generateDetails('Category', jobDescription.categoryname)}
                   {generateDetails('About', 'About the Company')}
                 </div>
               </div>
@@ -243,16 +243,16 @@ export default function Navbar({
               <div className="mb-5">
                 {generateHeading('Salary Details')}
                 <div className="mt-2 mb-3">
-                  {generateDetails('CTC (in lpa)', 'Rs 35,00,000')}
+                  {generateDetails('CTC (in lpa)', jobDescription.ctc)}
                   {generateDetails(
                     'CTC breakup',
-                    'Base Salary: Rs 22,00,000 Stock: Rs 13,00,000',
+                    `Base Salary: Rs ${jobDescription.ctc} Stock: Rs 13,00,000`,
                   )}
                   {generateDetails(
                     'Bond Details',
-                    'consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.',
+                    jobDescription.bondDetails
                   )}
-                  {generateDetails('Category', 'E-Commerece')}
+                  {generateDetails('Category', jobDescription.categoryname)}
                 </div>
               </div>
               <div className="mb-5">

@@ -126,7 +126,7 @@ export const Dashboard = () => {
   const [showNewJob, setShowNewJob] = useState(false);
 
   const handleShow = () => {
-    setShowNewJob(true);
+    setShowNewJob(!showNewJob);
   };
 
   const [show, setShow] = useState(false);
@@ -142,16 +142,16 @@ export const Dashboard = () => {
     endDate: "",
     graduatingYear: "",
   };
-  
+
   const GraduatingYears = ["2023"];
-  
+
   const handleClose = () => setShow(false);
   // const handleShow = () => setShow(true);
 
   const [placementCycle, setPlacementCycle] =
     useState<PlacementCycle.RootObject>(initialData);
 
-    const acadYears: AcademicYear.RootObject[] = useAppSelector((state) =>
+  const acadYears: AcademicYear.RootObject[] = useAppSelector((state) =>
     state.academicyear.currAcadYear
       ? [state.academicyear.currAcadYear, ...state.academicyear.prevAcadYears]
       : state.academicyear.prevAcadYears
@@ -203,7 +203,7 @@ export const Dashboard = () => {
   const [option, setOption] = useState<string>("Placement");
   const [session, setSession] = useState<string>("Full Time Hiring 2023-24");
 
-  fetch('http://localhost:3000/company/dashboard').then(res=>{
+  fetch('http://localhost:3000/company/dashboard').then(res => {
     res.json()
   })
 
@@ -230,13 +230,13 @@ export const Dashboard = () => {
                 Fill a new Application
               </Button>
             </div>
-            {showNewJob &&(
-                  <NewJob
-                  option={option}
-                  setOption={setOption}
-                  session={session}
-                  setSession={setSession}
-                />
+            {showNewJob && (
+              <NewJob
+                option={option}
+                setOption={setOption}
+                session={session}
+                setSession={setSession}
+              />
             )}
             <div className="d-flex justify-content-center my-5 mx-3 px-3">
               <Paper

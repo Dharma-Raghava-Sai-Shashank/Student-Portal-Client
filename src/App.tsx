@@ -18,7 +18,6 @@ import DashBoard from "./Student/Dashboard/Dashboard";
 import { Notices } from "./Admin/Notices/Notices";
 import { RespExtra } from "./Student/Dashboard/RespExtra";
 import "bootstrap/dist/css/bootstrap.css";
-
 import "./App.css";
 import { Alert, AlertColor, Snackbar } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
@@ -130,7 +129,8 @@ function App() {
         <Route path="/company/auth" element={<Auth />} />
         <Route path="/student/profile" element={<UserProfile />} />
         <Route path="/student/jobprofile" element={<JobProfile />} />
-        <Route path="/student/jobprofile/:id" element={<JobProfileDetail />} />
+        {/* <Route path="/student/jobprofile/:id" element={<JobProfileDetail />} /> */}
+        <Route path="/student/jobprofile/job" element={<JobProfileDetail />} />
         <Route path="/student/dashboard" element={<DashBoard />} />
         <Route path="/student/extras" element={<RespExtra />} />
 
