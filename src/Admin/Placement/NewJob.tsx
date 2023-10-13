@@ -234,7 +234,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       ...prevData,
       {
         id: uid(4),
-        stage: selectionStages.find(
+        stage: selectionStages?.find(
           (stage: any) => stage.stageId === stageData.stage,
         ),
         stageType: stageData.stageType,
@@ -256,7 +256,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       setSelected(
         selected.filter(
           (spec: any) =>
-            !specializations.find((item: any) => spec.specId === item.specId),
+            !specializations?.find((item: any) => spec.specId === item.specId),
         ),
       )
   }
@@ -272,11 +272,11 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   }
 
   const isSelected = (id: number) =>
-    selected.find((spec: any) => spec.specId === id)
+    selected?.find((spec: any) => spec.specId === id)
   const isAllSelected = () => {
     for (let i in specializations)
       if (
-        !selected.find(
+        !selected?.find(
           (spec: any) => spec.specId === specializations[i]?.specId,
         )
       )
@@ -312,7 +312,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     setUploadedDocs([])
     const docs = await uploadFiles(Array.from(fileList))
     setUploadedDocs(
-      docs.map((doc: any) => ({ docType: 'JNF', document: doc.document })),
+      docs?.map((doc: any) => ({ docType: 'JNF', document: doc.document })),
     )
     setIsUploading((prev) => !prev)
   }
@@ -322,11 +322,11 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const assembleJobData = async () => {
     const spocs: any = []
     spocs.push({
-      scpt: scpts.find((scpt: any) => scpt.scptId === primaryspoc),
+      scpt: scpts?.find((scpt: any) => scpt.scptId === primaryspoc),
       isPrimary: 1,
     })
     spocs.push({
-      scpt: scpts.find((scpt: any) => scpt.scptId === secondaryspoc),
+      scpt: scpts?.find((scpt: any) => scpt.scptId === secondaryspoc),
       isPrimary: 0,
     })
 
@@ -342,7 +342,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       spocs,
       HRs,
       nf_stages: ScheduleList as any,
-      nfEligibility: selected.map((spec: any) => {
+      nfEligibility: selected?.map((spec: any) => {
         return {
           spec,
           minLPA: 10,
@@ -553,7 +553,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     <ul
                       className={`dropdown-menu ${openCategory ? ' show' : ''}`}
                     >
-                      {categories.map((item: any) => (
+                      {categories?.map((item: any) => (
                         <li className="dropdown-item" key={item?.categoryId}>
                           <button
                             type="button"
@@ -701,7 +701,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       <div className="coursesModalBody">
                         <div className="row">
                           <div className="col-3 coursesNameBox">
-                            {courses.map((course: any) => {
+                            {courses?.map((course: any) => {
                               return (
                                 <div
                                   className="courseButtonDiv border"
@@ -774,7 +774,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                   >
                                     <TableHead>
                                       <TableRow>
-                                        {headCells.map((headCell) => (
+                                        {headCells?.map((headCell) => (
                                           <TableCell
                                             key={headCell.id}
                                             align="left"
@@ -851,7 +851,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                       </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                      {specializations.map(
+                                      {specializations?.map(
                                         (row: any, index: number) => {
                                           const isItemSelected = isSelected(
                                             row.specId,
@@ -947,7 +947,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                 <div className="col-2">CGPA Cutoff</div>
                               </div>
                               <div>
-                                {branches.map((row, index) => (
+                                {branches?.map((row, index) => (
                                   <div key={row}>
                                     <div className="row">
                                       <div className="col-5">{row}</div>
@@ -979,7 +979,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                 <div className="col-2">CGPA Cutoff</div>
                               </div>
                               <div>
-                                {branches.map((row, index) => (
+                                {branches?.map((row, index) => (
                                   <div key={row}>
                                     <div className="row">
                                       <div className="col-5">{row}</div>
@@ -1012,7 +1012,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                           label: 'Stage',
                           name: 'stage',
                           value: stageData?.stage,
-                          dropdownData: selectionStages.map((stage: any) => {
+                          dropdownData: selectionStages?.map((stage: any) => {
                             return {
                               name: stage.stageName,
                               value: stage.stageId,
@@ -1033,13 +1033,13 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                           label: 'Stage Mode',
                           name: 'stageMode',
                           value: stageData?.stageMode,
-                          dropdownData: ['Virtual', 'Physical'].map(
+                          dropdownData: ['Virtual', 'Physical']?.map(
                             (mode: string) => {
                               return { name: mode, value: mode }
                             },
                           ),
                         },
-                      ].map((item: any) => {
+                      ]?.map((item: any) => {
                         return (
                           <div className="col-3" key={item.name}>
                             <div className="d-flex justify-content-center w-100">
@@ -1077,7 +1077,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                       openSchedule === item.label ? ' show' : ''
                                     }`}
                                   >
-                                    {item.dropdownData.map((data: any) => (
+                                    {item.dropdownData?.map((data: any) => (
                                       <li
                                         className="dropdown-item"
                                         key={data.value}
@@ -1125,7 +1125,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                       animation={250}
                       ghostClass="blue-background-class"
                     >
-                      {ScheduleList.map((item, stage) => (
+                      {ScheduleList?.map((item, stage) => (
                         <div
                           className="d-flex justify-content-center"
                           key={item.stage?.stageId}
@@ -1203,7 +1203,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         renderValue={(selected) => selected.join(", ")}
                         MenuProps={MenuProps}
                       >
-                        {skills.map((skill) => (
+                        {skills?.map((skill) => (
                           <MenuItem key={skill} value={skill}>
                             <Checkbox
                               checked={personName.indexOf(skill) > -1}
@@ -1270,7 +1270,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                           })
                         }
                       >
-                        {currencies.map((option) => (
+                        {currencies?.map((option) => (
                           <MenuItem key={option} value={option}>
                             {option}
                           </MenuItem>
@@ -1394,7 +1394,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             })
                           }
                         >
-                          {currencies.map((option) => (
+                          {currencies?.map((option) => (
                             <MenuItem key={option} value={option}>
                               {option}
                             </MenuItem>
@@ -1488,7 +1488,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                           <MenuItem value="None">
                             <em>None</em>
                           </MenuItem>
-                          {scpts.map((scpt: any) => (
+                          {scpts?.map((scpt: any) => (
                             <MenuItem value={scpt.scptId} key={scpt.scptId}>
                               {scpt.name}
                             </MenuItem>
@@ -1517,7 +1517,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                           <MenuItem value="None">
                             <em>None</em>
                           </MenuItem>
-                          {scpts.map((scpt: any) => (
+                          {scpts?.map((scpt: any) => (
                             <MenuItem value={scpt.scptId} key={scpt.scptId}>
                               {scpt.name}
                             </MenuItem>
@@ -1565,7 +1565,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     <input type="file" onChange={handleFileChange} multiple />
 
                     <ul>
-                      {files.map((file, i) => (
+                      {files?.map((file, i) => (
                         <li key={i}>
                           {file.name} - {file.type}
                         </li>
@@ -1669,7 +1669,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                 Options:
                               </Typography>
                             </Form.Label>
-                            {questionOptions.map((option, index) => (
+                            {questionOptions?.map((option, index) => (
                               <Form.Control
                                 key={index}
                                 type="text"
@@ -1697,7 +1697,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
               {/* <div className="row"> */}
                 {/* {additionalQuestions.length >= 0 && (
                   <div className="col-sm-12 col-md-8 col-lg-6 my-3">
-                    {additionalQuestions.map((question: Question) => (
+                    {additionalQuestions?.map((question: Question) => (
                       <Card sx={{ minWidth: 275, boxShadow: "none" }}>
                         <div className="row my-1">
                           <div className="col-10">
@@ -1725,7 +1725,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                               <Typography variant="body2">
                                 {question?.type === "options" && (
                                   <div>
-                                    {question.options.map((option: string) => (
+                                    {question.options?.map((option: string) => (
                                       <Typography display="block">
                                         {" "}
                                         • {option}
@@ -1743,7 +1743,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                   </div>
                 )} */}
                 <div className="my-5">
-                  {additionalQuestions.map((question, index) => (
+                  {additionalQuestions?.map((question, index) => (
                     <Paper key={index} sx={{ width: '100%', mb: 2, p: 2 }}>
                       <div
                         style={{
@@ -1792,7 +1792,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                         <Typography variant="body1">
                           <strong>Options:</strong>
                         </Typography>
-                            {question.options.map((option, optionIndex) => (
+                            {question.options?.map((option, optionIndex) => (
                               <div
                                 key={optionIndex}
                                 style={{
