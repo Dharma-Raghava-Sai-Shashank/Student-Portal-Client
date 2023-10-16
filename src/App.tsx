@@ -34,7 +34,7 @@ import { SignIn } from "./Company/SignIn";
 import { Dashboard } from "./Company/Dashboard";
 import { CompanyProfile } from "./Company/CompanyProfile";
 import ContactUs from "./Company/ContactUs";
-import { CompanyRegistration } from "./Company/Registration";
+import  CompanyRegistration  from "./Company/Registration";
 
 const ProtectRoute: any = (Component: React.FC<{}>) => {
   return (
