@@ -35,6 +35,10 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import 'react-quill/dist/quill.snow.css'
 import './style.scss'
+import Pdf from 'react-to-pdf'
+import { useRef } from 'react'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 import { fetchAllCategories } from '../../api/companycategory.service'
 import { fetchAllSectors } from '../../api/companysector.service'
@@ -501,1475 +505,1602 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     updatedOptions[index] = value
     setQuestionOptions(updatedOptions)
   }
+  const ref = useRef(null)
+  const generatePdf = () => {
+    if (ref.current) {
+      const input = ref.current
+      html2canvas(input, {
+        scrollY: -window.scrollY,
+        scale: 2, // Adjust the scale value as needed
+        useCORS: true, // Add this option to handle CORS issues
+      }).then((canvas) => {
+        const imgData: any = canvas.toDataURL('image/png')
+        const pdf = new jsPDF()
+        const imgProps = pdf.getImageProperties(imgData)
+        const pdfWidth = pdf.internal.pageSize.getWidth()
+        let pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
+
+        let heightLeft = pdfHeight
+        let position = 0
+
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight)
+        heightLeft -= pdf.internal.pageSize.getHeight()
+
+        while (heightLeft >= 0) {
+          position = heightLeft - pdfHeight
+          pdf.addPage()
+          pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight)
+          heightLeft -= pdf.internal.pageSize.getHeight()
+        }
+
+        pdf.save('document.pdf')
+      })
+    }
+  }
+  
 
   return (
-    <div className="d-flex justify-content-center">
-      <div className=" w-100 px-5 py-5 grey2b">
-        <div>
-          <span className="fs-14">Placement </span>
-          <span
-            className=" fs-14 cursor-pointer"
-            onClick={() => setOption('Show all NF')}
-          >
-            | {session} |{' '}
-          </span>
-          <span className="green1c fs-14  fw-500 "> New Job </span>
-        </div>
-        <div className="bg-white my-2 shadow-lg ">
-          <div className="d-flex justify-content-between border-bottom">
-            <div className="fs-18 px-3 py-2 fw-500 my-2">Draft</div>
-          </div>
-          <div className="py-3 px-2 mx-4 mw-100">
-            <form onSubmit={handleAddNewJob}>
-              {/* NF Details */}
-              <div>
-                <Divider>
-                  <Chip label="NF Details" />
-                </Divider>
-
-                <div className="mb-3 dropdownBody">
-                  <label htmlFor="Website" className="newjobLabel">
-                    INF/JNF
-                  </label>
-                  <div className="dropdown ">
-                    <Select
-                      labelId="demo-simple-select-label"
-                      className="dropdown-toggle button-select"
-                      id="demo-simple-select"
-                      value={jobData.type}
-                      label="Select Notification Form"
-                      onChange={(e: any) =>
-                        setJobData((pre) => {
-                          return { ...pre, type: e.target.value }
-                        })
-                      }
-                    >
-                      <MenuItem value={'JNF'}>Job Notification Form </MenuItem>
-                      <MenuItem value={'INF'}>
-                        Internship Notification Form
-                      </MenuItem>
-                    </Select>
-                  </div>
-                </div>
+    <div ref={ref}>
+      <div>
+        <div className="d-flex justify-content-center">
+          <div className=" w-100 px-5 py-5 grey2b">
+            <div>
+              <span className="fs-14">Placement </span>
+              <span
+                className=" fs-14 cursor-pointer"
+                onClick={() => setOption('Show all NF')}
+              >
+                | {session} |{' '}
+              </span>
+              <span className="green1c fs-14  fw-500 "> New Job </span>
+            </div>
+            <div className="bg-white my-2 shadow-lg ">
+              <div className="d-flex justify-content-between border-bottom">
+                <div className="fs-18 px-3 py-2 fw-500 my-2">Draft</div>
               </div>
-
-              {/* Company Details */}
-              <div>
-                <Divider>
-                  <Chip label="COMPANY DETAILS" />
-                </Divider>
-                <div className="mb-3">
-                  <label htmlFor="Company Name" className="newjobLabel">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    className="newjobInput"
-                    id="Company Name"
-                    name="companyName"
-                    value={jobData.company.companyName}
-                    onChange={handleCompanyChange}
-                  />
-                  {/* <div id="emailHelp" className="form-text">
-                  We'll never share your email with anyone else.
-                </div> */}
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="Website" className="newjobLabel">
-                    Website
-                  </label>
-                  <input
-                    type="text"
-                    className="newjobInput"
-                    id="Website"
-                    name="companyWebsite"
-                    value={jobData.company.companyWebsite}
-                    onChange={handleCompanyChange}
-                  />
-                </div>
-                <div className="mb-3 dropdownBody">
-                  <label htmlFor="Website" className="newjobLabel">
-                    Category
-                  </label>
-                  <div className="dropdown" style={{ zIndex: 999 }}>
-                    <button
-                      type="button"
-                      className="dropdown-toggle button-select"
-                      onClick={() => {
-                        setOpenCategory((prev) => !prev)
-                        // setOpenCategoryOption(() => "");
-                      }}
-                    >
-                      {openCategoryOption === ''
-                        ? 'Select an Option'
-                        : openCategoryOption}
-                    </button>
-
-                    <ul
-                      className={`dropdown-menu ${openCategory ? ' show' : ''}`}
-                    >
-                      {categories?.map((item: any) => (
-                        <li className="dropdown-item" key={item?.categoryId}>
-                          <button
-                            type="button"
-                            value={item.categoryName}
-                            className="dropdown-option"
-                            onClick={() => {
-                              setOpenCategory(() => false)
-                              setOpenCategoryOption(() => item.categoryName)
-                              setJobData({
-                                ...jobData,
-                                company: { ...jobData.company, category: item },
-                              })
-                            }}
-                          >
-                            {item.categoryName}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="mb-3 dropdownBody">
-                  <label htmlFor="Website" className="newjobLabel">
-                    Sector
-                  </label>
-                  <div className="dropdown">
-                    <button
-                      type="button"
-                      className="dropdown-toggle button-select"
-                      onClick={() => setOpenSector((prev) => !prev)}
-                    >
-                      {openSectorOption === ''
-                        ? 'Select an Option'
-                        : openSectorOption}
-                    </button>
-                    <ul
-                      className={`dropdown-menu ${openSector ? ' show' : ''}`}
-                    >
-                      {sectors?.map((item: any) => (
-                        <li className="dropdown-item" key={item.sectorId}>
-                          <button
-                            type="button"
-                            value={item.sectorName}
-                            className="dropdown-option"
-                            onClick={() => {
-                              setOpenSector(() => false)
-                              setOpenSectorOption(() => item.sectorName)
-                              setJobData({
-                                ...jobData,
-                                company: { ...jobData.company, sector: item },
-                              })
-                            }}
-                          >
-                            {item.sectorName}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Job Details */}
-              <div>
-                <div className="divider mt-5">
-                  <Divider>
-                    <Chip label="JOB DETAILS" />
-                  </Divider>
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="Designation" className="newjobLabel">
-                    Designation
-                  </label>
-                  <input
-                    type="text"
-                    className="newjobInput"
-                    id="Designation"
-                    name="profile"
-                    value={jobData.profile}
-                    onChange={handleJobChange}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="Place of Posting" className="newjobLabel">
-                    Place of Posting
-                  </label>
-                  <input
-                    type="text"
-                    className="newjobInput"
-                    id="Place of Posting"
-                    name="placeOfPosting"
-                    value={jobData.placeOfPosting}
-                    onChange={handleJobChange}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="Job Descriptiong" className="newjobLabel">
-                    Job Description
-                  </label>
-                  <textarea
-                    // type="text"
-                    rows={row[6]}
-                    className="newjobInput"
-                    id="Job Description"
-                    name="jobDescription"
-                    value={jobData.jobDescription}
-                    onChange={handleJobChange}
-                  />
-                </div>
-              </div>
-              {/* Stipend Details */}
-              <div>
-                <div className="divider mt-5">
-                  <Divider>
-                    <Chip label="SALARY DETAILS" />
-                  </Divider>
-                </div>
-                {jobData.type === 'INF' ? (
-                  <div className="mb-3">
-                    <label htmlFor="CTC" className="newjobLabel">
-                      Stipend (per Month)
-                    </label>
-                    <input
-                      type="text"
-                      className="newjobInput"
-                      id="CTC"
-                      name="ctc"
-                      value={jobData.ctc}
-                      onChange={handleJobChange}
-                    />
-                  </div>
-                ) : (
+              <div className="py-3 px-2 mx-4 mw-100">
+                <form onSubmit={handleAddNewJob}>
+                  {/* NF Details */}
                   <div>
-                    <div className="mb-3">
-                      <label htmlFor="CTC" className="newjobLabel">
-                        CTC (in lpa)
+                    <Divider>
+                      <Chip label="NF Details" />
+                    </Divider>
+
+                    <div className="mb-3 dropdownBody">
+                      <label htmlFor="Website" className="newjobLabel">
+                        INF/JNF
                       </label>
-                      <input
-                        type="text"
-                        className="newjobInput"
-                        id="CTC"
-                        name="ctc"
-                        value={jobData.ctc}
-                        onChange={handleJobChange}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="CTCbreakup" className="newjobLabel">
-                        CTC breakup
-                      </label>
-                      <textarea
-                        rows={row[4]}
-                        className="newjobInput"
-                        id="CTCbreakup"
-                        name="ctcBreakup"
-                        value={jobData.ctcBreakup}
-                        onChange={handleJobChange}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="mb-3">
-                  <label htmlFor="BondDetails" className="newjobLabel">
-                    Bond Details
-                  </label>
-                  <textarea
-                    // type="text"
-                    rows={row[4]}
-                    className="newjobInput"
-                    id="BondDetails"
-                    name="bondDetails"
-                    value={jobData.bondDetails}
-                    onChange={handleJobChange}
-                  />
-                </div>
-              </div>
-              {/* Course Details */}
-              <div>
-                <div className="divider mt-5">
-                  <Divider>
-                    <Chip label="ELIGIBILE COURSES" />
-                  </Divider>
-                </div>
-                <div className="newJobCourses">
-                  <Button
-                    sx={{ color: '#00ae57', fontSize: '12px' }}
-                    onClick={handleShowCourse}
-                  >
-                    <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} />
-                    Add Courses and Disciplines
-                  </Button>
-
-                  <Modal size="xl" show={show} onHide={handleCloseCourse}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>
-                        Eligible Courses and Disciplines
-                      </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <div className="coursesModalBody">
-                        <div className="row">
-                          <div className="col-3 coursesNameBox">
-                            {courses?.map((course: any) => {
-                              return (
-                                <div
-                                  className="courseButtonDiv border"
-                                  key={course.courseId}
-                                >
-                                  <button
-                                    className="courseButton"
-                                    onClick={() =>
-                                      setCurrCourse(course.courseId)
-                                    }
-                                  >
-                                    <div className="courseName">
-                                      {' '}
-                                      {course.courseName}
-                                    </div>
-                                    {/* <div className="courseYear"> 4-years</div> */}
-                                  </button>
-                                </div>
-                              )
-                            })}
-                          </div>
-                          <div className="col-9 branchNameBox">
-                            <Box sx={{ width: '100%' }}>
-                              <Paper sx={{ width: '100%', mb: 2 }}>
-                                {selected.length > 0 && (
-                                  <Typography
-                                    sx={{ flex: '1 1 100%' }}
-                                    color="inherit"
-                                    variant="subtitle1"
-                                    component="div"
-                                  >
-                                    {selected.length} selected
-                                  </Typography>
-                                )}
-                                <div className=" my-4">
-                                  <div className="me-3">
-                                    <Switch
-                                      checked={sameCgpaChecked}
-                                      onChange={handleChange}
-                                      inputProps={{
-                                        'aria-label': 'controlled',
-                                      }}
-                                    />
-                                    Same CGPA Cutoff for all branches
-                                  </div>
-                                  <div>
-                                    {sameCgpaChecked && (
-                                      <div className="mb-3 d-flex">
-                                        <label
-                                          htmlFor="Company Name"
-                                          className="newjobLabel mx-3"
-                                        >
-                                          CGPA{' '}
-                                        </label>
-                                        <input
-                                          type="number"
-                                          className="newjobInput ms-3 w-25"
-                                          id="cgpa"
-                                        />
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-
-                                <TableContainer>
-                                  <Table
-                                    sx={{ minWidth: 750 }}
-                                    aria-labelledby="tableTitle"
-                                    size="medium"
-                                  >
-                                    <TableHead>
-                                      <TableRow>
-                                        {headCells?.map((headCell) => (
-                                          <TableCell
-                                            key={headCell.id}
-                                            align="left"
-                                            padding="normal"
-                                          >
-                                            <Typography
-                                              variant="button"
-                                              display="block"
-                                              gutterBottom
-                                            >
-                                              {headCell.label}
-                                            </Typography>
-                                          </TableCell>
-                                        ))}
-                                        {!sameCgpaChecked && (
-                                          <TableCell
-                                            key="cgpa"
-                                            align="left"
-                                            padding="normal"
-                                          >
-                                            <Typography
-                                              variant="button"
-                                              display="block"
-                                              gutterBottom
-                                            >
-                                              CGPA Cutoff
-                                            </Typography>
-                                          </TableCell>
-                                        )}
-
-                                        <TableCell padding="checkbox">
-                                          <div className="d-flex">
-                                            <Checkbox
-                                              color="primary"
-                                              indeterminate={
-                                                selected.length > 0 &&
-                                                selected.length <
-                                                  specializations.length
-                                              }
-                                              checked={isAllSelected()}
-                                              onChange={handleSelectAllClick}
-                                              inputProps={{
-                                                'aria-label': 'select all',
-                                              }}
-                                              onMouseEnter={handlePopoverOpen}
-                                              onMouseLeave={handlePopoverClose}
-                                            />
-                                            <Popover
-                                              id="mouse-over-popover"
-                                              sx={{
-                                                pointerEvents: 'none',
-                                              }}
-                                              open={open}
-                                              anchorEl={anchorEl}
-                                              anchorOrigin={{
-                                                vertical: 'bottom',
-                                                horizontal: 'left',
-                                              }}
-                                              transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'left',
-                                              }}
-                                              onClose={handlePopoverClose}
-                                              disableRestoreFocus
-                                            >
-                                              <Typography sx={{ p: 1 }}>
-                                                Select all branches
-                                              </Typography>
-                                            </Popover>
-                                            {/* <small>Select all</small> */}
-                                          </div>
-                                          {/* Select all */}
-                                        </TableCell>
-                                      </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                      {specializations?.map(
-                                        (row: any, index: number) => {
-                                          const isItemSelected = isSelected(
-                                            row.specId,
-                                          )
-                                            ? true
-                                            : false
-                                          const labelId = row.specId
-
-                                          return (
-                                            <TableRow
-                                              hover
-                                              role="checkbox"
-                                              aria-checked={isItemSelected}
-                                              tabIndex={-1}
-                                              key={row}
-                                              selected={isItemSelected}
-                                            >
-                                              <TableCell
-                                                component="th"
-                                                id={labelId}
-                                                scope="row"
-                                              >
-                                                {row.departmentName}
-                                              </TableCell>
-                                              <TableCell align="left">
-                                                {row.disciplineName}
-                                              </TableCell>
-                                              <TableCell align="left">
-                                                {row.specName}
-                                              </TableCell>
-                                              {!sameCgpaChecked && (
-                                                <TableCell align="left">
-                                                  <TextField
-                                                    id="standard-number"
-                                                    label="CGPA(out of 10)"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                      shrink: true,
-                                                    }}
-                                                    variant="standard"
-                                                    disabled={!isItemSelected}
-                                                  />
-                                                </TableCell>
-                                              )}
-                                              <TableCell padding="checkbox">
-                                                <Checkbox
-                                                  color="primary"
-                                                  checked={isItemSelected}
-                                                  inputProps={{
-                                                    'aria-labelledby': labelId,
-                                                  }}
-                                                  onChange={(event) =>
-                                                    handleClick(event, row)
-                                                  }
-                                                />
-                                              </TableCell>
-                                            </TableRow>
-                                          )
-                                        },
-                                      )}
-                                    </TableBody>
-                                  </Table>
-                                </TableContainer>
-                              </Paper>
-                            </Box>
-                          </div>
-                        </div>
-                      </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button onClick={handleCloseCourse}>Close</Button>
-                      <Button onClick={handleCloseCourse}>Save Changes</Button>
-                    </Modal.Footer>
-                  </Modal>
-
-                  <div>
-                    <div className="showSelectectedCourse ">
-                      <div className="row showSelectectedCourseDegree">
-                        <div className="col-2 degreeDiv pt-5">
-                          <div className="">
-                            <div className="">
-                              <div className="DegreeName"> B.Tech</div>
-                              <div className="DegreeYear"> 4-years</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-10 showSelectectedCourseBranch mt-3">
-                          <Box sx={{ width: '100%' }}>
-                            <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
-                              <div className="row  showSelectectedCourseHeading">
-                                <div className="col-5">Department</div>
-                                <div className="col-5">Branch</div>
-                                <div className="col-2">CGPA Cutoff</div>
-                              </div>
-                              <div>
-                                {branches?.map((row, index) => (
-                                  <div key={row}>
-                                    <div className="row">
-                                      <div className="col-5">{row}</div>
-                                      <div className="col-5">{row}</div>
-                                      <div className="col-2">8.5</div>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </Paper>
-                          </Box>
-                        </div>
-                      </div>
-                      <div className="row showSelectectedCourseDegree">
-                        <div className="col-2 degreeDiv pt-5">
-                          <div className="">
-                            <div className="">
-                              <div className="DegreeName"> M.Tech</div>
-                              <div className="DegreeYear"> 2-years</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-10 showSelectectedCourseBranch mt-3">
-                          <Box sx={{ width: '100%' }}>
-                            <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
-                              <div className="row  showSelectectedCourseHeading">
-                                <div className="col-5">Department</div>
-                                <div className="col-5">Branch</div>
-                                <div className="col-2">CGPA Cutoff</div>
-                              </div>
-                              <div>
-                                {branches?.map((row, index) => (
-                                  <div key={row}>
-                                    <div className="row">
-                                      <div className="col-5">{row}</div>
-                                      <div className="col-5">{row}</div>
-                                      <div className="col-2">8.0</div>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </Paper>
-                          </Box>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Schedule Details */}
-              <div className="newJobFlowchart">
-                <div className="divider mt-5">
-                  <Divider>
-                    <Chip label="SCHEDULE" />
-                  </Divider>
-                </div>
-                <div className="my-4">
-                  <div>
-                    <div className="row my-4">
-                      {[
-                        {
-                          label: 'Stage',
-                          name: 'stage',
-                          value: stageData?.stage,
-                          dropdownData: selectionStages?.map((stage: any) => {
-                            return {
-                              name: stage.stageName,
-                              value: stage.stageId,
-                            }
-                          }),
-                        },
-                        {
-                          label: 'Stage Type',
-                          name: 'stageType',
-                          value: stageData?.stageType,
-                          dropdownData: [
-                            { name: 'Technical', value: 'Tech' },
-                            { name: 'Aptitude', value: 'Apti' },
-                            { name: 'Other', value: 'Other' },
-                          ],
-                        },
-                        {
-                          label: 'Stage Mode',
-                          name: 'stageMode',
-                          value: stageData?.stageMode,
-                          dropdownData: ['Virtual', 'Physical']?.map(
-                            (mode: string) => {
-                              return { name: mode, value: mode }
-                            },
-                          ),
-                        },
-                      ]?.map((item: any) => {
-                        return (
-                          <div className="col-3" key={item.name}>
-                            <div className="d-flex justify-content-center w-100">
-                              <div
-                                className="mb-3 dropdownBody"
-                                style={{ height: '40px', width: '200px' }}
-                              >
-                                <label htmlFor="mode" className="newjobLabel">
-                                  {item.label}
-                                </label>
-                                <div className="dropdown">
-                                  <button
-                                    type="button"
-                                    style={{
-                                      height: '40px',
-                                      width: '200px',
-                                      lineHeight: '40px',
-                                    }}
-                                    className="dropdown-toggle button-select"
-                                    onClick={() => {
-                                      setOpenSchedule(item.label)
-                                      // setOpenCategoryOption(() => "");
-                                    }}
-                                  >
-                                    {item.value === '' || item.value === 0
-                                      ? 'Select an option'
-                                      : item.dropdownData?.find(
-                                          (data: any) =>
-                                            data.value === item.value,
-                                        )?.name}
-                                  </button>
-
-                                  <ul
-                                    className={`dropdown-menu ${
-                                      openSchedule === item.label ? ' show' : ''
-                                    }`}
-                                  >
-                                    {item.dropdownData?.map((data: any) => (
-                                      <li
-                                        className="dropdown-item"
-                                        key={data.value}
-                                      >
-                                        <button
-                                          type="button"
-                                          value={data.value}
-                                          className="dropdown-option"
-                                          onClick={() => {
-                                            setOpenSchedule('None')
-                                            setStageData({
-                                              ...stageData,
-                                              [item.name]: data.value,
-                                            })
-                                          }}
-                                        >
-                                          {data.name}
-                                        </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      })}
-                      <div className="col-3">
-                        <div className="d-flex justify-content-center mt-4 pt-2">
-                          <Button
-                            variant="contained"
-                            startIcon={<AddIcon />}
-                            onClick={() => handleAddStage()}
-                          >
-                            ADD
-                          </Button>{' '}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <ReactSortable
-                      list={ScheduleList}
-                      setList={setScheduleList}
-                      animation={250}
-                      ghostClass="blue-background-class"
-                    >
-                      {ScheduleList?.map((item, stage) => (
-                        <div
-                          className="d-flex justify-content-center"
-                          key={item.stage?.stageId}
-                        >
-                          <div className="scrollSchedule">
-                            <div>
-                              <div>
-                                <Typography
-                                  variant="overline"
-                                  display="block"
-                                  // lineHeight="10px"
-                                  align="center"
-                                  style={{
-                                    fontWeight: '600',
-                                    fontSize: '0.9rem',
-                                  }}
-                                >
-                                  Stage {stage + 1}: {item.stage?.stageName}
-                                </Typography>
-
-                                <div className="d-flex justify-content-center">
-                                  <div>
-                                    <Typography
-                                      variant="caption"
-                                      display="block"
-                                    >
-                                      Mode: {item.stageMode}
-                                    </Typography>
-                                    <Typography
-                                      variant="caption"
-                                      display="block"
-                                    >
-                                      Type of Stage: {item.stageType}
-                                    </Typography>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </ReactSortable>
-                    {ScheduleList.length !== 0 && (
-                      <div>
-                        <Typography
-                          variant="caption"
-                          display="block"
-                          align="right"
-                        >
-                          *Drag the box to change the order
-                        </Typography>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              {/* Skill based */}
-              {/* <div className="my-5">
-                <Divider>
-                  <Chip label="SKILL BASED HIRING" />
-                </Divider>
-                <div className="my-3">
-                  <label htmlFor="Company Name" className="newjobLabel">
-                    Skills
-                  </label>
-                  <div>
-                    <FormControl sx={{ mt: 1, mb: 3, width: "100%" }}>
-                      <Select
-                        labelId="demo-multiple-checkbox-label"
-                        id="demo-multiple-checkbox"
-                        multiple
-                        value={personName}
-                        onChange={handleChangeSkill}
-                        input={<OutlinedInput label="Tag" />}
-                        renderValue={(selected) => selected.join(", ")}
-                        MenuProps={MenuProps}
-                      >
-                        {skills?.map((skill) => (
-                          <MenuItem key={skill} value={skill}>
-                            <Checkbox
-                              checked={personName.indexOf(skill) > -1}
-                            />
-                            <ListItemText primary={skill} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </div>
-                </div>
-              </div> */}
-              {/* HR Details */}
-              <div className="my-5">
-                <Divider>
-                  <Chip label="HR Details" />
-                </Divider>
-                <div>
-                  <div className="mb-3">
-                    <label htmlFor="Company Name" className="newjobLabel">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      className="newjobInput"
-                      id="HRName"
-                      name="name"
-                      value={primaryHr.name}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setPrimaryHr({ ...primaryHr, name: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="Company Name" className="newjobLabel">
-                      Phone
-                    </label>
-                    <div
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        paddingTop: '10px',
-                      }}
-                    >
-                      <TextField
-                        id="outlined-select-currency"
-                        select
-                        label="Country Code"
-                        defaultValue="+91"
-                        style={{ width: '18%' }}
-                        name="phonePref"
-                        value={primaryHr.phones?.[0]?.phonePref}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setPrimaryHr({
-                            ...primaryHr,
-                            phones: [
-                              {
-                                ...primaryHr.phones?.[0],
-                                phonePref: e.target.value,
-                              },
-                            ],
-                          })
-                        }
-                      >
-                        {currencies?.map((option) => (
-                          <MenuItem key={option} value={option}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                      <TextField
-                        id="outlined-multiline-flexible"
-                        label="Phone Number"
-                        style={{ width: '80%' }}
-                        value={primaryHr.phones?.[0]?.phone}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setPrimaryHr({
-                            ...primaryHr,
-                            phones: [
-                              {
-                                ...primaryHr.phones?.[0],
-                                phone: e.target.value,
-                              },
-                            ],
-                          })
-                        }
-                      />
-                    </div>
-                    <div id="emailHelp" className="form-text">
-                      We'll never share your phone number with anyone else.
-                    </div>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="Company Name" className="newjobLabel">
-                      Email ID
-                    </label>
-                    <input
-                      type="email"
-                      className="newjobInput"
-                      id="HREmail"
-                      name="email"
-                      value={primaryHr.emails?.[0]}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setPrimaryHr({ ...primaryHr, emails: [e.target.value] })
-                      }
-                    />
-                    <div id="emailHelp" className="form-text">
-                      We'll never share your email with anyone else.
-                    </div>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="Company Name" className="newjobLabel">
-                      LinkedIn
-                    </label>
-                    <input
-                      type="text"
-                      className="newjobInput"
-                      id="linkedIn"
-                      name="linkedin"
-                      value={primaryHr.linkedin}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setPrimaryHr({ ...primaryHr, linkedin: e.target.value })
-                      }
-                    />
-                  </div>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={secondaryHR}
-                        onChange={() => setSecondaryHR((prev) => !prev)}
-                      />
-                    }
-                    label="Add Secondary HR Details"
-                  />
-                </div>
-                {secondaryHR && (
-                  <div>
-                    <div className="mb-3">
-                      <label htmlFor="Company Name" className="newjobLabel">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        className="newjobInput"
-                        id="HRName"
-                        name="name"
-                        value={secondaryHr.name}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setSecondaryHr({
-                            ...secondaryHr,
-                            name: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="Company Name" className="newjobLabel">
-                        Phone
-                      </label>
-                      <div
-                        style={{
-                          width: '100%',
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          paddingTop: '10px',
-                        }}
-                      >
-                        <TextField
-                          id="outlined-select-currency"
-                          select
-                          label="Country Code"
-                          defaultValue="+91"
-                          style={{ width: '18%' }}
-                          name="phonePref"
-                          value={secondaryHr.phones?.[0]?.phonePref}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setSecondaryHr({
-                              ...secondaryHr,
-                              phones: [
-                                {
-                                  ...secondaryHr.phones?.[0],
-                                  phonePref: e.target.value,
-                                },
-                              ],
+                      <div className="dropdown ">
+                        <Select
+                          labelId="demo-simple-select-label"
+                          className="dropdown-toggle button-select"
+                          id="demo-simple-select"
+                          value={jobData.type}
+                          label="Select Notification Form"
+                          onChange={(e: any) =>
+                            setJobData((pre) => {
+                              return { ...pre, type: e.target.value }
                             })
                           }
                         >
-                          {currencies?.map((option) => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
+                          <MenuItem value={'JNF'}>
+                            Job Notification Form{' '}
+                          </MenuItem>
+                          <MenuItem value={'INF'}>
+                            Internship Notification Form
+                          </MenuItem>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Company Details */}
+                  <div>
+                    <Divider>
+                      <Chip label="COMPANY DETAILS" />
+                    </Divider>
+                    <div className="mb-3">
+                      <label htmlFor="Company Name" className="newjobLabel">
+                        Company Name
+                      </label>
+                      <input
+                        type="text"
+                        className="newjobInput"
+                        id="Company Name"
+                        name="companyName"
+                        value={jobData.company.companyName}
+                        onChange={handleCompanyChange}
+                      />
+                      {/* <div id="emailHelp" className="form-text">
+                      We'll never share your email with anyone else.
+                    </div> */}
+                    </div>
+
+                    <div className="mb-3">
+                      <label htmlFor="Website" className="newjobLabel">
+                        Website
+                      </label>
+                      <input
+                        type="text"
+                        className="newjobInput"
+                        id="Website"
+                        name="companyWebsite"
+                        value={jobData.company.companyWebsite}
+                        onChange={handleCompanyChange}
+                      />
+                    </div>
+                    <div className="mb-3 dropdownBody">
+                      <label htmlFor="Website" className="newjobLabel">
+                        Category
+                      </label>
+                      <div className="dropdown" style={{ zIndex: 999 }}>
+                        <button
+                          type="button"
+                          className="dropdown-toggle button-select"
+                          onClick={() => {
+                            setOpenCategory((prev) => !prev)
+                            // setOpenCategoryOption(() => "");
+                          }}
+                        >
+                          {openCategoryOption === ''
+                            ? 'Select an Option'
+                            : openCategoryOption}
+                        </button>
+
+                        <ul
+                          className={`dropdown-menu ${
+                            openCategory ? ' show' : ''
+                          }`}
+                        >
+                          {categories?.map((item: any) => (
+                            <li
+                              className="dropdown-item"
+                              key={item?.categoryId}
+                            >
+                              <button
+                                type="button"
+                                value={item.categoryName}
+                                className="dropdown-option"
+                                onClick={() => {
+                                  setOpenCategory(() => false)
+                                  setOpenCategoryOption(() => item.categoryName)
+                                  setJobData({
+                                    ...jobData,
+                                    company: {
+                                      ...jobData.company,
+                                      category: item,
+                                    },
+                                  })
+                                }}
+                              >
+                                {item.categoryName}
+                              </button>
+                            </li>
                           ))}
-                        </TextField>
-                        <TextField
-                          id="outlined-multiline-flexible"
-                          label="Phone Number"
-                          style={{ width: '80%' }}
-                          value={secondaryHr.phones?.[0]?.phone}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setSecondaryHr({
-                              ...secondaryHr,
-                              phones: [
-                                {
-                                  ...secondaryHr.phones?.[0],
-                                  phone: e.target.value,
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="mb-3 dropdownBody">
+                      <label htmlFor="Website" className="newjobLabel">
+                        Sector
+                      </label>
+                      <div className="dropdown">
+                        <button
+                          type="button"
+                          className="dropdown-toggle button-select"
+                          onClick={() => setOpenSector((prev) => !prev)}
+                        >
+                          {openSectorOption === ''
+                            ? 'Select an Option'
+                            : openSectorOption}
+                        </button>
+                        <ul
+                          className={`dropdown-menu ${
+                            openSector ? ' show' : ''
+                          }`}
+                        >
+                          {sectors?.map((item: any) => (
+                            <li className="dropdown-item" key={item.sectorId}>
+                              <button
+                                type="button"
+                                value={item.sectorName}
+                                className="dropdown-option"
+                                onClick={() => {
+                                  setOpenSector(() => false)
+                                  setOpenSectorOption(() => item.sectorName)
+                                  setJobData({
+                                    ...jobData,
+                                    company: {
+                                      ...jobData.company,
+                                      sector: item,
+                                    },
+                                  })
+                                }}
+                              >
+                                {item.sectorName}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Job Details */}
+                  <div>
+                    <div className="divider mt-5">
+                      <Divider>
+                        <Chip label="JOB DETAILS" />
+                      </Divider>
+                    </div>
+
+                    <div className="mb-3">
+                      <label htmlFor="Designation" className="newjobLabel">
+                        Designation
+                      </label>
+                      <input
+                        type="text"
+                        className="newjobInput"
+                        id="Designation"
+                        name="profile"
+                        value={jobData.profile}
+                        onChange={handleJobChange}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="Place of Posting" className="newjobLabel">
+                        Place of Posting
+                      </label>
+                      <input
+                        type="text"
+                        className="newjobInput"
+                        id="Place of Posting"
+                        name="placeOfPosting"
+                        value={jobData.placeOfPosting}
+                        onChange={handleJobChange}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="Job Descriptiong" className="newjobLabel">
+                        Job Description
+                      </label>
+                      <textarea
+                        // type="text"
+                        rows={row[6]}
+                        className="newjobInput"
+                        id="Job Description"
+                        name="jobDescription"
+                        value={jobData.jobDescription}
+                        onChange={handleJobChange}
+                      />
+                    </div>
+                  </div>
+                  {/* Stipend Details */}
+                  <div>
+                    <div className="divider mt-5">
+                      <Divider>
+                        <Chip label="SALARY DETAILS" />
+                      </Divider>
+                    </div>
+                    {jobData.type === 'INF' ? (
+                      <div className="mb-3">
+                        <label htmlFor="CTC" className="newjobLabel">
+                          Stipend (per Month)
+                        </label>
+                        <input
+                          type="text"
+                          className="newjobInput"
+                          id="CTC"
+                          name="ctc"
+                          value={jobData.ctc}
+                          onChange={handleJobChange}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="mb-3">
+                          <label htmlFor="CTC" className="newjobLabel">
+                            CTC (in lpa)
+                          </label>
+                          <input
+                            type="text"
+                            className="newjobInput"
+                            id="CTC"
+                            name="ctc"
+                            value={jobData.ctc}
+                            onChange={handleJobChange}
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="CTCbreakup" className="newjobLabel">
+                            CTC breakup
+                          </label>
+                          <textarea
+                            rows={row[4]}
+                            className="newjobInput"
+                            id="CTCbreakup"
+                            name="ctcBreakup"
+                            value={jobData.ctcBreakup}
+                            onChange={handleJobChange}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="mb-3">
+                      <label htmlFor="BondDetails" className="newjobLabel">
+                        Bond Details
+                      </label>
+                      <textarea
+                        // type="text"
+                        rows={row[4]}
+                        className="newjobInput"
+                        id="BondDetails"
+                        name="bondDetails"
+                        value={jobData.bondDetails}
+                        onChange={handleJobChange}
+                      />
+                    </div>
+                  </div>
+                  {/* Course Details */}
+                  <div>
+                    <div className="divider mt-5">
+                      <Divider>
+                        <Chip label="ELIGIBILE COURSES" />
+                      </Divider>
+                    </div>
+                    <div className="newJobCourses">
+                      <Button
+                        sx={{ color: '#00ae57', fontSize: '12px' }}
+                        onClick={handleShowCourse}
+                      >
+                        <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} />
+                        Add Courses and Disciplines
+                      </Button>
+
+                      <Modal size="xl" show={show} onHide={handleCloseCourse}>
+                        <Modal.Header closeButton>
+                          <Modal.Title>
+                            Eligible Courses and Disciplines
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <div className="coursesModalBody">
+                            <div className="row">
+                              <div className="col-3 coursesNameBox">
+                                {courses?.map((course: any) => {
+                                  return (
+                                    <div
+                                      className="courseButtonDiv border"
+                                      key={course.courseId}
+                                    >
+                                      <button
+                                        className="courseButton"
+                                        onClick={() =>
+                                          setCurrCourse(course.courseId)
+                                        }
+                                      >
+                                        <div className="courseName">
+                                          {' '}
+                                          {course.courseName}
+                                        </div>
+                                        {/* <div className="courseYear"> 4-years</div> */}
+                                      </button>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                              <div className="col-9 branchNameBox">
+                                <Box sx={{ width: '100%' }}>
+                                  <Paper sx={{ width: '100%', mb: 2 }}>
+                                    {selected.length > 0 && (
+                                      <Typography
+                                        sx={{ flex: '1 1 100%' }}
+                                        color="inherit"
+                                        variant="subtitle1"
+                                        component="div"
+                                      >
+                                        {selected.length} selected
+                                      </Typography>
+                                    )}
+                                    <div className=" my-4">
+                                      <div className="me-3">
+                                        <Switch
+                                          checked={sameCgpaChecked}
+                                          onChange={handleChange}
+                                          inputProps={{
+                                            'aria-label': 'controlled',
+                                          }}
+                                        />
+                                        Same CGPA Cutoff for all branches
+                                      </div>
+                                      <div>
+                                        {sameCgpaChecked && (
+                                          <div className="mb-3 d-flex">
+                                            <label
+                                              htmlFor="Company Name"
+                                              className="newjobLabel mx-3"
+                                            >
+                                              CGPA{' '}
+                                            </label>
+                                            <input
+                                              type="number"
+                                              className="newjobInput ms-3 w-25"
+                                              id="cgpa"
+                                            />
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    <TableContainer>
+                                      <Table
+                                        sx={{ minWidth: 750 }}
+                                        aria-labelledby="tableTitle"
+                                        size="medium"
+                                      >
+                                        <TableHead>
+                                          <TableRow>
+                                            {headCells?.map((headCell) => (
+                                              <TableCell
+                                                key={headCell.id}
+                                                align="left"
+                                                padding="normal"
+                                              >
+                                                <Typography
+                                                  variant="button"
+                                                  display="block"
+                                                  gutterBottom
+                                                >
+                                                  {headCell.label}
+                                                </Typography>
+                                              </TableCell>
+                                            ))}
+                                            {!sameCgpaChecked && (
+                                              <TableCell
+                                                key="cgpa"
+                                                align="left"
+                                                padding="normal"
+                                              >
+                                                <Typography
+                                                  variant="button"
+                                                  display="block"
+                                                  gutterBottom
+                                                >
+                                                  CGPA Cutoff
+                                                </Typography>
+                                              </TableCell>
+                                            )}
+
+                                            <TableCell padding="checkbox">
+                                              <div className="d-flex">
+                                                <Checkbox
+                                                  color="primary"
+                                                  indeterminate={
+                                                    selected.length > 0 &&
+                                                    selected.length <
+                                                      specializations.length
+                                                  }
+                                                  checked={isAllSelected()}
+                                                  onChange={
+                                                    handleSelectAllClick
+                                                  }
+                                                  inputProps={{
+                                                    'aria-label': 'select all',
+                                                  }}
+                                                  onMouseEnter={
+                                                    handlePopoverOpen
+                                                  }
+                                                  onMouseLeave={
+                                                    handlePopoverClose
+                                                  }
+                                                />
+                                                <Popover
+                                                  id="mouse-over-popover"
+                                                  sx={{
+                                                    pointerEvents: 'none',
+                                                  }}
+                                                  open={open}
+                                                  anchorEl={anchorEl}
+                                                  anchorOrigin={{
+                                                    vertical: 'bottom',
+                                                    horizontal: 'left',
+                                                  }}
+                                                  transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left',
+                                                  }}
+                                                  onClose={handlePopoverClose}
+                                                  disableRestoreFocus
+                                                >
+                                                  <Typography sx={{ p: 1 }}>
+                                                    Select all branches
+                                                  </Typography>
+                                                </Popover>
+                                                {/* <small>Select all</small> */}
+                                              </div>
+                                              {/* Select all */}
+                                            </TableCell>
+                                          </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                          {specializations?.map(
+                                            (row: any, index: number) => {
+                                              const isItemSelected = isSelected(
+                                                row.specId,
+                                              )
+                                                ? true
+                                                : false
+                                              const labelId = row.specId
+
+                                              return (
+                                                <TableRow
+                                                  hover
+                                                  role="checkbox"
+                                                  aria-checked={isItemSelected}
+                                                  tabIndex={-1}
+                                                  key={row}
+                                                  selected={isItemSelected}
+                                                >
+                                                  <TableCell
+                                                    component="th"
+                                                    id={labelId}
+                                                    scope="row"
+                                                  >
+                                                    {row.departmentName}
+                                                  </TableCell>
+                                                  <TableCell align="left">
+                                                    {row.disciplineName}
+                                                  </TableCell>
+                                                  <TableCell align="left">
+                                                    {row.specName}
+                                                  </TableCell>
+                                                  {!sameCgpaChecked && (
+                                                    <TableCell align="left">
+                                                      <TextField
+                                                        id="standard-number"
+                                                        label="CGPA(out of 10)"
+                                                        type="number"
+                                                        InputLabelProps={{
+                                                          shrink: true,
+                                                        }}
+                                                        variant="standard"
+                                                        disabled={
+                                                          !isItemSelected
+                                                        }
+                                                      />
+                                                    </TableCell>
+                                                  )}
+                                                  <TableCell padding="checkbox">
+                                                    <Checkbox
+                                                      color="primary"
+                                                      checked={isItemSelected}
+                                                      inputProps={{
+                                                        'aria-labelledby': labelId,
+                                                      }}
+                                                      onChange={(event) =>
+                                                        handleClick(event, row)
+                                                      }
+                                                    />
+                                                  </TableCell>
+                                                </TableRow>
+                                              )
+                                            },
+                                          )}
+                                        </TableBody>
+                                      </Table>
+                                    </TableContainer>
+                                  </Paper>
+                                </Box>
+                              </div>
+                            </div>
+                          </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button onClick={handleCloseCourse}>Close</Button>
+                          <Button onClick={handleCloseCourse}>
+                            Save Changes
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
+
+                      <div>
+                        <div className="showSelectectedCourse ">
+                          <div className="row showSelectectedCourseDegree">
+                            <div className="col-2 degreeDiv pt-5">
+                              <div className="">
+                                <div className="">
+                                  <div className="DegreeName"> B.Tech</div>
+                                  <div className="DegreeYear"> 4-years</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-10 showSelectectedCourseBranch mt-3">
+                              <Box sx={{ width: '100%' }}>
+                                <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
+                                  <div className="row  showSelectectedCourseHeading">
+                                    <div className="col-5">Department</div>
+                                    <div className="col-5">Branch</div>
+                                    <div className="col-2">CGPA Cutoff</div>
+                                  </div>
+                                  <div>
+                                    {branches?.map((row, index) => (
+                                      <div key={row}>
+                                        <div className="row">
+                                          <div className="col-5">{row}</div>
+                                          <div className="col-5">{row}</div>
+                                          <div className="col-2">8.5</div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </Paper>
+                              </Box>
+                            </div>
+                          </div>
+                          <div className="row showSelectectedCourseDegree">
+                            <div className="col-2 degreeDiv pt-5">
+                              <div className="">
+                                <div className="">
+                                  <div className="DegreeName"> M.Tech</div>
+                                  <div className="DegreeYear"> 2-years</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-10 showSelectectedCourseBranch mt-3">
+                              <Box sx={{ width: '100%' }}>
+                                <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
+                                  <div className="row  showSelectectedCourseHeading">
+                                    <div className="col-5">Department</div>
+                                    <div className="col-5">Branch</div>
+                                    <div className="col-2">CGPA Cutoff</div>
+                                  </div>
+                                  <div>
+                                    {branches?.map((row, index) => (
+                                      <div key={row}>
+                                        <div className="row">
+                                          <div className="col-5">{row}</div>
+                                          <div className="col-5">{row}</div>
+                                          <div className="col-2">8.0</div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </Paper>
+                              </Box>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Schedule Details */}
+                  <div className="newJobFlowchart">
+                    <div className="divider mt-5">
+                      <Divider>
+                        <Chip label="SCHEDULE" />
+                      </Divider>
+                    </div>
+                    <div className="my-4">
+                      <div>
+                        <div className="row my-4">
+                          {[
+                            {
+                              label: 'Stage',
+                              name: 'stage',
+                              value: stageData?.stage,
+                              dropdownData: selectionStages?.map(
+                                (stage: any) => {
+                                  return {
+                                    name: stage.stageName,
+                                    value: stage.stageId,
+                                  }
                                 },
+                              ),
+                            },
+                            {
+                              label: 'Stage Type',
+                              name: 'stageType',
+                              value: stageData?.stageType,
+                              dropdownData: [
+                                { name: 'Technical', value: 'Tech' },
+                                { name: 'Aptitude', value: 'Apti' },
+                                { name: 'Other', value: 'Other' },
                               ],
+                            },
+                            {
+                              label: 'Stage Mode',
+                              name: 'stageMode',
+                              value: stageData?.stageMode,
+                              dropdownData: ['Virtual', 'Physical']?.map(
+                                (mode: string) => {
+                                  return { name: mode, value: mode }
+                                },
+                              ),
+                            },
+                          ]?.map((item: any) => {
+                            return (
+                              <div className="col-3" key={item.name}>
+                                <div className="d-flex justify-content-center w-100">
+                                  <div
+                                    className="mb-3 dropdownBody"
+                                    style={{ height: '40px', width: '200px' }}
+                                  >
+                                    <label
+                                      htmlFor="mode"
+                                      className="newjobLabel"
+                                    >
+                                      {item.label}
+                                    </label>
+                                    <div className="dropdown">
+                                      <button
+                                        type="button"
+                                        style={{
+                                          height: '40px',
+                                          width: '200px',
+                                          lineHeight: '40px',
+                                        }}
+                                        className="dropdown-toggle button-select"
+                                        onClick={() => {
+                                          setOpenSchedule(item.label)
+                                          // setOpenCategoryOption(() => "");
+                                        }}
+                                      >
+                                        {item.value === '' || item.value === 0
+                                          ? 'Select an option'
+                                          : item.dropdownData?.find(
+                                              (data: any) =>
+                                                data.value === item.value,
+                                            )?.name}
+                                      </button>
+
+                                      <ul
+                                        className={`dropdown-menu ${
+                                          openSchedule === item.label
+                                            ? ' show'
+                                            : ''
+                                        }`}
+                                      >
+                                        {item.dropdownData?.map((data: any) => (
+                                          <li
+                                            className="dropdown-item"
+                                            key={data.value}
+                                          >
+                                            <button
+                                              type="button"
+                                              value={data.value}
+                                              className="dropdown-option"
+                                              onClick={() => {
+                                                setOpenSchedule('None')
+                                                setStageData({
+                                                  ...stageData,
+                                                  [item.name]: data.value,
+                                                })
+                                              }}
+                                            >
+                                              {data.name}
+                                            </button>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          })}
+                          <div className="col-3">
+                            <div className="d-flex justify-content-center mt-4 pt-2">
+                              <Button
+                                variant="contained"
+                                startIcon={<AddIcon />}
+                                onClick={() => handleAddStage()}
+                              >
+                                ADD
+                              </Button>{' '}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <ReactSortable
+                          list={ScheduleList}
+                          setList={setScheduleList}
+                          animation={250}
+                          ghostClass="blue-background-class"
+                        >
+                          {ScheduleList?.map((item, stage) => (
+                            <div
+                              className="d-flex justify-content-center"
+                              key={item.stage?.stageId}
+                            >
+                              <div className="scrollSchedule">
+                                <div>
+                                  <div>
+                                    <Typography
+                                      variant="overline"
+                                      display="block"
+                                      // lineHeight="10px"
+                                      align="center"
+                                      style={{
+                                        fontWeight: '600',
+                                        fontSize: '0.9rem',
+                                      }}
+                                    >
+                                      Stage {stage + 1}: {item.stage?.stageName}
+                                    </Typography>
+
+                                    <div className="d-flex justify-content-center">
+                                      <div>
+                                        <Typography
+                                          variant="caption"
+                                          display="block"
+                                        >
+                                          Mode: {item.stageMode}
+                                        </Typography>
+                                        <Typography
+                                          variant="caption"
+                                          display="block"
+                                        >
+                                          Type of Stage: {item.stageType}
+                                        </Typography>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </ReactSortable>
+                        {ScheduleList.length !== 0 && (
+                          <div>
+                            <Typography
+                              variant="caption"
+                              display="block"
+                              align="right"
+                            >
+                              *Drag the box to change the order
+                            </Typography>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {/* Skill based */}
+                  {/* <div className="my-5">
+                    <Divider>
+                      <Chip label="SKILL BASED HIRING" />
+                    </Divider>
+                    <div className="my-3">
+                      <label htmlFor="Company Name" className="newjobLabel">
+                        Skills
+                      </label>
+                      <div>
+                        <FormControl sx={{ mt: 1, mb: 3, width: "100%" }}>
+                          <Select
+                            labelId="demo-multiple-checkbox-label"
+                            id="demo-multiple-checkbox"
+                            multiple
+                            value={personName}
+                            onChange={handleChangeSkill}
+                            input={<OutlinedInput label="Tag" />}
+                            renderValue={(selected) => selected.join(", ")}
+                            MenuProps={MenuProps}
+                          >
+                            {skills?.map((skill) => (
+                              <MenuItem key={skill} value={skill}>
+                                <Checkbox
+                                  checked={personName.indexOf(skill) > -1}
+                                />
+                                <ListItemText primary={skill} />
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </div>
+                    </div>
+                  </div> */}
+                  {/* HR Details */}
+                  <div className="my-5">
+                    <Divider>
+                      <Chip label="HR Details" />
+                    </Divider>
+                    <div>
+                      <div className="mb-3">
+                        <label htmlFor="Company Name" className="newjobLabel">
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          className="newjobInput"
+                          id="HRName"
+                          name="name"
+                          value={primaryHr.name}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setPrimaryHr({ ...primaryHr, name: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="Company Name" className="newjobLabel">
+                          Phone
+                        </label>
+                        <div
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            paddingTop: '10px',
+                          }}
+                        >
+                          <TextField
+                            id="outlined-select-currency"
+                            select
+                            label="Country Code"
+                            defaultValue="+91"
+                            style={{ width: '18%' }}
+                            name="phonePref"
+                            value={primaryHr.phones?.[0]?.phonePref}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) =>
+                              setPrimaryHr({
+                                ...primaryHr,
+                                phones: [
+                                  {
+                                    ...primaryHr.phones?.[0],
+                                    phonePref: e.target.value,
+                                  },
+                                ],
+                              })
+                            }
+                          >
+                            {currencies?.map((option) => (
+                              <MenuItem key={option} value={option}>
+                                {option}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                          <TextField
+                            id="outlined-multiline-flexible"
+                            label="Phone Number"
+                            style={{ width: '80%' }}
+                            value={primaryHr.phones?.[0]?.phone}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) =>
+                              setPrimaryHr({
+                                ...primaryHr,
+                                phones: [
+                                  {
+                                    ...primaryHr.phones?.[0],
+                                    phone: e.target.value,
+                                  },
+                                ],
+                              })
+                            }
+                          />
+                        </div>
+                        <div id="emailHelp" className="form-text">
+                          We'll never share your phone number with anyone else.
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="Company Name" className="newjobLabel">
+                          Email ID
+                        </label>
+                        <input
+                          type="email"
+                          className="newjobInput"
+                          id="HREmail"
+                          name="email"
+                          value={primaryHr.emails?.[0]}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setPrimaryHr({
+                              ...primaryHr,
+                              emails: [e.target.value],
+                            })
+                          }
+                        />
+                        <div id="emailHelp" className="form-text">
+                          We'll never share your email with anyone else.
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="Company Name" className="newjobLabel">
+                          LinkedIn
+                        </label>
+                        <input
+                          type="text"
+                          className="newjobInput"
+                          id="linkedIn"
+                          name="linkedin"
+                          value={primaryHr.linkedin}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setPrimaryHr({
+                              ...primaryHr,
+                              linkedin: e.target.value,
                             })
                           }
                         />
                       </div>
-                      <div id="emailHelp" className="form-text">
-                        We'll never share your phone number with anyone else.
-                      </div>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="Company Name" className="newjobLabel">
-                        Email ID
-                      </label>
-                      <input
-                        type="email"
-                        className="newjobInput"
-                        id="HREmail"
-                        name="email"
-                        value={secondaryHr.emails?.[0]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setSecondaryHr({
-                            ...secondaryHr,
-                            emails: [e.target.value],
-                          })
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={secondaryHR}
+                            onChange={() => setSecondaryHR((prev) => !prev)}
+                          />
                         }
-                      />
-                      <div id="emailHelp" className="form-text">
-                        We'll never share your email with anyone else.
-                      </div>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="Company Name" className="newjobLabel">
-                        LinkedIn
-                      </label>
-                      <input
-                        type="text"
-                        className="newjobInput"
-                        id="linkedIn"
-                        name="linkedin"
-                        value={secondaryHr.linkedin}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setSecondaryHr({
-                            ...secondaryHr,
-                            linkedin: e.target.value,
-                          })
-                        }
+                        label="Add Secondary HR Details"
                       />
                     </div>
-                  </div>
-                )}
-              </div>
-              {/* Assign spocs */}
-              <div className="my-5">
-                <Divider>
-                  <Chip label="ASSIGN SPOCs" />
-                </Divider>
-                <div className="my-3">
-                  <label htmlFor="Company Name" className="newjobLabel ms-2">
-                    Primary SPOC
-                  </label>
-                  <div>
-                    <FormControl sx={{ width: '100%' }}>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <Select
-                          labelId="demo-simple-select-helper-label"
-                          id="demo-simple-select-helper"
-                          value={primaryspoc}
-                          onChange={(e) => {
-                            setPrimaryspoc(() => e.target.value)
-                          }}
-                          label="Select Primary SPOC"
-                        >
-                          <MenuItem value="None">
-                            <em>None</em>
-                          </MenuItem>
-                          {scpts?.map((scpt: any) => (
-                            <MenuItem value={scpt.scptId} key={scpt.scptId}>
-                              {scpt.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </FormControl>
-                  </div>
-                </div>
-                <div className="my-3">
-                  <label htmlFor="Company Name" className="newjobLabel ms-2">
-                    Secondary SPOC
-                  </label>
-                  <div>
-                    <FormControl sx={{ width: '100%' }}>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <Select
-                          labelId="demo-simple-select-helper-label"
-                          id="demo-simple-select-helper"
-                          value={secondaryspoc}
-                          onChange={(e) => {
-                            setsecondaryspoc(() => e.target.value)
-                          }}
-                          label="Select Primary SPOC"
-                        >
-                          <MenuItem value="None">
-                            <em>None</em>
-                          </MenuItem>
-                          {scpts?.map((scpt: any) => (
-                            <MenuItem value={scpt.scptId} key={scpt.scptId}>
-                              {scpt.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </FormControl>
-                    {primaryspoc === secondaryspoc && primaryspoc !== '' && (
-                      <div
-                        id="emailHelp"
-                        className="ms-2 form-text text-danger"
-                      >
-                        Primary and Secondary SPOCs are the same.
+                    {secondaryHR && (
+                      <div>
+                        <div className="mb-3">
+                          <label htmlFor="Company Name" className="newjobLabel">
+                            Name
+                          </label>
+                          <input
+                            type="text"
+                            className="newjobInput"
+                            id="HRName"
+                            name="name"
+                            value={secondaryHr.name}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) =>
+                              setSecondaryHr({
+                                ...secondaryHr,
+                                name: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="Company Name" className="newjobLabel">
+                            Phone
+                          </label>
+                          <div
+                            style={{
+                              width: '100%',
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              paddingTop: '10px',
+                            }}
+                          >
+                            <TextField
+                              id="outlined-select-currency"
+                              select
+                              label="Country Code"
+                              defaultValue="+91"
+                              style={{ width: '18%' }}
+                              name="phonePref"
+                              value={secondaryHr.phones?.[0]?.phonePref}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>,
+                              ) =>
+                                setSecondaryHr({
+                                  ...secondaryHr,
+                                  phones: [
+                                    {
+                                      ...secondaryHr.phones?.[0],
+                                      phonePref: e.target.value,
+                                    },
+                                  ],
+                                })
+                              }
+                            >
+                              {currencies?.map((option) => (
+                                <MenuItem key={option} value={option}>
+                                  {option}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                            <TextField
+                              id="outlined-multiline-flexible"
+                              label="Phone Number"
+                              style={{ width: '80%' }}
+                              value={secondaryHr.phones?.[0]?.phone}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>,
+                              ) =>
+                                setSecondaryHr({
+                                  ...secondaryHr,
+                                  phones: [
+                                    {
+                                      ...secondaryHr.phones?.[0],
+                                      phone: e.target.value,
+                                    },
+                                  ],
+                                })
+                              }
+                            />
+                          </div>
+                          <div id="emailHelp" className="form-text">
+                            We'll never share your phone number with anyone
+                            else.
+                          </div>
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="Company Name" className="newjobLabel">
+                            Email ID
+                          </label>
+                          <input
+                            type="email"
+                            className="newjobInput"
+                            id="HREmail"
+                            name="email"
+                            value={secondaryHr.emails?.[0]}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) =>
+                              setSecondaryHr({
+                                ...secondaryHr,
+                                emails: [e.target.value],
+                              })
+                            }
+                          />
+                          <div id="emailHelp" className="form-text">
+                            We'll never share your email with anyone else.
+                          </div>
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="Company Name" className="newjobLabel">
+                            LinkedIn
+                          </label>
+                          <input
+                            type="text"
+                            className="newjobInput"
+                            id="linkedIn"
+                            name="linkedin"
+                            value={secondaryHr.linkedin}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) =>
+                              setSecondaryHr({
+                                ...secondaryHr,
+                                linkedin: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-              {/* Add Additional Files */}
-              <div className="my-5">
-                <Divider>
-                  <Chip label="Add Additional Files" />
-                </Divider>
-                <div className="my-3">
-                  <label htmlFor="Company Name" className="newjobLabel ms-2">
-                    Choose additional files (if any)
-                  </label>
-                  <div className="m-3">
-                    {/* <Button
-                      variant="outlined"
-                      component="label"
-                      startIcon={<FileUploadIcon />}
-                      // onClick={handleUploadClick}
-                    >
-                      Upload Files
-                      <input
-                        hidden
-                        accept="pdf"
-                        multiple
-                        type="file"
-                        // ref={hiddenFileInput}
-                        onChange={handleUploadChange}
-                      />
-                    </Button> */}
-                    <input type="file" onChange={handleFileChange} multiple />
-
-                    <ul>
-                      {files?.map((file, i) => (
-                        <li key={i}>
-                          {file.name} - {file.type}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <button onClick={handleUploadClick} disabled={isUploading}>
-                      Upload
-                    </button>
-                    {isUploading && <h6>Uploading...</h6>}
-                  </div>
-                </div>
-              </div>
-
-              {/* NF Additional Question */}
-              <div>
-                <div className="divider mt-5">
-                  <Divider>
-                    <Chip label="NF Additional Question" />
-                  </Divider>
-                </div>
-                <div className="newAdditionalQuestion">
-                  <Button
-                    sx={{ color: '#00ae57', fontSize: '12px' }}
-                    onClick={handleAddQuestions}
-                    // color="success"
-                    startIcon={<EditOutlinedIcon fontSize="small" />}
-                  >
-                    {/* <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} /> */}
-                    ADD ADDITIONAL QUESTIONS
-                  </Button>
-
-                  <Modal show={showModal} onHide={handleCloseModal}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>NF Additional Questions</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <Form>
-                        <Form.Group className="mb-2">
-                          <Form.Label>
-                            <Typography className="fw-500" variant="button">
-                              Question Title:
-                            </Typography>
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            value={questionTitle}
-                            onChange={(e) => setQuestionTitle(e.target.value)}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-2">
-                          <Form.Label>
-                            <Typography className="fw-500" variant="button">
-                              Description:
-                            </Typography>
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            value={questionDescription}
-                            onChange={(e) =>
-                              setQuestionDescription(e.target.value)
-                            }
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-2">
-                          <Form.Label>
-                            <Typography className="fw-500" variant="button">
-                              Question Type:
-                            </Typography>
-                          </Form.Label>
-                          <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">
-                              Type
-                            </InputLabel>
+                  {/* Assign spocs */}
+                  <div className="my-5">
+                    <Divider>
+                      <Chip label="ASSIGN SPOCs" />
+                    </Divider>
+                    <div className="my-3">
+                      <label
+                        htmlFor="Company Name"
+                        className="newjobLabel ms-2"
+                      >
+                        Primary SPOC
+                      </label>
+                      <div>
+                        <FormControl sx={{ width: '100%' }}>
+                          <FormControl sx={{ m: 1, minWidth: 120 }}>
                             <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              value={questionType}
-                              label="Age"
-                              onChange={(e) => setQuestionType(e.target.value)}
+                              labelId="demo-simple-select-helper-label"
+                              id="demo-simple-select-helper"
+                              value={primaryspoc}
+                              onChange={(e) => {
+                                setPrimaryspoc(() => e.target.value)
+                              }}
+                              label="Select Primary SPOC"
                             >
-                              <MenuItem value="shortAnswer">
-                                Short Answer
+                              <MenuItem value="None">
+                                <em>None</em>
                               </MenuItem>
-                              <MenuItem value="options">Options</MenuItem>
+                              {scpts?.map((scpt: any) => (
+                                <MenuItem value={scpt.scptId} key={scpt.scptId}>
+                                  {scpt.name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
-                          {/* <Form.Control
-                            as="select"
-                            value={questionType}
-                            onChange={(e) => setQuestionType(e.target.value)}
-                          >
-                            <option value="shortAnswer">Short Answer</option>
-                            <option value="options">Options</option>
-                          </Form.Control> */}
-                        </Form.Group>
-                        {questionType === 'options' && (
-                          <Form.Group>
-                            <Form.Label>
-                              <Typography className="fw-500" variant="button">
-                                Options:
-                              </Typography>
-                            </Form.Label>
-                            {questionOptions?.map((option, index) => (
-                              <Form.Control
-                                key={index}
-                                type="text"
-                                value={option}
-                                className="mb-1"
-                                onChange={(e) =>
-                                  handleOptionChange(index, e.target.value)
-                                }
-                              />
-                            ))}
-                            <Button onClick={handleAddOption}>
-                              Add Option
-                            </Button>
-                          </Form.Group>
-                        )}
-                      </Form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button onClick={handleCloseModal}>Close</Button>
-                      <Button onClick={handleSaveQuestion}>Save Changes</Button>
-                    </Modal.Footer>
-                  </Modal>
-                </div>
-              </div>
-              {/* <div className="row"> */}
-              {/* {additionalQuestions.length >= 0 && (
-                  <div className="col-sm-12 col-md-8 col-lg-6 my-3">
-                    {additionalQuestions?.map((question: Question) => (
-                      <Card sx={{ minWidth: 275, boxShadow: "none" }}>
-                        <div className="row my-1">
-                          <div className="col-10">
-                            <CardContent className="py-0">
-                              <Typography
-                                sx={{ fontSize: 14 }}
-                                color="text.secondary"
-                              >
-                                Question type:
-                                {question?.type === "shortAnswer"
-                                  ? " Short Answer"
-                                  : " Option based"}{" "}
-                              </Typography>
-                              <Typography
-                                variant="body1"
-                                className="fw-400"
-                                component="div"
-                                sx={{ fontSize: 18 }}
-                              >
-                                Title: {question.title}
-                              </Typography>
-                              <Typography color="text.secondary" gutterBottom>
-                                Description: {" " + question.description}
-                              </Typography>
-                              <Typography variant="body2">
-                                {question?.type === "options" && (
-                                  <div>
-                                    {question.options?.map((option: string) => (
-                                      <Typography display="block">
-                                        {" "}
-                                        • {option}
-                                      </Typography>
-                                    ))}
-                                  </div>
-                                )}
-                              </Typography>
-                            </CardContent>
-                          </div>
-                          
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                )} */}
-              <div className="my-5">
-                {additionalQuestions?.map((question, index) => (
-                  <Paper key={index} sx={{ width: '100%', mb: 2, p: 2 }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Typography variant="body1" sx={{ ml: 2 }}>
-                        <strong>Title:</strong> {question.title}
-                      </Typography>
-                      <div>
-                        <Button
-                          variant="text"
-                          startIcon={<EditOutlinedIcon fontSize="small" />}
-                          color="success"
-                          sx={{ fontSize: 12 }}
-                          onClick={() => handleEditQuestion(index)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="text"
-                          startIcon={
-                            <DeleteOutlineOutlinedIcon fontSize="small" />
-                          }
-                          color="error"
-                          sx={{ fontSize: 12, marginLeft: '0.5rem' }}
-                          onClick={() => handleDeleteQuestion(index)}
-                        >
-                          Delete
-                        </Button>
+                        </FormControl>
                       </div>
                     </div>
-                    <CardContent className="py-0">
-                      <Typography variant="body1">
-                        <strong>Description:</strong> {question.description}
-                      </Typography>
-                      <Typography variant="body1">
-                        <strong>Type:</strong> {question.type}
-                      </Typography>
-                      {question.type === 'options' && (
-                        <div
-                          style={{ marginLeft: '1rem', marginTop: '0.25rem' }}
+                    <div className="my-3">
+                      <label
+                        htmlFor="Company Name"
+                        className="newjobLabel ms-2"
+                      >
+                        Secondary SPOC
+                      </label>
+                      <div>
+                        <FormControl sx={{ width: '100%' }}>
+                          <FormControl sx={{ m: 1, minWidth: 120 }}>
+                            <Select
+                              labelId="demo-simple-select-helper-label"
+                              id="demo-simple-select-helper"
+                              value={secondaryspoc}
+                              onChange={(e) => {
+                                setsecondaryspoc(() => e.target.value)
+                              }}
+                              label="Select Primary SPOC"
+                            >
+                              <MenuItem value="None">
+                                <em>None</em>
+                              </MenuItem>
+                              {scpts?.map((scpt: any) => (
+                                <MenuItem value={scpt.scptId} key={scpt.scptId}>
+                                  {scpt.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </FormControl>
+                        {primaryspoc === secondaryspoc && primaryspoc !== '' && (
+                          <div
+                            id="emailHelp"
+                            className="ms-2 form-text text-danger"
+                          >
+                            Primary and Secondary SPOCs are the same.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {/* Add Additional Files */}
+                  <div className="my-5">
+                    <Divider>
+                      <Chip label="Add Additional Files" />
+                    </Divider>
+                    <div className="my-3">
+                      <label
+                        htmlFor="Company Name"
+                        className="newjobLabel ms-2"
+                      >
+                        Choose additional files (if any)
+                      </label>
+                      <div className="m-3">
+                        {/* <Button
+                          variant="outlined"
+                          component="label"
+                          startIcon={<FileUploadIcon />}
+                          // onClick={handleUploadClick}
                         >
-                          <Typography variant="body1">
-                            <strong>Options:</strong>
+                          Upload Files
+                          <input
+                            hidden
+                            accept="pdf"
+                            multiple
+                            type="file"
+                            // ref={hiddenFileInput}
+                            onChange={handleUploadChange}
+                          />
+                        </Button> */}
+                        <input
+                          type="file"
+                          onChange={handleFileChange}
+                          multiple
+                        />
+
+                        <ul>
+                          {files?.map((file, i) => (
+                            <li key={i}>
+                              {file.name} - {file.type}
+                            </li>
+                          ))}
+                        </ul>
+
+                        <button
+                          onClick={handleUploadClick}
+                          disabled={isUploading}
+                        >
+                          Upload
+                        </button>
+                        {isUploading && <h6>Uploading...</h6>}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* NF Additional Question */}
+                  <div>
+                    <div className="divider mt-5">
+                      <Divider>
+                        <Chip label="NF Additional Question" />
+                      </Divider>
+                    </div>
+                    <div className="newAdditionalQuestion">
+                      <Button
+                        sx={{ color: '#00ae57', fontSize: '12px' }}
+                        onClick={handleAddQuestions}
+                        // color="success"
+                        startIcon={<EditOutlinedIcon fontSize="small" />}
+                      >
+                        {/* <EditOutlinedIcon fontSize="small" sx={{ mx: 1 }} /> */}
+                        ADD ADDITIONAL QUESTIONS
+                      </Button>
+
+                      <Modal show={showModal} onHide={handleCloseModal}>
+                        <Modal.Header closeButton>
+                          <Modal.Title>NF Additional Questions</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <Form>
+                            <Form.Group className="mb-2">
+                              <Form.Label>
+                                <Typography className="fw-500" variant="button">
+                                  Question Title:
+                                </Typography>
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={questionTitle}
+                                onChange={(e) =>
+                                  setQuestionTitle(e.target.value)
+                                }
+                              />
+                            </Form.Group>
+                            <Form.Group className="mb-2">
+                              <Form.Label>
+                                <Typography className="fw-500" variant="button">
+                                  Description:
+                                </Typography>
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={questionDescription}
+                                onChange={(e) =>
+                                  setQuestionDescription(e.target.value)
+                                }
+                              />
+                            </Form.Group>
+                            <Form.Group className="mb-2">
+                              <Form.Label>
+                                <Typography className="fw-500" variant="button">
+                                  Question Type:
+                                </Typography>
+                              </Form.Label>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  Type
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={questionType}
+                                  label="Age"
+                                  onChange={(e) =>
+                                    setQuestionType(e.target.value)
+                                  }
+                                >
+                                  <MenuItem value="shortAnswer">
+                                    Short Answer
+                                  </MenuItem>
+                                  <MenuItem value="options">Options</MenuItem>
+                                </Select>
+                              </FormControl>
+                              {/* <Form.Control
+                                as="select"
+                                value={questionType}
+                                onChange={(e) => setQuestionType(e.target.value)}
+                              >
+                                <option value="shortAnswer">Short Answer</option>
+                                <option value="options">Options</option>
+                              </Form.Control> */}
+                            </Form.Group>
+                            {questionType === 'options' && (
+                              <Form.Group>
+                                <Form.Label>
+                                  <Typography
+                                    className="fw-500"
+                                    variant="button"
+                                  >
+                                    Options:
+                                  </Typography>
+                                </Form.Label>
+                                {questionOptions?.map((option, index) => (
+                                  <Form.Control
+                                    key={index}
+                                    type="text"
+                                    value={option}
+                                    className="mb-1"
+                                    onChange={(e) =>
+                                      handleOptionChange(index, e.target.value)
+                                    }
+                                  />
+                                ))}
+                                <Button onClick={handleAddOption}>
+                                  Add Option
+                                </Button>
+                              </Form.Group>
+                            )}
+                          </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button onClick={handleCloseModal}>Close</Button>
+                          <Button onClick={handleSaveQuestion}>
+                            Save Changes
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
+                    </div>
+                  </div>
+                  {/* <div className="row"> */}
+                  {/* {additionalQuestions.length >= 0 && (
+                      <div className="col-sm-12 col-md-8 col-lg-6 my-3">
+                        {additionalQuestions?.map((question: Question) => (
+                          <Card sx={{ minWidth: 275, boxShadow: "none" }}>
+                            <div className="row my-1">
+                              <div className="col-10">
+                                <CardContent className="py-0">
+                                  <Typography
+                                    sx={{ fontSize: 14 }}
+                                    color="text.secondary"
+                                  >
+                                    Question type:
+                                    {question?.type === "shortAnswer"
+                                      ? " Short Answer"
+                                      : " Option based"}{" "}
+                                  </Typography>
+                                  <Typography
+                                    variant="body1"
+                                    className="fw-400"
+                                    component="div"
+                                    sx={{ fontSize: 18 }}
+                                  >
+                                    Title: {question.title}
+                                  </Typography>
+                                  <Typography color="text.secondary" gutterBottom>
+                                    Description: {" " + question.description}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {question?.type === "options" && (
+                                      <div>
+                                        {question.options?.map((option: string) => (
+                                          <Typography display="block">
+                                            {" "}
+                                            • {option}
+                                          </Typography>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </Typography>
+                                </CardContent>
+                              </div>
+                              
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    )} */}
+                  <div className="my-5">
+                    {additionalQuestions?.map((question, index) => (
+                      <Paper key={index} sx={{ width: '100%', mb: 2, p: 2 }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Typography variant="body1" sx={{ ml: 2 }}>
+                            <strong>Title:</strong> {question.title}
                           </Typography>
-                          {question.options?.map((option, optionIndex) => (
+                          <div>
+                            <Button
+                              variant="text"
+                              startIcon={<EditOutlinedIcon fontSize="small" />}
+                              color="success"
+                              sx={{ fontSize: 12 }}
+                              onClick={() => handleEditQuestion(index)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              variant="text"
+                              startIcon={
+                                <DeleteOutlineOutlinedIcon fontSize="small" />
+                              }
+                              color="error"
+                              sx={{ fontSize: 12, marginLeft: '0.5rem' }}
+                              onClick={() => handleDeleteQuestion(index)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                        <CardContent className="py-0">
+                          <Typography variant="body1">
+                            <strong>Description:</strong> {question.description}
+                          </Typography>
+                          <Typography variant="body1">
+                            <strong>Type:</strong> {question.type}
+                          </Typography>
+                          {question.type === 'options' && (
                             <div
-                              key={optionIndex}
                               style={{
-                                display: 'flex',
-                                alignItems: 'center',
+                                marginLeft: '1rem',
+                                marginTop: '0.25rem',
                               }}
                             >
-                              <Checkbox checked />
-                              <Typography
-                                variant="body1"
-                                sx={{ marginLeft: '0.5rem' }}
-                              >
-                                {option}
+                              <Typography variant="body1">
+                                <strong>Options:</strong>
                               </Typography>
+                              {question.options?.map((option, optionIndex) => (
+                                <div
+                                  key={optionIndex}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <Checkbox checked />
+                                  <Typography
+                                    variant="body1"
+                                    sx={{ marginLeft: '0.5rem' }}
+                                  >
+                                    {option}
+                                  </Typography>
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Paper>
-                ))}
-              </div>
-              <div>
-                <Typography variant="caption" display="block" align="right">
-                  *Add additionals NF question here
-                </Typography>
-              </div>
-              {/* </div> */}
-
-              {/* Add Additional Details */}
-              <div className="my-5">
-                <Divider>
-                  <Chip label="Add Additional Details" />
-                </Divider>
-
-                <div className="my-3">
-                  <label htmlFor="Company Name" className="newjobLabel ms-2">
-                    Add Additional Details
-                  </label>
-
-                  <div>
-                    <ReactQuill
-                      theme="snow"
-                      value={jobData.additionalDetails}
-                      onChange={(value) =>
-                        setJobData({ ...jobData, additionalDetails: value })
-                      }
-                      modules={modules}
-                      style={{ height: '300px', marginBottom: '150px' }}
-                    />
+                          )}
+                        </CardContent>
+                      </Paper>
+                    ))}
                   </div>
-                </div>
-              </div>
+                  <div>
+                    <Typography variant="caption" display="block" align="right">
+                      *Add additionals NF question here
+                    </Typography>
+                  </div>
+                  {/* </div> */}
 
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={isUploading}
-              >
-                Submit
-              </button>
-            </form>
+                  {/* Add Additional Details */}
+                  <div className="my-5">
+                    <Divider>
+                      <Chip label="Add Additional Details" />
+                    </Divider>
+
+                    <div className="my-3">
+                      <label
+                        htmlFor="Company Name"
+                        className="newjobLabel ms-2"
+                      >
+                        Add Additional Details
+                      </label>
+
+                      <div>
+                        <ReactQuill
+                          theme="snow"
+                          value={jobData.additionalDetails}
+                          onChange={(value) =>
+                            setJobData({ ...jobData, additionalDetails: value })
+                          }
+                          modules={modules}
+                          style={{ height: '300px', marginBottom: '150px' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={isUploading}
+                  >
+                    Submit
+                  </button>
+                  <button
+                    onClick={generatePdf}
+                    className="btn btn-primary"
+                    style={{ margin: '0 0 0 10px' }}
+                  >
+                    Generate PDF
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
-          <div></div>
         </div>
       </div>
     </div>
