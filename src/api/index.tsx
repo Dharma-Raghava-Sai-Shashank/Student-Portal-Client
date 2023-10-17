@@ -23,5 +23,5 @@ export const APIRequest = async (url: string, method: string, data?: Object | Fo
     });
 };
 
-// export const baseURL = `http://localhost:3001/api`;
-export const baseURL = `http://localhost:3001/api`
+export const baseURL = `http://localhost:3001/api`;
+// export const baseURL = `https://student-portal-server-2sbh.onrender.com/api`;
