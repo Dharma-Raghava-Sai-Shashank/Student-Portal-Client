@@ -164,6 +164,132 @@ export const Dashboard = () => {
     }));
   };
 
+
+  const data2={
+  "success": true,
+  "jobs": [
+    {
+      "nfId": 1,
+      "type": "JNF",
+      "profile": "MS SDE",
+      "placeOfPosting": "Bangalore",
+      "jobDescription": "Good job",
+      "modeOfInternship": "NA",
+      "ctc": "45LPA",
+      "ctcBreakup": "45LPA",
+      "bondDetails": "NA",
+      "hasPPO": "0",
+      "ismOffersMin": 2,
+      "ismOffersMax": 20,
+      "cdcInformation": "Nope",
+      "additionalDetails": "NA",
+      "status": "Finalized",
+      "deadline": "2023-07-01T18:29:59.000Z",
+      "createdAt": "2023-03-18T15:07:45.000Z",
+      "updatedAt": "2023-03-18T15:07:47.000Z",
+      "deletedAt": null,
+      "is_eligible": 1,
+      "is_applied": 1,
+      "is_open": 1
+    },
+    {
+      "nfId": 2,
+      "type": "JNF",
+      "profile": "Goog SDE",
+      "placeOfPosting": "Hyderabad",
+      "jobDescription": "Awesome job",
+      "modeOfInternship": "NA",
+      "ctc": "50LPA",
+      "ctcBreakup": "50LPA",
+      "bondDetails": "NA",
+      "hasPPO": "0",
+      "ismOffersMin": 3,
+      "ismOffersMax": 7,
+      "cdcInformation": "Nope",
+      "additionalDetails": "NA",
+      "status": "Draft",
+      "deadline": "2023-04-01T18:29:59.000Z",
+      "createdAt": "2023-03-18T15:07:45.000Z",
+      "updatedAt": "2023-03-18T15:07:47.000Z",
+      "deletedAt": null,
+      "is_eligible": 0,
+      "is_applied": 1,
+      "is_open": 0
+    },
+    {
+      "nfId": 3,
+      "type": "JNF",
+      "profile": "Texas Elec",
+      "placeOfPosting": "Noida",
+      "jobDescription": "Fantastic job",
+      "modeOfInternship": "NA",
+      "ctc": "55LPA",
+      "ctcBreakup": "55LPA",
+      "bondDetails": "NA",
+      "hasPPO": "0",
+      "ismOffersMin": 4,
+      "ismOffersMax": 4,
+      "cdcInformation": "Nope",
+      "additionalDetails": "NA",
+      "status": "Draft",
+      "deadline": "2023-04-01T18:29:59.000Z",
+      "createdAt": "2023-03-18T15:07:45.000Z",
+      "updatedAt": "2023-03-18T15:07:47.000Z",
+      "deletedAt": null,
+      "is_eligible": 0,
+      "is_applied": 0,
+      "is_open": 0
+    },
+    {
+      "nfId": 8,
+      "type": "INF",
+      "profile": "Data Analyst",
+      "placeOfPosting": "Bengaluru",
+      "jobDescription": "Worth it",
+      "modeOfInternship": "NA",
+      "ctc": "23LPA",
+      "ctcBreakup": "23LPA",
+      "bondDetails": "1 year",
+      "hasPPO": "1",
+      "ismOffersMin": 1,
+      "ismOffersMax": 3,
+      "cdcInformation": "Nope",
+      "additionalDetails": "NA",
+      "status": "Draft",
+      "deadline": "2023-03-21T12:38:09.000Z",
+      "createdAt": "2023-03-19T12:38:08.000Z",
+      "updatedAt": "2023-03-19T12:38:08.000Z",
+      "deletedAt": null,
+      "is_eligible": 0,
+      "is_applied": 0,
+      "is_open": 0
+    },
+    {
+      "nfId": 49,
+      "type": "INF",
+      "profile": "Business Analyst",
+      "placeOfPosting": "Gurgaon",
+      "jobDescription": "NA",
+      "modeOfInternship": "NA",
+      "ctc": "10LPA",
+      "ctcBreakup": "NA",
+      "bondDetails": "NA",
+      "hasPPO": "0",
+      "ismOffersMin": 3,
+      "ismOffersMax": 5,
+      "cdcInformation": "Nope",
+      "additionalDetails": "<p>NA</p>",
+      "status": "Draft",
+      "deadline": "2023-03-31T11:05:44.000Z",
+      "createdAt": "2023-03-29T11:05:44.000Z",
+      "updatedAt": "2023-03-29T11:05:44.000Z",
+      "deletedAt": null,
+      "is_eligible": 1,
+      "is_applied": 0,
+      "is_open": 0
+    }
+  ]
+}
   const cycles = useAppSelector((state) => state.placementcycle);
 
   React.useEffect(() => {
@@ -266,24 +392,20 @@ export const Dashboard = () => {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell key="cycle">Cycle</TableCell>
+                        <TableCell key="cycle">CTC</TableCell>
                         <TableCell key="profile">Profile</TableCell>
                         <TableCell key="Date">Date</TableCell>
                         <TableCell key="Status">Status</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {data
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
+                      {data2.jobs
                         .map((nf) => {
                           return (
-                            <StyledTableRow key={nf.id}>
-                              <TableCell>{nf.cycle}</TableCell>
+                            <StyledTableRow key={nf.nfId}>
+                              <TableCell>{nf.ctc}</TableCell>
                               <TableCell>{nf.profile}</TableCell>
-                              <TableCell>{nf.date}</TableCell>
+                              <TableCell>{nf.createdAt}</TableCell>
                               <TableCell>{nf.status}</TableCell>
                             </StyledTableRow>
                           );
