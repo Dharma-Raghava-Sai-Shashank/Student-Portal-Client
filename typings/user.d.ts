@@ -1,9 +1,9 @@
-declare enum Gender{
+declare enum Gender {
     MALE = "male",
     FEMALE = "female",
     OTHER = 'other'
 }
-declare enum Category{
+declare enum Category {
     GENERAL = "Gen",
     SC = "SC",
     ST = 'ST',
@@ -11,7 +11,7 @@ declare enum Category{
     OBC = 'OBC'
 }
 
-declare namespace User{
+declare namespace User {
     interface AuthData {
         email?: string,
         username?: string,
@@ -19,7 +19,7 @@ declare namespace User{
         type?: string
     }
 
-    interface Student{
+    interface Student {
         admno: string,
         category: string,
         cvs?: any,
@@ -39,8 +39,26 @@ declare namespace User{
         uidType: string,
         uidValue: string,
     }
-    interface Response{
+    interface Response {
         success: boolean,
         studentData: Student
+    }
+
+    interface CompanySignup {
+        name: string,
+        sector: number,
+        category: number,
+        website: string,
+        primary_hr: {
+            hr_name: string,
+            email: string,
+            contact_number: {
+                phonePref: string,
+                phone: string,
+            },
+            designation: string,
+            linkedin: string
+        },
+
     }
 }

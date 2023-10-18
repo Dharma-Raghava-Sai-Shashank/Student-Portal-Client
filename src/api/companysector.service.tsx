@@ -1,7 +1,6 @@
 import { APIRequest, baseURL } from ".";
 
-const studentURL = baseURL + '/sector';
-const adminBaseURL = studentURL + '/admin';
+const endpoint = baseURL + '/sector';
 
 export const fetchAllSectors = async () =>
-await APIRequest(adminBaseURL, "GET");
+    await APIRequest(endpoint, "GET");

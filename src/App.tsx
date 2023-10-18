@@ -3,7 +3,7 @@ import Auth from "./screens/Auth/Auth";
 import Registration from "./screens/Registration/Registration";
 import { Admin } from "./Admin/Admin";
 import { Placement } from "./Admin/Placement/Placement";
-import {Users} from "./Admin/Users/Users";
+import { Users } from "./Admin/Users/Users";
 import { PlacementCycle } from "./Admin/Department/Department";
 import { Companies } from "./Admin/Companies/Companies";
 import { CompanyDetails } from "./Admin/Companies/CompanyDetails";
@@ -35,6 +35,7 @@ import { Dashboard } from "./Company/Dashboard";
 import { CompanyProfile } from "./Company/CompanyProfile";
 import ContactUs from "./Company/ContactUs";
 import CompanyRegistration from "./Company/Registration";
+import VerifyToken from "./Company/VerifyToken";
 
 const ProtectRoute: any = (Component: React.FC<{}>) => {
   return (
@@ -139,6 +140,7 @@ function App() {
         <Route path="/company/profile" element={<CompanyProfile />} />
         <Route path="/company/contactus" element={<ContactUs />} />
         <Route path="/company/registration" element={<CompanyRegistration />} />
+        <Route path="/company/verifytoken" element={<VerifyToken />} />
       </Routes>
       <AuthVerify logOut={logOut} />
     </>

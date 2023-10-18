@@ -117,7 +117,7 @@ const CompanyRegistration = () => {
                     </Typography>
                   </div>
                   <form>
-                    
+
                     <div className="d-flex justify-content-center mt-4">
                       <FormControl fullWidth variant="outlined" margin="normal">
                         <InputLabel>Sector</InputLabel>
@@ -159,7 +159,7 @@ const CompanyRegistration = () => {
                       </Button>
                     </div>
 
-                    
+
                     <div className="d-flex justify-content-center my-3">
                       <Link to="/company/dashboard">
                         <button
