@@ -35,7 +35,7 @@ import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import 'react-quill/dist/quill.snow.css'
 import './style.scss'
-import {useState,useEffect} from "react"
+import { useState, useEffect } from "react"
 import { fetchAllCategories } from '../api/companycategory.service'
 import { fetchAllCourses } from '../api/course.service'
 import { fetchAllScpts } from '../api/scpt.service'
@@ -47,6 +47,7 @@ import { createJob } from '../api/job.service'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getAllCourses } from '../Slices/course'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import { APIRequest } from '../api'
 interface Schedule {
   id: string
   stage: any
@@ -473,20 +474,15 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     setQuestionOptions(updatedOptions)
   }
 
-  const [comp,setComp]=useState('');
-  const[jobD,setJobD]=useState('');
+  const [comp, setComp] = useState('');
+  const [jobD, setJobD] = useState('');
 
-  const handleAddNewJob=(e: React.ChangeEvent<any>)=>{
+  const API_URL = "http://localhost:3001/api/jobs/admin";
+
+  const handleAddNewJob = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
-    // console.log(`${jobD} at ${comp}`);
-    const data ={comp,jobD}
-    fetch('https://localhost:3000/company/dashboard',{
-      method:'POST',
-      headers:{"Content:type":"application/json"},
-      body:JSON.stringify(data)
-    }).then(()=>{
-      console.log('New data entry');
-    })
+    APIRequest(API_URL, "POST", jobData);
+    console.log(jobData);
   }
 
   return (
@@ -522,8 +518,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     className="newjobInput"
                     id="Company Name"
                     name="companyName"
-                    value={comp}
-                    onChange={(e)=>setComp(e.target.value)}
+                    value={jobData.company.companyName}
+                    onChange={handleCompanyChange}
                   />
                   {/* <div id="emailHelp" className="form-text">
                   We'll never share your email with anyone else.
@@ -605,7 +601,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     id="Designation"
                     name="profile"
                     value={jobD}
-                    onChange={(e)=>setJobD(e.target.value)}
+                    onChange={(e) => setJobD(e.target.value)}
                   />
                 </div>
                 <div className="mb-3">
@@ -823,7 +819,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                               indeterminate={
                                                 selected.length > 0 &&
                                                 selected.length <
-                                                  specializations.length
+                                                specializations.length
                                               }
                                               checked={isAllSelected()}
                                               onChange={handleSelectAllClick}
@@ -1078,15 +1074,14 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                                     {item.value === '' || item.value === 0
                                       ? 'Select an option'
                                       : item.dropdownData?.find(
-                                          (data: any) =>
-                                            data.value === item.value,
-                                        )?.name}
+                                        (data: any) =>
+                                          data.value === item.value,
+                                      )?.name}
                                   </button>
 
                                   <ul
-                                    className={`dropdown-menu ${
-                                      openSchedule === item.label ? ' show' : ''
-                                    }`}
+                                    className={`dropdown-menu ${openSchedule === item.label ? ' show' : ''
+                                      }`}
                                   >
                                     {item.dropdownData?.map((data: any) => (
                                       <li
@@ -1706,7 +1701,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                 </div>
               </div>
               {/* <div className="row"> */}
-                {/* {additionalQuestions.length >= 0 && (
+              {/* {additionalQuestions.length >= 0 && (
                   <div className="col-sm-12 col-md-8 col-lg-6 my-3">
                     {additionalQuestions?.map((question: Question) => (
                       <Card sx={{ minWidth: 275, boxShadow: "none" }}>
@@ -1753,88 +1748,88 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     ))}
                   </div>
                 )} */}
-                <div className="my-5">
-                  {additionalQuestions?.map((question, index) => (
-                    <Paper key={index} sx={{ width: '100%', mb: 2, p: 2 }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Typography variant="body1" sx={{ ml: 2 }}>
-                          <strong>Title:</strong> {question.title}
-                        </Typography>
-                        <div>
-                          <Button
-                            variant="text"
-                            startIcon={<EditOutlinedIcon fontSize="small" />}
-                            color="success"
-                            sx={{ fontSize: 12 }}
-                            onClick={() => handleEditQuestion(index)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="text"
-                            startIcon={
-                              <DeleteOutlineOutlinedIcon fontSize="small" />
-                            }
-                            color="error"
-                            sx={{ fontSize: 12, marginLeft: '0.5rem' }}
-                            onClick={() => handleDeleteQuestion(index)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
+              <div className="my-5">
+                {additionalQuestions?.map((question, index) => (
+                  <Paper key={index} sx={{ width: '100%', mb: 2, p: 2 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Typography variant="body1" sx={{ ml: 2 }}>
+                        <strong>Title:</strong> {question.title}
+                      </Typography>
+                      <div>
+                        <Button
+                          variant="text"
+                          startIcon={<EditOutlinedIcon fontSize="small" />}
+                          color="success"
+                          sx={{ fontSize: 12 }}
+                          onClick={() => handleEditQuestion(index)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="text"
+                          startIcon={
+                            <DeleteOutlineOutlinedIcon fontSize="small" />
+                          }
+                          color="error"
+                          sx={{ fontSize: 12, marginLeft: '0.5rem' }}
+                          onClick={() => handleDeleteQuestion(index)}
+                        >
+                          Delete
+                        </Button>
                       </div>
-                      <CardContent className="py-0">
-                        <Typography variant="body1">
-                          <strong>Description:</strong> {question.description}
-                        </Typography>
-                        <Typography variant="body1">
-                          <strong>Type:</strong> {question.type}
-                        </Typography>
-                        {question.type === 'options' && (
-                          <div
-                            style={{ marginLeft: '1rem', marginTop: '0.25rem' }}
-                          >
-                        <Typography variant="body1">
-                          <strong>Options:</strong>
-                        </Typography>
-                            {question.options?.map((option, optionIndex) => (
-                              <div
-                                key={optionIndex}
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                }}
+                    </div>
+                    <CardContent className="py-0">
+                      <Typography variant="body1">
+                        <strong>Description:</strong> {question.description}
+                      </Typography>
+                      <Typography variant="body1">
+                        <strong>Type:</strong> {question.type}
+                      </Typography>
+                      {question.type === 'options' && (
+                        <div
+                          style={{ marginLeft: '1rem', marginTop: '0.25rem' }}
+                        >
+                          <Typography variant="body1">
+                            <strong>Options:</strong>
+                          </Typography>
+                          {question.options?.map((option, optionIndex) => (
+                            <div
+                              key={optionIndex}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Checkbox checked />
+                              <Typography
+                                variant="body1"
+                                sx={{ marginLeft: '0.5rem' }}
                               >
-                                <Checkbox checked />
-                                <Typography
-                                  variant="body1"
-                                  sx={{ marginLeft: '0.5rem' }}
-                                >
-                                  {option}
-                                </Typography>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </CardContent>
-                    </Paper>
-                  ))}
-                </div>
-                <div>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    align="right"
-                  >
-                    *Add additionals NF question here
-                  </Typography>
-                </div>
+                                {option}
+                              </Typography>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Paper>
+                ))}
+              </div>
+              <div>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  align="right"
+                >
+                  *Add additionals NF question here
+                </Typography>
+              </div>
               {/* </div> */}
 
               {/* Add Additional Details */}

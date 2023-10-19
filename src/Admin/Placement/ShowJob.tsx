@@ -1,61 +1,64 @@
-import React, { ReactNode, useState } from "react";
-import { useParams } from "react-router";
-import Avatar from "@mui/material/Avatar";
-import ApartmentIcon from "@mui/icons-material/Apartment";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Paper from "@mui/material/Paper";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import Modal from "react-bootstrap/Modal";
-import { Dayjs } from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { branches } from "../constants/branches";
-import { skills } from "../constants/skills";
-import { MainSidebar } from "../Sidebars/MainSidebar";
-import { Header1 } from "../Headers/Header1";
-import { AddstudentsModal } from "./AddStudentModal";
-import "./style.scss";
-import { alpha, styled } from "@mui/material/styles";
-import { pink } from "@mui/material/colors";
-import Switch from "@mui/material/Switch";
-import { htmlTypography } from "../../Student/Dashboard/Dashboard";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormHelperText from "@mui/material/FormHelperText";
+import React, { ReactNode, useState, useEffect } from 'react'
+import { useParams } from 'react-router'
+import Avatar from '@mui/material/Avatar'
+import ApartmentIcon from '@mui/icons-material/Apartment'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Chip from '@mui/material/Chip'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Paper from '@mui/material/Paper'
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import Modal from 'react-bootstrap/Modal'
+import { Dayjs } from 'dayjs'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { branches } from '../constants/branches'
+import { skills } from '../constants/skills'
+import { MainSidebar } from '../Sidebars/MainSidebar'
+import { Header1 } from '../Headers/Header1'
+import { AddstudentsModal } from './AddStudentModal'
+import './style.scss'
+import { alpha, styled } from '@mui/material/styles'
+import { pink } from '@mui/material/colors'
+import Switch from '@mui/material/Switch'
+import { htmlTypography } from '../../Student/Dashboard/Dashboard'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormHelperText from '@mui/material/FormHelperText'
+import companyData from './data'
+import Pdf from 'react-to-pdf'
+import { useRef } from 'react'
 
-const label = { inputProps: { "aria-label": "Color switch demo" } };
+const label = { inputProps: { 'aria-label': 'Color switch demo' } }
 
 const Schedule = [
   {
-    id: "892b",
-    StageName: "Resume SL",
-    StageMode: "Virtual",
-    StageDate: "22/04/2022",
+    id: '892b',
+    StageName: 'Resume SL',
+    StageMode: 'Virtual',
+    StageDate: '22/04/2022',
   },
   {
-    id: "882b",
-    StageName: "Reasoning",
-    StageMode: "Virtual",
-    StageDate: "22/04/2022",
+    id: '882b',
+    StageName: 'Reasoning',
+    StageMode: 'Virtual',
+    StageDate: '22/04/2022',
   },
   {
-    id: "881b",
-    StageName: "Interview 1",
-    StageMode: "On Campus",
-    StageDate: "22/04/2022",
+    id: '881b',
+    StageName: 'Interview 1',
+    StageMode: 'On Campus',
+    StageDate: '22/04/2022',
   },
   {
-    id: "812b",
-    StageName: "Group Discussion",
-    StageMode: "Virtual",
-    StageDate: "22/04/2022",
+    id: '812b',
+    StageName: 'Group Discussion',
+    StageMode: 'Virtual',
+    StageDate: '22/04/2022',
   },
-];
+]
 
 export const HtmlText = (
   <div>
@@ -74,58 +77,82 @@ export const HtmlText = (
       </li>
     </ol>
   </div>
-);
+)
 
 export const generateDetails = (
   detailType: string,
-  detail: string | undefined
+  detail: string | undefined,
 ) => {
   return (
     <div className="row mt-3 border-bottom mx-2">
       <div className="col-3 ">
-        <Typography variant="subtitle2" sx={{ color: "gray" }} gutterBottom>
+        <Typography variant="subtitle2" sx={{ color: 'gray' }} gutterBottom>
           {detailType}
         </Typography>
       </div>
       <div className="col-9">
-        <Typography variant="body2" sx={{ fontSize: "0.93rem" }} gutterBottom>
+        <Typography variant="body2" sx={{ fontSize: '0.93rem' }} gutterBottom>
           {detail}
         </Typography>
       </div>
     </div>
-  );
-};
+  )
+}
 export const generateHeading = (heading: string) => {
   return (
     <div>
-      <Typography variant="subtitle2" sx={{ fontSize: "1rem" }} gutterBottom>
+      <Typography variant="subtitle2" sx={{ fontSize: '1rem' }} gutterBottom>
         {heading}
       </Typography>
-      <hr style={{ height: "1.3px", margin: 0 }} />
+      <hr style={{ height: '1.3px', margin: 0 }} />
     </div>
-  );
-};
+  )
+}
 export const ShowJob = () => {
-  const [inputdeadlineTime, setInputDeadlineTime] =
-    React.useState<Dayjs | null>();
-  const [deadlineTime, setDeadlineTime] = React.useState<Dayjs | null>();
-  const [show, setShow] = useState(false);
-  const [stageName, setStageName] = useState("");
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const handleSetDeadline = () => setDeadlineTime(() => inputdeadlineTime);
-  const [showCheckbox, setShowCheckbox] = useState(true);
+  const [
+    inputdeadlineTime,
+    setInputDeadlineTime,
+  ] = React.useState<Dayjs | null>()
+  const [deadlineTime, setDeadlineTime] = React.useState<Dayjs | null>()
+  const [show, setShow] = useState(false)
+  const [stageName, setStageName] = useState('')
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+  const handleSetDeadline = () => setDeadlineTime(() => inputdeadlineTime)
+  const [showCheckbox, setShowCheckbox] = useState(true)
 
-  const [showStudentModal, setshowStudentModal] = useState(false);
+  const [showStudentModal, setshowStudentModal] = useState(false)
 
-  const params = useParams();
-  const applicationId = params.applicationId as string;
+  const params = useParams()
+  const [data, setData] = useState<any>({})
+  const [loading, setLoading] = useState(true)
+  const applicationId = params.applicationId as string
 
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = React.useState(true)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-  };
+    setChecked(event.target.checked)
+  }
+
+  //  Fetch data from an API endpoint
+  // useEffect(() => {
+  //   fetch('your_api_endpoint_here')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setData(data);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching data:', error);
+  //       setLoading(false);
+  //     });
+  // }, [])
+
+  // if (loading) {
+  //   return <div>Loading...</div>
+  // }
+
+
   return (
     <div>
       <div className="d-flex">
@@ -146,16 +173,16 @@ export const ShowJob = () => {
                     <div className="col-3  my-5">
                       <div className="d-flex justify-content-center">
                         <Avatar
-                          className={"doctorcolor"}
+                          className={'doctorcolor'}
                           aria-label="recipe"
                           sx={{ width: 120, height: 120 }}
                         >
-                          <ApartmentIcon sx={{ fontSize: "80px" }} />
+                          <ApartmentIcon sx={{ fontSize: '80px' }} />
                         </Avatar>
                       </div>
                     </div>
                     <div className="col-6 my-5">
-                      <Box sx={{ width: "100%", maxWidth: 500 }}>
+                      <Box sx={{ width: '100%', maxWidth: 500 }}>
                         <div className="ms-1">
                           <Typography variant="h4" gutterBottom>
                             Google
@@ -173,7 +200,7 @@ export const ShowJob = () => {
                             </Typography>
                           </div>
                         </div>
-                        <Chip label={"Full time 2022-23"} variant="outlined" />
+                        <Chip label={'Full time 2022-23'} variant="outlined" />
                       </Box>
                     </div>
                     <div className="col-3 my-2 d-flex align-self-end ">
@@ -183,12 +210,12 @@ export const ShowJob = () => {
                             <Typography
                               variant="button"
                               className={`me-3 fw-600 ms-2 ${
-                                checked ? "green1c" : "text-danger"
+                                checked ? 'green1c' : 'text-danger'
                               }`}
                               display="block"
                             >
                               Status:
-                              {checked ? " In Progress" : " Application Closed"}
+                              {checked ? ' In Progress' : ' Application Closed'}
                             </Typography>
                             <div className="d-flex">
                               <Switch
@@ -198,7 +225,7 @@ export const ShowJob = () => {
                                 color="success"
                               />
                               <FormHelperText className="my-2">
-                                Click to {checked ? " close" : "open"} the
+                                Click to {checked ? ' close' : 'open'} the
                                 application
                               </FormHelperText>
                             </div>
@@ -252,24 +279,18 @@ export const ShowJob = () => {
                               onClick={handleShow}
                             >
                               {deadlineTime
-                                ? "Edit Application Deadine"
-                                : "Add Application Deadine"}
+                                ? 'Edit Application Deadine'
+                                : 'Add Application Deadine'}
                             </Button>
                           </div>
                           {deadlineTime && (
-                            <div className="ms-3 mt-2 mb-5">
-                              <div>
-                                <div>
-                                  <strong className="text-danger">
-                                    Deadline:
-                                  </strong>
-                                </div>
-                                <div>
-                                  <strong className="">
-                                    {deadlineTime.format("DD/MM/YYYY hh:mm A")}
-                                  </strong>
-                                </div>
-                              </div>
+                            <div className="ms-4 mt-1 mb-3">
+                              <strong className="text-danger">
+                                Deadline:{' '}
+                              </strong>
+                              <strong className="" style={{ fontSize: '1rem' }}>
+                                {deadlineTime.format('DD/MM/YYYY hh:mm A')}
+                              </strong>
                             </div>
                           )}
                           <Modal show={show} onHide={handleClose}>
@@ -284,8 +305,8 @@ export const ShowJob = () => {
                                   >
                                     <DemoContainer
                                       components={[
-                                        "DateTimePicker",
-                                        "DateTimePicker",
+                                        'DateTimePicker',
+                                        'DateTimePicker',
                                       ]}
                                     >
                                       <DateTimePicker
@@ -304,8 +325,8 @@ export const ShowJob = () => {
                               <Button
                                 variant="contained"
                                 onClick={() => {
-                                  handleClose();
-                                  handleSetDeadline();
+                                  handleClose()
+                                  handleSetDeadline()
                                 }}
                               >
                                 Save
@@ -317,11 +338,11 @@ export const ShowJob = () => {
                               variant="text"
                               color="success"
                               fullWidth
-                              sx={{ p: 0, textTransform: "capitalize" }}
+                              sx={{ p: 0, textTransform: 'capitalize' }}
                               onClick={() => {
-                                setshowStudentModal(true);
-                                setShowCheckbox(() => false);
-                                setStageName(() => "All Applications");
+                                setshowStudentModal(true)
+                                setShowCheckbox(() => false)
+                                setStageName(() => 'All Applications')
                               }}
                             >
                               View all students
@@ -331,11 +352,11 @@ export const ShowJob = () => {
                                 variant="text"
                                 color="success"
                                 fullWidth
-                                sx={{ p: 0, textTransform: "capitalize" }}
+                                sx={{ p: 0, textTransform: 'capitalize' }}
                                 onClick={() => {
-                                  setshowStudentModal(true);
-                                  setShowCheckbox(() => true);
-                                  setStageName(() => item.StageName);
+                                  setshowStudentModal(true)
+                                  setShowCheckbox(() => true)
+                                  setStageName(() => item.StageName)
                                 }}
                               >
                                 View {item.StageName} Stage
@@ -345,11 +366,11 @@ export const ShowJob = () => {
                               variant="text"
                               fullWidth
                               color="success"
-                              sx={{ p: 0, textTransform: "capitalize" }}
+                              sx={{ p: 0, textTransform: 'capitalize' }}
                               onClick={() => {
-                                setshowStudentModal(true);
-                                setShowCheckbox(() => true);
-                                setStageName(() => "Final Shortlist");
+                                setshowStudentModal(true)
+                                setShowCheckbox(() => true)
+                                setStageName(() => 'Final Shortlist')
                               }}
                             >
                               Final Selected Students
@@ -358,11 +379,11 @@ export const ShowJob = () => {
                               variant="text"
                               fullWidth
                               color="success"
-                              sx={{ p: 0, textTransform: "capitalize" }}
+                              sx={{ p: 0, textTransform: 'capitalize' }}
                               onClick={() => {
-                                setshowStudentModal(true);
-                                setShowCheckbox(() => true);
-                                setStageName(() => "Final Shortlist");
+                                setshowStudentModal(true)
+                                setShowCheckbox(() => true)
+                                setStageName(() => 'Final Shortlist')
                               }}
                             >
                               Recieved PPO
@@ -380,52 +401,72 @@ export const ShowJob = () => {
 
                     <div className="col-9 border p-3">
                       <div>
+                        {/* Company Details */}
+
                         <div className="mb-5">
-                          {generateHeading("Company Details")}
-                          <div className="mt-2 mb-3">
-                            {generateDetails("Company Name", "Google")}
-                            {generateDetails(
-                              "Placement Cycle",
-                              "Full time 2022-23"
-                            )}
-                            {generateDetails("Website", "careers.google.com")}
-                            {generateDetails("Category", "E-Commerece")}
-                          </div>
-                        </div>
-                        <div className="mb-5">
-                          {generateHeading("Job Details")}
+                          {generateHeading('Company Details')}
                           <div className="mt-2 mb-3">
                             {generateDetails(
-                              "Designation",
-                              "Software Developer"
+                              'Company Name',
+                              companyData.companyName,
                             )}
-                            {generateDetails("Place of Posting", "Bangalore")}
                             {generateDetails(
-                              "Job Description",
-                              "consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam."
+                              'Placement Cycle',
+                              companyData.placementCycle,
                             )}
-                            {generateDetails("Category", "E-Commerece")}
+                            {generateDetails('Website', companyData.website)}
+                            {generateDetails('Category', companyData.category)}
                           </div>
                         </div>
+
+                        {/* Job Details */}
+
                         <div className="mb-5">
-                          {generateHeading("Salary Details")}
+                          {generateHeading('Job Details')}
                           <div className="mt-2 mb-3">
-                            {generateDetails("CTC (in lpa)", "Rs 35,00,000")}
                             {generateDetails(
-                              "CTC breakup",
-                              "Base Salary: Rs 22,00,000 Stock: Rs 13,00,000"
+                              'Designation',
+                              companyData.jobDetails.designation,
                             )}
                             {generateDetails(
-                              "Bond Details",
-                              "consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam."
+                              'Place of Posting',
+                              companyData.jobDetails.placeOfPosting,
                             )}
-                            {generateDetails("Category", "E-Commerece")}
+                            {generateDetails(
+                              'Job Description',
+                              companyData.jobDetails.jobDescription,
+                            )}
+                            {/* {generateDetails('Category', companyData.category)} */}
                           </div>
                         </div>
+
+                        {/* Salary Details */}
+
+                        <div className="mb-5">
+                          {generateHeading('Salary Details')}
+                          <div className="mt-2 mb-3">
+                            {generateDetails(
+                              'CTC (in lpa)',
+                              companyData.salaryDetails.ctc,
+                            )}
+                            {generateDetails(
+                              'CTC breakup',
+                              companyData.salaryDetails.ctcBreakup,
+                            )}
+                            {generateDetails(
+                              'Bond Details',
+                              companyData.salaryDetails.bondDetails,
+                            )}
+                            {/* {generateDetails('Category', 'E-Commerece')} */}
+                          </div>
+                        </div>
+
+                        {/* Eligible Courses and Disciplines */}
+
                         <div className="mb-5">
                           <div>
                             {generateHeading(
-                              "Eligible Courses and Disciplines"
+                              'Eligible Courses and Disciplines',
                             )}
                           </div>
                           <div className="mt-2 mb-3 ms-2">
@@ -440,8 +481,8 @@ export const ShowJob = () => {
                                   </div>
                                 </div>
                                 <div className="col-11 showSelectectedCourseBranch mt-3">
-                                  <Box sx={{ width: "100%" }}>
-                                    <Paper sx={{ width: "100%", mb: 2, p: 3 }}>
+                                  <Box sx={{ width: '100%' }}>
+                                    <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
                                       <div className="row  showSelectectedCourseHeading">
                                         <div className="col-5">Department</div>
                                         <div className="col-5">Branch</div>
@@ -474,8 +515,8 @@ export const ShowJob = () => {
                                   </div>
                                 </div>
                                 <div className="col-11 showSelectectedCourseBranch mt-3">
-                                  <Box sx={{ width: "100%" }}>
-                                    <Paper sx={{ width: "100%", mb: 2, p: 3 }}>
+                                  <Box sx={{ width: '100%' }}>
+                                    <Paper sx={{ width: '100%', mb: 2, p: 3 }}>
                                       <div className="row  showSelectectedCourseHeading">
                                         <div className="col-5">Department</div>
                                         <div className="col-5">Branch</div>
@@ -501,8 +542,11 @@ export const ShowJob = () => {
                             </div>
                           </div>
                         </div>
+
+                        {/* Schedule */}
+
                         <div>
-                          {generateHeading("Schedule")}
+                          {generateHeading('Schedule')}
                           <div className="my-3">
                             {Schedule.map((item, stage) => (
                               <div className="d-flex justify-content-center">
@@ -515,8 +559,8 @@ export const ShowJob = () => {
                                         // lineHeight="10px"
                                         align="center"
                                         style={{
-                                          fontWeight: "600",
-                                          fontSize: "0.9rem",
+                                          fontWeight: '600',
+                                          fontSize: '0.9rem',
                                         }}
                                       >
                                         Stage {stage + 1}: {item.StageName}
@@ -545,9 +589,12 @@ export const ShowJob = () => {
                             ))}
                           </div>
                         </div>
-                        <div>
+
+                        {/* Skill Based Hiring */}
+
+                        {/* <div>
                           <div className="mb-5">
-                            {generateHeading("Skill Based Hiring")}
+                            {generateHeading('Skill Based Hiring')}
 
                             <div className="my-3 mb-3 ms-3">
                               <ul>
@@ -557,65 +604,74 @@ export const ShowJob = () => {
                               </ul>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
+
+                        {/* HR Details */}
+
                         <div>
                           <div className="mb-5">
-                            {generateHeading("HR Details")}
+                            {generateHeading('HR Details')}
 
                             <div className="mt-2 mb-5">
                               {generateDetails(
-                                "Primary HR Name",
-                                "Krittika Barnwal"
+                                'Primary HR Name',
+                                'Krittika Barnwal',
                               )}
-                              {generateDetails("Phone Number", "8278928092")}
+                              {generateDetails('Phone Number', '8278928092')}
                               {generateDetails(
-                                "Email ID",
-                                "abss.fkkejfci@jd.com"
+                                'Email ID',
+                                'abss.fkkejfci@jd.com',
                               )}
                             </div>
                             <div className="mt-2 mb-5">
                               {generateDetails(
-                                "Secondary HR Name",
-                                "Harry Potter"
+                                'Secondary HR Name',
+                                'Harry Potter',
                               )}
-                              {generateDetails("Phone Number", "8278928092")}
+                              {generateDetails('Phone Number', '8278928092')}
                               {generateDetails(
-                                "Email ID",
-                                "abss.fkkejfci@jd.com"
+                                'Email ID',
+                                'abss.fkkejfci@jd.com',
                               )}
                             </div>
                           </div>
                         </div>
+
+                        {/* Assigned SPOC */}
+
                         <div>
                           <div className="mb-5">
-                            {generateHeading("Assigned SPOC")}
+                            {generateHeading('Assigned SPOC')}
 
                             <div className="mt-2 mb-5">
                               {generateDetails(
-                                "Primary SPOC Name",
-                                "Krittika Barnwal"
+                                'Primary SPOC Name',
+                                'Krittika Barnwal',
                               )}
-                              {generateDetails("Phone Number", "8278928092")}
+                              {generateDetails('Phone Number', '8278928092')}
                               {generateDetails(
-                                "Email ID",
-                                "abss.fkkejfci@jd.com"
+                                'Email ID',
+                                'abss.fkkejfci@jd.com',
                               )}
                             </div>
                             <div className="mt-2 mb-5">
                               {generateDetails(
-                                "Secondary SPOC Name",
-                                "Harry Potter"
+                                'Secondary SPOC Name',
+                                'Harry Potter',
                               )}
-                              {generateDetails("Phone Number", "8278928092")}
+                              {generateDetails('Phone Number', '8278928092')}
                               {generateDetails(
-                                "Email ID",
-                                "abss.fkkejfci@jd.com"
+                                'Email ID',
+                                'abss.fkkejfci@jd.com',
                               )}
                             </div>
                           </div>
+
+                          {/* Additional Infomation */}
+
                           <div>
                             <div className="mb-5">
-                              {generateHeading("Additional Infomation")}
+                              {generateHeading('Additional Infomation')}
 
                               <div className="mt-2 mb-5" id="AdditionalDetails">
                                 {htmlTypography(HtmlText)}
@@ -633,5 +689,5 @@ export const ShowJob = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
