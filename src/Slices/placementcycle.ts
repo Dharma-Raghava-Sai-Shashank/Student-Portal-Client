@@ -31,7 +31,7 @@ export const fetchPlacementCycles = createAsyncThunk(
        * else only fetch the cycles in which the student has been enrolled
        */
       const data =
-        type === "admin"
+        type === "admin" || type === 'company'
           ? await PlacementCycleService.fetchAllPlacementCycles()
           : await PlacementCycleService.fetchEnrolledPlacementCycles();
 
@@ -128,7 +128,7 @@ export const saveSpecializationForCycle = createAsyncThunk(
         );
         return thunkAPI.rejectWithValue(
           data.message ||
-            "Error saving specializations for Placement Cycles!! Please try again."
+          "Error saving specializations for Placement Cycles!! Please try again."
         );
       }
       thunkAPI.dispatch(getPlacementCycleById({ placementCycleId: data?.placementCycleId }));
