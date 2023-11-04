@@ -16,7 +16,9 @@ import JobProfileDetail from './Student/Job Profiles/JobProfileDetail';
 import DashBoard from "./Student/Dashboard/Dashboard";
 import { Notices } from "./Admin/Notices/Notices";
 import { RespExtra } from "./Student/Dashboard/RespExtra";
+// import { Registration } from "./screens/Registration/Registration";
 import "bootstrap/dist/css/bootstrap.css";
+
 
 import "./App.css";
 import { Alert, AlertColor, Snackbar } from "@mui/material";
@@ -119,6 +121,7 @@ function App() {
         <Route path="/student/jobprofile/:id" element={<JobProfileDetail />} />
         <Route path="/student/dashboard" element={<DashBoard />} />
         <Route path="/student/extras" element={<RespExtra />} />
+        <Route path="/student/reg" element={<Registration />} />
       </Routes>
       <AuthVerify logOut={logOut} />
     </>

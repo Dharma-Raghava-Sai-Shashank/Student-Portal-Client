@@ -247,5 +247,3 @@ export const _Registration = () => {
     </div>
   );
 };
-
- _Registration;

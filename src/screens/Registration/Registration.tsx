@@ -16,7 +16,7 @@ import {useNavigate} from "react-router-dom";
 
 
 const steps = ["Personal Details", "Educational Details", "Upload Resume"];
-const API_URL = "https://jsonplaceholder.typicode.com/posts";
+const API_URL = "http://localhost:3001/api/student/profile";
 
 export default function Registration() {
   const maxSemester = 8;
