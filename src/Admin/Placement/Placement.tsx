@@ -6,7 +6,8 @@ import { NewJob } from "./NewJob";
 
 export const Placement = () => {
   const [option, setOption] = useState<string>("Placement");
-  const [session, setSession] = useState<string>("Full Time Hiring 2023-24");
+  const [session, setSession] = useState<string>("FT Cycle 2023-24");
+  
   return (
     <div className="d-flex">
       <MainSidebar />
