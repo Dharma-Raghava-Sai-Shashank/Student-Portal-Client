@@ -17,11 +17,14 @@ import { eligibilityCriteria } from './EligibilityCriteria'
 import Navbar from './Navbar'
 import { APIRequest } from '../../api'
 import student from '../Profile/StudentProfile'
+import { baseURL } from '../../api'
 
 export default function JobProfileDetail() {
   const { id } = useParams()
   const jobId = id ? parseInt(id) : 0
   const [selectedProfile, setSelectedProfile] = React.useState({});
+  const [studentAdmissionNumber, setStudentAdmissionNumber] = useState('')
+  const [studentEmail, setStudentEmail] = useState('')
   // const selectedProfile = jobProfileData.find((profile) => profile.id === jobId)
   React.useEffect(() => {
     (async () => {
@@ -34,6 +37,13 @@ export default function JobProfileDetail() {
       } catch (error) {
         console.error('Error occurred during API request:', error);
       }
+      const response1 = await APIRequest(`${baseURL}/student/profile`, 'GET')
+      if (response1.success) {
+        const a = response1;
+        setStudentAdmissionNumber(a.student_profile.admno);
+      } else {
+        alert('API request failed:', response1.message);
+      }
     })();
   }, [])
 
@@ -45,6 +55,9 @@ export default function JobProfileDetail() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [resume, setResume] = useState()
+
+  const [loading, setLoading] = useState(false)
 
   if (!selectedProfile.success) {
     return <div className="job-profile-detail">Job profile not found.</div>
@@ -113,10 +126,35 @@ export default function JobProfileDetail() {
       const file = event.target.files[0]
       // Perform any necessary file validation or processing here
       setResumeName(file.name)
+      setResume(event.target.files[0]);
     }
 
-    const handleSubmitApplication = () => {
+    const handleSubmitApplication = async () => {
       // Perform any necessary backend API calls or data processing here
+      setLoading(1)
+      let obj = {
+        perfectFit: fullName,
+        whyhire: email,
+        skills: phone,
+        resumeFile: resume,
+        admissionNumber: studentAdmissionNumber,
+      }
+      const jobId = localStorage.getItem("jobId")
+      fetch(`${baseURL}/jobs/student/apply/${jobId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(obj)
+      })
+        .then((response) => {
+          setLoading(0)
+          console.log(response)
+          alert(`${obj.admissionNumber} has successfully applied for ${job_description.companyName}`)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
       setIsApplied(true)
       setIsModalOpen(false)
     }
@@ -351,6 +389,7 @@ export default function JobProfileDetail() {
                       <Button
                         variant="outlined"
                         onClick={handleSubmitApplication}
+                        disabled={isApplied}
                       >
                         Submit Application
                       </Button>

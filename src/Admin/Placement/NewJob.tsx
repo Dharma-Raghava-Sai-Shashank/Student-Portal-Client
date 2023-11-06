@@ -408,8 +408,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const handleAddNewJob = async (e: any) => {
     e.preventDefault()
 
-    // const res = await assembleJobData() //comment krna hai baad me isko yaad se baad me abhi testing chal rha!
-    // console.log(res)
+    const res = await assembleJobData() //comment krna hai baad me isko yaad se baad me abhi testing chal rha!
+    console.log(res)
 
     await createJob(await assembleJobData())
   }
