@@ -42,7 +42,9 @@ export const AddstudentsModal = ({
   showCheckbox,
   stageName,
 }: props) => {
-  const handleCloseCourse = () => setOpen(false);
+  const handleCloseCourse = () => {
+    setOpen(false);
+  }
   const handleShowCourse = () => setOpen(true);
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [studentInput, setStudentInput] = useState("");
@@ -96,7 +98,6 @@ export const AddstudentsModal = ({
     setAnchorEl(null);
   };
   const isSelected = (name: string) => selected.indexOf(name) !== -1;
-
   return (
     <div>
       <Modal size="lg" show={open} onHide={handleCloseCourse}>

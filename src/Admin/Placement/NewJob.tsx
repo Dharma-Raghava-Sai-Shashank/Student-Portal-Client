@@ -111,6 +111,7 @@ const modules = {
 }
 
 const initialJobData = {
+  placementCycleName:'',
   type: 'JNF',
   profile: '',
   placeOfPosting: '',
@@ -170,6 +171,7 @@ interface Question {
 }
 export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [openCategory, setOpenCategory] = useState<boolean>(false)
+  const [placementCycleName, setPlacementCycleName] = useState<string>('')
   const [openCategoryOption, setOpenCategoryOption] = useState<string>('')
   const [openSector, setOpenSector] = useState<boolean>(false)
   const [openSectorOption, setOpenSectorOption] = useState<string>('')
@@ -213,6 +215,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
 
   React.useEffect(() => {
     const fetchData = async () => {
+  console.log(session)
       const { categories } = await fetchAllCategories()
       const { sectors } = await fetchAllSectors()
       // const { courses } = await fetchAllCourses();
@@ -223,6 +226,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       setCategories(categories)
       setSectors(sectors)
       // setCourses(courses);
+      setPlacementCycleName(session);
       setCurrCourse(courses?.[0]?.courseId as number)
       setScpts(scpts)
       setSelectionStages(stages)
@@ -358,8 +362,10 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
     const HRs: any = []
     const primary = await createHR(primaryHr)
     const secondary = await createHR(secondaryHr)
+
     HRs.push({ isPrimary: 1, hr: primary?.HR })
     HRs.push({ isPrimary: 0, hr: secondary?.HR })
+    console.log(placementCycleName)
 
     setJobData((prevData: any) => ({
       ...prevData,
@@ -389,6 +395,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
 
     return {
       ...jobData,
+      placementCycleName:placementCycleName,
       nf_docs: [...uploadedDocs],
       spocs,
       HRs,
@@ -401,8 +408,8 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const handleAddNewJob = async (e: any) => {
     e.preventDefault()
 
-    // const res = await assembleJobData() //comment krna hai baad me isko yaad se baad me abhi testing chal rha!
-    // console.log(res)
+    const res = await assembleJobData() //comment krna hai baad me isko yaad se baad me abhi testing chal rha!
+    console.log(res)
 
     await createJob(await assembleJobData())
   }
@@ -682,7 +689,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                     </div>
                     <div className="mb-3 dropdownBody">
                       <label htmlFor="Website" className="newjobLabel">
-                        Sector
+                        Sector hii
                       </label>
                       <div className="dropdown">
                         <button
@@ -699,6 +706,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
                             openSector ? ' show' : ''
                           }`}
                         >
+                        
                           {sectors?.map((item: any) => (
                             <li className="dropdown-item" key={item.sectorId}>
                               <button
