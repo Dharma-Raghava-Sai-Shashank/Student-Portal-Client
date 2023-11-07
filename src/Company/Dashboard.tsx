@@ -329,7 +329,7 @@ export const Dashboard = () => {
   const [option, setOption] = useState<string>("Placement");
   const [session, setSession] = useState<string>("Full Time Hiring 2023-24");
 
-  fetch('http://localhost:3000/company/dashboard').then(res => {
+  fetch('https://student-portal-client-seven.vercel.app/company/dashboard').then(res => {
     res.json()
   })
 

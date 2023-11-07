@@ -16,7 +16,7 @@ import {useNavigate} from "react-router-dom";
 
 
 const steps = ["Personal Details", "Educational Details", "Upload Resume"];
-const API_URL = "http://localhost:3001/api/student/profile";
+const API_URL = "https://student-portal-server-2sbh.onrender.com/api/student/profile";
 
 export default function Registration() {
   const maxSemester = 8;

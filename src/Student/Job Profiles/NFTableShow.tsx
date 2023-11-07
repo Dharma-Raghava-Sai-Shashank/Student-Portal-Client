@@ -101,7 +101,7 @@ export const NFTableShow = ({
   React.useEffect(() => {
     (async () => {
       try {
-        const response = await APIRequest("http://localhost:3001/api/jobs/student/all", 'GET');
+        const response = await APIRequest("https://student-portal-server-2sbh.onrender.com/api/jobs/student/all", 'GET');
         if (response.success) {
           setJobProfileData(response.jobs)
         }
