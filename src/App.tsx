@@ -34,7 +34,7 @@ import { SignIn } from "./Company/SignIn";
 import { Dashboard } from "./Company/Dashboard";
 import { CompanyProfile } from "./Company/CompanyProfile";
 import ContactUs from "./Company/ContactUs";
-import CompanyRegistration from "./Company/Registration";
+import {_Registration} from "./Company/Registration";
 import VerifyToken from "./Company/VerifyToken";
 
 const ProtectRoute: any = (Component: React.FC<{}>) => {
@@ -139,7 +139,7 @@ function App() {
         <Route path="/company/dashboard" element={<Dashboard />} />
         <Route path="/company/profile" element={<CompanyProfile />} />
         <Route path="/company/contactus" element={<ContactUs />} />
-        <Route path="/company/registration" element={<CompanyRegistration />} />
+        <Route path="/company/registration" element={<_Registration />} />
         <Route path="/company/verifytoken" element={<VerifyToken />} />
       </Routes>
       <AuthVerify logOut={logOut} />

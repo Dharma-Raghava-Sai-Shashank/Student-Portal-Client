@@ -18,6 +18,7 @@ import Navbar from './Navbar'
 import { APIRequest } from '../../api'
 import student from '../Profile/StudentProfile'
 import { baseURL } from '../../api'
+const token = localStorage.getItem('token');
 
 export default function JobProfileDetail() {
   const { id } = useParams()
@@ -30,7 +31,7 @@ export default function JobProfileDetail() {
     (async () => {
       try {
         const jobNumber = localStorage.getItem("jobId")
-        const response = await APIRequest(`http://localhost:3001/api/jobs/student/${jobNumber}`, 'GET');
+        const response = await APIRequest(`${baseURL}/jobs/student/${jobNumber}`, 'GET');
         if (response.success) {
           setSelectedProfile(response)
         }
@@ -143,7 +144,8 @@ export default function JobProfileDetail() {
       fetch(`${baseURL}/jobs/student/apply/${jobId}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(obj)
       })

@@ -373,14 +373,14 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
       spocs,
       HRs,
       nf_stages: ScheduleList as any,
-      // nfEligibility: selected?.map((spec: any) => {
-      //   return {
-      //     spec,
-      //     minLPA: 10,
-      //     maxLPA: 30,
-      //     cgpaValue: 7.5,
-      //   }
-      // }) as any,
+      nfEligibility: selected?.map((spec: any) => {
+        return {
+          spec,
+          minLPA: 10,
+          maxLPA: 30,
+          cgpaValue: 7.5,
+        }
+      }) as any,
     }))
 
     const nfEligibility: any = []

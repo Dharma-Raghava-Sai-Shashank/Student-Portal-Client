@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const CompanyRegistration = () => {
+export const _Registration = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -247,5 +247,3 @@ const CompanyRegistration = () => {
     </div>
   );
 };
-
-export default CompanyRegistration;
