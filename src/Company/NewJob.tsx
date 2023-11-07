@@ -477,7 +477,7 @@ export const NewJob = ({ option, setOption, session, setSession }: props) => {
   const [comp, setComp] = useState('');
   const [jobD, setJobD] = useState('');
 
-  const API_URL = "http://localhost:3001/api/jobs/admin";
+  const API_URL = "https://student-portal-server-2sbh.onrender.com/api/jobs/admin";
 
   const handleAddNewJob = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
